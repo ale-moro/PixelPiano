@@ -6,6 +6,7 @@ Thumbs.db
 .env
 node_modules/
 *.log
+out
 
 # Ignore text editor specific files
 .vscode/
