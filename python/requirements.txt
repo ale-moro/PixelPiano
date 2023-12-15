@@ -1,0 +1,13 @@
+# Specific package with version
+mediapipe==0.10.9
+cv2
+wget
+
+# Package with a minimum version
+# other-package>=4.5.6
+
+# Package with a maximum version
+# some-package<=2.0.0
+
+# Package without specifying the version (latest)
+# another-package
