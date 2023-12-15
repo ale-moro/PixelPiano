@@ -13,7 +13,7 @@ Open the `python` folder
 - Activate virtual environment: `venv\Scripts\activate`
 
 ### Install required dependencies
-- Install require dependencies: `pip install -r /path/to/requirements.txt`
+- Install require dependencies: `pip install -r requirements.txt`
 
 ### Run python script
 - Run the script: `python hand_landmarker_video.py`
