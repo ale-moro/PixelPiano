@@ -1,6 +1,6 @@
 # Specific package with version
 mediapipe==0.10.9
-opencv-python==4.8.1
+opencv-python==4.8.1.78
 wget==1.21.4
 
 # Package with a minimum version
