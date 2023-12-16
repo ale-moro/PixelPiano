@@ -14,11 +14,14 @@ void draw() {
 
 void oscEvent(OscMessage msg) {
   try {
-    if (msg.checkAddrPattern("/coordinates")) {
-      if (msg.checkTypetag("ff")) {
-        float receivedValue1 = msg.get(0).floatValue();
-        float receivedValue2 = msg.get(1).floatValue();
-        println("Received values: " + receivedValue1 + ", " + receivedValue2);
+if (msg.checkAddrPattern("/note_numbers")) {
+      if (msg.checkTypetag("iiiii")) {
+        int receivedValue1 = msg.get(0).intValue();
+        int receivedValue2 = msg.get(1).intValue();
+        int receivedValue3 = msg.get(2).intValue();
+        int receivedValue4 = msg.get(3).intValue();
+        int receivedValue5 = msg.get(4).intValue();
+        println("Received values: " + receivedValue1 + ", " + receivedValue2+", "+ receivedValue3 + ", " + receivedValue4+", "+receivedValue5);
         // Do something with the received values in Processing
       } else {
         println("Error: Unexpected OSC message typetag.");
