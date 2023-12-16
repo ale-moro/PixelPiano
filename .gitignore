@@ -18,6 +18,7 @@ out
 *.jar
 *.war
 out
+.task
 
 # Ignore dependencies and build directories
 venv/
