@@ -41,7 +41,7 @@ if not os.path.exists(model_path):
     wget.download('https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task', model_path)
 
 def send_osc_active_notes(note_numbers: list):
-  #note_numbers = [int(n) for n in note_numbers]
+  note_numbers = [int(n) for n in note_numbers]
   client.send_message('/note_numbers', note_numbers)
 
 def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLandmarkerResult):
