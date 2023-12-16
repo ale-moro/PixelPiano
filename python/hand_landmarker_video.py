@@ -26,7 +26,7 @@ FONT_SIZE = 10
 FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
 
-ip = 'localhost'
+ip = '192.168.1.105'
 port = 12000 
 client = udp_client.SimpleUDPClient(ip, port)
 landmark_utils = LandmarkUtils()
@@ -40,6 +40,7 @@ if not os.path.exists(model_path):
     wget.download('https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task', model_path)
 
 def send_osc_active_notes(note_numbers: list):
+  note_numbers = [int(n) for n in note_numbers]
   client.send_message('/note_numbers', note_numbers)
 
 def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLandmarkerResult):
@@ -54,8 +55,7 @@ def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLan
         # Loop through the detected hands to visualize.
         for idx in range(len(hand_landmarks_list)):
             hand_landmarks = hand_landmarks_list[idx]
-            
-            
+
         # Draw the hand landmarks.
         hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
         hand_landmarks_proto.landmark.extend([
@@ -71,7 +71,6 @@ def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLan
         return annotated_image
   except:
       return rgb_image
-
 
 class landmarker_and_result():
     def __init__(self):
@@ -129,9 +128,11 @@ def main():
 
       # map landmarks to notes
       midi_notes = landmark_mapper.landmarks_to_midi_notes(landmarks_coords, rows_indices, columns_indices) 
+  
+      send_osc_active_notes(list(midi_notes))
 
       # display frame
-      cv2.imshow('frame', frame) 
+      cv2.imshow('frame', frame.astype(np.uint8)) 
       if cv2.waitKey(1) == ord('q'):
             break
 
