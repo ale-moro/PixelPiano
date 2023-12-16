@@ -16,6 +16,7 @@ node_modules/
 *.class
 *.jar
 *.war
+out
 
 # Ignore dependencies and build directories
 venv/
