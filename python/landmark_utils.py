@@ -17,7 +17,6 @@ class LandmarkUtils:
                     for idy in range(4, len(hand_landmarks), 4):
                         x_coord = hand_landmarks[idy].x
                         y_coord = hand_landmarks[idy].y
-                        # print("x:", x_coord, "y:", y_coord)
                         visible_landmarks_list.append(np.array([x_coord, y_coord]))
                 return np.array(visible_landmarks_list)
         except:
@@ -31,27 +30,21 @@ class LandmarkMapper:
     def scale_landmark_to_video_size(self, frame, landmarks):
         width = frame.shape[0]
         height = frame.shape[1]
-        print('landmarks', landmarks)
-        scaled_landmarks = np.array([[round(lm[0]*width), round(lm[1]*height)] for lm in landmarks])
+        scaled_landmarks = np.array([[round(lm[0]*height), round(lm[1]*width)] for lm in landmarks])
         scaled_landmarks[scaled_landmarks < 0] = 0
-        print('scaled landmarks', scaled_landmarks)
-        return scaled_landmarks.astype(np.uint8)
+        return scaled_landmarks
 
     def landmarks_to_midi_notes(self, landmarks_coords, rows_indices, columns_indices):
-    #     print('rows_indices', rows_indices)
-        print('columns_indices', columns_indices)
-        print('landmarks_coords', landmarks_coords)
-        keys = []
+        notes = []
         for landmark in landmarks_coords:
             horizontal_key = sum(np.array([1 for num in columns_indices if num <= landmark[0]]))
-            keys.append(horizontal_key)
+            notes.append(horizontal_key)
 
-        print('active keys:', keys)
+        notes = np.array([(note+39) for note in notes])
+        print('active notes:', notes)
+        return notes
+
         
-            
-    def prova(self):
-        print('hhw')
-
 class CameraMapper:
     def __init__(self) -> None:
         pass

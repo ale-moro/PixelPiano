@@ -55,12 +55,6 @@ def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLan
         for idx in range(len(hand_landmarks_list)):
             hand_landmarks = hand_landmarks_list[idx]
             
-            # prints and send fingertips landmarks
-            for idy in range(4, len(hand_landmarks),4):
-                x_coord = hand_landmarks[idy].x
-                y_coord = hand_landmarks[idy].y
-                # print("x:", x_coord, "y:", y_coord)
-                client.send_message('/coordinates', [x_coord, y_coord])
             
         # Draw the hand landmarks.
         hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
@@ -74,8 +68,6 @@ def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLan
             mp.solutions.drawing_styles.get_default_hand_landmarks_style(),
             mp.solutions.drawing_styles.get_default_hand_connections_style()
         )
-          
-        print("\n")
         return annotated_image
   except:
       return rgb_image
@@ -134,8 +126,7 @@ def main():
       # retrieve and convert landmarks
       landmarks_coords = landmark_utils.xy_fingertips_landmarks(hand_landmarker.result)
       landmarks_coords = landmark_mapper.scale_landmark_to_video_size(frame, landmarks_coords)
-      print('coords:', landmarks_coords.shape, landmarks_coords)
-      
+
       # map landmarks to notes
       midi_notes = landmark_mapper.landmarks_to_midi_notes(landmarks_coords, rows_indices, columns_indices) 
 
