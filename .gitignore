@@ -18,6 +18,7 @@ out
 *.jar
 *.war
 out
+.task
 
 # Ignore dependencies and build directories
 venv/
@@ -31,3 +32,4 @@ yarn-error.log
 
 # Ignore environment configurations
 .env
+python/hand_landmarker.task
