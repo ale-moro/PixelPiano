@@ -18,6 +18,8 @@ import numpy as np
 from pythonosc import osc_message_builder
 from pythonosc import udp_client
 
+from landmark_utils import *
+
 # SETUP
 MARGIN = 10  # pixels
 FONT_SIZE = 10
@@ -123,6 +125,7 @@ def main():
    # access webcam
    cap = cv2.VideoCapture(0)
    hand_landmarker = landmarker_and_result()
+   cm = CameraMapper()
    while True:
       # pull frame
       ret, frame = cap.read()
@@ -134,9 +137,8 @@ def main():
         
       hand_landmarker.detect_async(frame)
       frame = draw_landmarks_on_image(frame,hand_landmarker.result)
-      cv2.imshow('frame',frame)
-      
-
+      frame = cm.draw_grid_on_image(frame)
+      cv2.imshow('frame', frame)
       if cv2.waitKey(1) == ord('q'):
             break
 
@@ -147,29 +149,3 @@ def main():
 
 if __name__ == "__main__":
    main()
-''' 
-ret, frame = cap.read()
-print(ret, frame)
-frame = cv2.flip(frame, 1)
-cv2.imshow('frame',frame)
-cv2.imshow(frame)
-if cv2.waitKey(1) == ord('q'):
-    break
-
-# STEP 2: Create an HandLandmarker object.
-base_options = python.BaseOptions(model_asset_path='hand_landmarker.task')
-options = vision.HandLandmarkerOptions(base_options=base_options,
-                                       num_hands=2)
-detector = vision.HandLandmarker.create_from_options(options)
-
-# STEP 3: Load the input image.
-image = mp.Image.create_from_file(image_name)
-
-# STEP 4: Detect hand landmarks from the input image.
-detection_result = detector.detect(image)
-
-# STEP 5: Process the classification result. In this case, visualize it.
-annotated_image = draw_landmarks_on_image(image.numpy_view(), detection_result)
-cv2.imshow('landmarks_image', cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
-cv2.waitKey(0)
-print('end')'''
