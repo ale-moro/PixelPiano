@@ -1,19 +1,56 @@
 import numpy as np
+import mediapipe as mp
 import matplotlib.pyplot as plt
 
+class LandmarkUtils:
+    def xy_fingertips_landmarks(self, detection_result: mp.tasks.vision.HandLandmarkerResult):
+        try:
+            if detection_result.hand_landmarks == []:
+                return np.array([])
+            else:
+                visible_landmarks_list = []
+                hand_landmarks_list = detection_result.hand_landmarks
+                # Loop through the detected hands to visualize.
+                for idx in range(len(hand_landmarks_list)):
+                    hand_landmarks = hand_landmarks_list[idx]
+                    # prints and send fingertips landmarks
+                    for idy in range(4, len(hand_landmarks), 4):
+                        x_coord = hand_landmarks[idy].x
+                        y_coord = hand_landmarks[idy].y
+                        visible_landmarks_list.append(np.array([x_coord, y_coord]))
+                return np.array(visible_landmarks_list)
+        except:
+            return np.array([])
+
+    
 class LandmarkMapper:
     def __init__(self) -> None:
         pass
 
-    def prova(self):
-        print('hhw')
+    def scale_landmark_to_video_size(self, frame, landmarks):
+        width = frame.shape[0]
+        height = frame.shape[1]
+        scaled_landmarks = np.array([[round(lm[0]*height), round(lm[1]*width)] for lm in landmarks])
+        scaled_landmarks[scaled_landmarks < 0] = 0
+        return scaled_landmarks
 
+    def landmarks_to_midi_notes(self, landmarks_coords, rows_indices, columns_indices):
+        notes = []
+        for landmark in landmarks_coords:
+            horizontal_key = sum(np.array([1 for num in columns_indices if num <= landmark[0]]))
+            notes.append(horizontal_key)
+
+        notes = np.array([(note+39) for note in notes])
+        print('active notes:', notes)
+        return notes
+
+        
 class CameraMapper:
     def __init__(self) -> None:
         pass
 
 
-    def create_image_grid(self, image, n_rows, n_columns):
+    def create_image_grid(self, image, n_rows, n_columns, return_indices=False):
         """
         Create an image grid with specified step sizes between grid points.
         
@@ -37,22 +74,28 @@ class CameraMapper:
         grid[rows_indices+2, :] = 255
         grid[:, columns_indices+2] = 255
         grid[rows_indices+3, :] = 255
-        grid[:, columns_indices+2] = 255
-        return np.array(grid).astype('int')
+        grid[:, columns_indices+3] = 255
+        if return_indices:
+            return np.array(grid).astype('int'), rows_indices, columns_indices
+        else:
+            return np.array(grid).astype('int')
 
-    def draw_grid_on_image(self, rgb_image):
+    def draw_grid_on_image(self, rgb_image, return_indices=False):
         grid_image = np.copy(rgb_image) # np.array
         # print(annotated_image.shape) # 480, 640, 3 (rgb)
-        grid = self.create_image_grid(
+        grid, rows_indices, columns_indices = self.create_image_grid(
             grid_image,
-            n_rows=5,
-            n_columns=5
+            n_rows=1,
+            n_columns=8, 
+            return_indices=return_indices
         )
-
         assert grid_image.shape == grid.shape
         grid_image = grid + grid_image
         grid_image[grid_image>255] = 255
         # print('grid_image', grid_image.shape)
         # plt.imshow(grid_image)
         # plt.show()
-        return grid_image.astype(np.uint8)
+        if return_indices:
+            return grid_image.astype(np.uint8), rows_indices, columns_indices
+        else:
+            return grid_image.astype(np.uint8)
