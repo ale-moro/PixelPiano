@@ -32,3 +32,4 @@ yarn-error.log
 
 # Ignore environment configurations
 .env
+python/hand_landmarker.task
