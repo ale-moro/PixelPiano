@@ -1,7 +1,13 @@
 # Specific package with version
 mediapipe==0.10.9
+<<<<<<< Updated upstream
+cv2
+wget
+=======
 opencv-python==4.8.1.78
 wget==3.2
+python-osc==1.8.3
+>>>>>>> Stashed changes
 
 # Package with a minimum version
 # other-package>=4.5.6

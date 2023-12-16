@@ -17,6 +17,7 @@ out
 *.class
 *.jar
 *.war
+out
 
 # Ignore dependencies and build directories
 venv/

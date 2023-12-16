@@ -14,12 +14,19 @@ from mediapipe.framework.formats import landmark_pb2
 import cv2
 # math
 import numpy as np
+# OSC
+from pythonosc import osc_message_builder
+from pythonosc import udp_client
 
 # SETUP
 MARGIN = 10  # pixels
 FONT_SIZE = 10
 FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
+
+ip = 'localhost'
+port = 12000 
+client = udp_client.SimpleUDPClient(ip, port)
 
 # Hand Landmarks model download
 model_path = os.path.abspath('hand_landmarker.task')
@@ -50,6 +57,15 @@ def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLan
          for idx in range(len(hand_landmarks_list)):
             hand_landmarks = hand_landmarks_list[idx]
             
+            # prints and send fingertips landmarks
+            for idy in range(4,len(hand_landmarks),4):
+               x_coord = hand_landmarks[idy].x
+               y_coord = hand_landmarks[idy].y
+
+               print("x:", x_coord, "y:", y_coord)
+               client.send_message('/coordinates', [x_coord, y_coord])
+            
+            
             # Draw the hand landmarks.
             hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
             hand_landmarks_proto.landmark.extend([
@@ -60,9 +76,13 @@ def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLan
                mp.solutions.hands.HAND_CONNECTIONS,
                mp.solutions.drawing_styles.get_default_hand_landmarks_style(),
                mp.solutions.drawing_styles.get_default_hand_connections_style())
+         
+            
+         print("\n")
          return annotated_image
    except:
       return rgb_image
+
 
 class landmarker_and_result():
     def __init__(self):
@@ -99,29 +119,31 @@ class landmarker_and_result():
       self.landmarker.close()
 
 def main():
-# STEP 1: capture video
-    # access webcam
-    cap = cv2.VideoCapture(0)
-    hand_landmarker = landmarker_and_result()
-    while True:
-        # pull frame
-        ret, frame = cap.read()
-        # mirror frame
-        frame = cv2.flip(frame, 1)
-        # display frame
-        # create landmarker
-        # draw landmarks on frame
-        hand_landmarker.detect_async(frame)
-        frame = draw_landmarks_on_image(frame,hand_landmarker.result)
-        cv2.imshow('frame',frame)
+   # STEP 1: capture video
+   # access webcam
+   cap = cv2.VideoCapture(0)
+   hand_landmarker = landmarker_and_result()
+   while True:
+      # pull frame
+      ret, frame = cap.read()
+      # mirror frame
+      frame = cv2.flip(frame, 1)
+      # display frame
+      # create landmarker
+      # draw landmarks on frame
+        
+      hand_landmarker.detect_async(frame)
+      frame = draw_landmarks_on_image(frame,hand_landmarker.result)
+      cv2.imshow('frame',frame)
+      
 
-        if cv2.waitKey(1) == ord('q'):
+      if cv2.waitKey(1) == ord('q'):
             break
 
     # release everything
-    hand_landmarker.close()
-    cap.release()
-    cv2.destroyAllWindows()
+   hand_landmarker.close()
+   cap.release()
+   cv2.destroyAllWindows()
 
 if __name__ == "__main__":
    main()
