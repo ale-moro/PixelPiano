@@ -42,7 +42,7 @@ class LandmarkMapper:
 
         notes = np.array([(note+39) for note in notes])
         print('active notes:', notes)
-        return notes
+        return np.unique(notes)
 
         
 class CameraMapper:
@@ -96,6 +96,6 @@ class CameraMapper:
         # plt.imshow(grid_image)
         # plt.show()
         if return_indices:
-            return grid_image.astype(np.uint8), rows_indices, columns_indices
+            return grid_image.astype('int'), rows_indices, columns_indices
         else:
-            return grid_image.astype(np.uint8)
+            return grid_image.astype('int')
