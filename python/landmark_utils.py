@@ -35,14 +35,16 @@ class LandmarkMapper:
         return scaled_landmarks
 
     def landmarks_to_midi_notes(self, landmarks_coords, rows_indices, columns_indices):
-        notes = []
-        for landmark in landmarks_coords:
+        #number of fingers
+        notes = np.zeros(5)
+        notes.fill(-39)
+        for index, landmark in enumerate(landmarks_coords):
             horizontal_key = sum(np.array([1 for num in columns_indices if num <= landmark[0]]))
-            notes.append(horizontal_key)
+            notes[index] = horizontal_key
 
         notes = np.array([(note+39) for note in notes])
         print('active notes:', notes)
-        return np.unique(notes)
+        return notes
 
         
 class CameraMapper:

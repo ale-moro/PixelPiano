@@ -26,7 +26,8 @@ FONT_SIZE = 10
 FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
 
-ip = '192.168.1.105'
+#ip = '192.168.1.176'
+ip = 'localhost'
 port = 12000 
 client = udp_client.SimpleUDPClient(ip, port)
 landmark_utils = LandmarkUtils()
@@ -40,7 +41,7 @@ if not os.path.exists(model_path):
     wget.download('https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task', model_path)
 
 def send_osc_active_notes(note_numbers: list):
-  note_numbers = [int(n) for n in note_numbers]
+  #note_numbers = [int(n) for n in note_numbers]
   client.send_message('/note_numbers', note_numbers)
 
 def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLandmarkerResult):
@@ -87,7 +88,7 @@ class landmarker_and_result():
       options = mp.tasks.vision.HandLandmarkerOptions( 
         base_options = mp.tasks.BaseOptions(model_asset_path="hand_landmarker.task"), # path to model
         running_mode = mp.tasks.vision.RunningMode.LIVE_STREAM, # running on a live stream
-        num_hands = 2, # track both hands
+        num_hands = 1, # track both hands
         min_hand_detection_confidence = 0.3, # lower than value to get predictions more often
         min_hand_presence_confidence = 0.3, # lower than value to get predictions more often
         min_tracking_confidence = 0.3, # lower than value to get predictions more often
