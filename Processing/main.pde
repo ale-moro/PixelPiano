@@ -39,25 +39,23 @@ void setup() {
             .setColorBackground(color(0))
             .setColorActive(color(150));
             
+  myKnob.getCaptionLabel().setVisible(false);
+            
   myFader = cp5.addSlider("mySlider")
               .setRange(0, 100)
-              .setValue(0)
-              .setPosition(width*28/60, height*5/30)
+              .setValue(10)
+              .setPosition(width*28/60 -10, height*5/30)
               .setSize(60,160)
               .setColorForeground(color(150))
               .setColorBackground(color(0))
               .setColorActive(color(150));
               
   myFader.getCaptionLabel().setVisible(false);
-  cp5.addTextlabel("sliderLabel")
-    .setText(nf(int(myFader.getValue())))
-    .setPosition(width*28/60 + 20, height*5/30 + 80)     
-    .setColorValue(255)
-    .setFont(createFont("Arial", 11));
+
   
   PFont customFont1 = createFont("Monospaced", 20);
   octaveUp = cp5.addButton("octaveUp")
-             .setPosition(3*width/5 + width/8 + 90,height*5/30 + 80)
+             .setPosition(3*width/5 + width/8 + 90,height*5/30 + 110)
              .setSize(60,60)
              .setColorBackground(color(0))
              .setColorForeground(color(150))
@@ -67,7 +65,7 @@ void setup() {
   octaveUp.getCaptionLabel().setFont(customFont1);
   
   octaveDown = cp5.addButton("octaveDown")
-                  .setPosition(3*width/5 + width/8, height*5/30 + 80)
+                  .setPosition(3*width/5 + width/8, height*5/30 + 110)
                   .setSize(60,60)
                   .setColorBackground(color(0))
                   .setColorForeground(color(150))
@@ -78,7 +76,7 @@ void setup() {
   
   PFont customFont = createFont("Monospaced", 20);
   mode = cp5.addButton("mode")
-            .setPosition(3*width/5 + width/8 + 16 ,height*5/30 + 10)
+            .setPosition(3*width/5 + width/8 + 16 ,height*5/30 - 15)
             .setSize(120,60)
             .setColorBackground(color(0))
             .setColorForeground(color(150))
@@ -154,7 +152,6 @@ void mousePressed() {
 
 void mySlider(float value){
   
-  cp5.get(Textlabel.class, "sliderLabel").setText(nf(int(value)));
 }
 
 void octaveUp() {

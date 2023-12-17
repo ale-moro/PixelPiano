@@ -124,6 +124,41 @@ class Piano{
     
     fill(255);
     rect(3*boxX/2 + boxWidth , boxY, boxWidth/2, boxHeight,10);
+    
+    
+    // Mini boxes
+    
+    // fader
+    fill(0);
+    rect(width*28/60 - 20, height*5/30 - 5, 100,175,10);
+    fill(0, 200);
+    rect(width*28/60 - 15, height*5/30, 100, 175, 10); 
+    
+    // knob
+    fill(0, 200);
+    ellipse(width*11/60 +85, height*5/30 +85, 160, 160);
+    
+    // expert/beginner
+    fill(0);
+    rect(3*width/5 + width/8 + 10 ,height*5/30 -20, 130,70,10);
+    fill(0, 200);
+    rect(3*width/5 + width/8 + 15, height*5/30 -15, 130, 70, 10);
+    
+    // octaves
+    fill(0);
+    rect(3*width/5 + width/8 + 85,height*5/30 + 105, 70,70,10);
+    fill(0, 200);
+    rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);
+    
+    fill(0);
+    rect(3*width/5 + width/8 - 5, height*5/30 + 105, 70,70,10);
+    fill(0, 200);
+    rect(3*width/5 + width/8,height*5/30 + 110, 70, 70, 10);
+    
+    
+    
+    
+    
   }
  
 
