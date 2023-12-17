@@ -1,120 +1,130 @@
 import java.util.Arrays;
+import controlP5.*;
 int pianoHeight;
-int[] blackKeys = {1, 2, 4, 5, 6, 8, 9, 11, 12, 13};
 boolean isPlaying = false;
+boolean beginner = false;
+int[] blackKeys = {1, 2, 4, 5, 6, 8, 9, 11, 12, 13, 15, 16, 18, 19, 20};
 boolean isMouseOverButton = false;
+color[] pastelColors = new color[15];
+int[] octaves = {3,4,5};
+Piano keyboard;
+Start initialization;
+ControlP5 cp5;
+Knob myKnob;
+Slider myFader;
+Button octaveUp;
+Button octaveDown;
+Button mode;
+
+
 
 void setup() {
   fullScreen();
   pianoHeight = height / 3;
+  initialization = new Start();
+  keyboard = new Piano();
+  cp5 = new ControlP5(this);
+   
+  for (int i = 0; i < pastelColors.length; i++) {
+    pastelColors[i] = color(random(200, 255), random(200, 255), random(200, 255));
+  }
+  
+  myKnob = cp5.addKnob("myKnob")
+            .setRange(0, 100)
+            .setValue(0) // Mappare valore nel range e settare value
+            .setPosition(width*11/60, height*5/30)
+            .setRadius(80)
+            .setNumberOfTickMarks(10)
+            .setColorForeground(color(150))
+            .setColorBackground(color(0))
+            .setColorActive(color(150));
+            
+  myFader = cp5.addSlider("mySlider")
+              .setRange(0, 100)
+              .setValue(0)
+              .setPosition(width*28/60, height*5/30)
+              .setSize(60,160)
+              .setColorForeground(color(150))
+              .setColorBackground(color(0))
+              .setColorActive(color(150));
+              
+  myFader.getCaptionLabel().setVisible(false);
+  cp5.addTextlabel("sliderLabel")
+    .setText(nf(int(myFader.getValue())))
+    .setPosition(width*28/60 + 20, height*5/30 + 80)     
+    .setColorValue(255)
+    .setFont(createFont("Arial", 11));
+  
+  PFont customFont1 = createFont("Monospaced", 20);
+  octaveUp = cp5.addButton("octaveUp")
+             .setPosition(3*width/5 + width/8 + 90,height*5/30 + 80)
+             .setSize(60,60)
+             .setColorBackground(color(0))
+             .setColorForeground(color(150))
+             .setColorActive(color(150));
+             
+  octaveUp.setLabel("+");
+  octaveUp.getCaptionLabel().setFont(customFont1);
+  
+  octaveDown = cp5.addButton("octaveDown")
+                  .setPosition(3*width/5 + width/8, height*5/30 + 80)
+                  .setSize(60,60)
+                  .setColorBackground(color(0))
+                  .setColorForeground(color(150))
+                  .setColorActive(color(150));
+               
+  octaveDown.setLabel("-");
+  octaveDown.getCaptionLabel().setFont(customFont1);
+  
+  PFont customFont = createFont("Monospaced", 20);
+  mode = cp5.addButton("mode")
+            .setPosition(3*width/5 + width/8 + 16 ,height*5/30 + 10)
+            .setSize(120,60)
+            .setColorBackground(color(0))
+            .setColorForeground(color(150))
+            .setColorActive(color(150));
+            
+  mode.setLabel("Expert");
+  mode.getCaptionLabel().setFont(customFont);
+  
+                  
+            
+            
 }
 
 void draw() {
   background(255);
-  drawText();
-  drawPiano();
-  drawPlayButton();
-}
-
-void drawText() {
-  fill(0);
-  textMode(SHAPE);
-
-  float textX = width / 2;
-  float textY1 = height / 6 - 30;
-  float textY2 = height / 6 + 50;
-
-  // Usa il font monospaced di Processing
-  textFont(createFont("Monospaced", 48));
-
-  // Disegna il titolo "PixelPiano" con ombra
-  textSize(60);
-  textAlign(CENTER, CENTER);
-
-  // Disegna l'ombra del titolo
-  fill(150, 50);
-  text("PixelPiano", textX + 3, textY1 + 3);
-  fill(0);
-  text("PixelPiano", textX, textY1);
-
-  // Disegna la sottotitolo "The Interactive Virtual Piano" con ombra
-  textSize(40);
-  textAlign(CENTER, CENTER);
-
-  // Disegna l'ombra del sottotitolo
-  fill(150, 50);
-  text("The Interactive Virtual Piano", textX + 3, textY2 + 3);
-  fill(0);
-  text("The Interactive Virtual Piano", textX, textY2);
-
-  // Ripristina la modalità di testo in 2D per il disegno successivo
-  textMode(MODEL);
-}
-
-void drawPiano() {
-  for (int i = 0; i < 15; i++) {
-    float keyWidth = width / 14;
-    float keyX = i * keyWidth;
-
-    // Disegna i tasti bianchi
-    fill(255);
-    rect(keyX, height - pianoHeight, keyWidth, pianoHeight, 10);
-
-    // Disegna i tasti neri
-    if (Arrays.binarySearch(blackKeys, i) >= 0) {
-      float blackKeyWidth = keyWidth / 1.5;
-      float blackKeyHeight = pianoHeight / 1.7;
-      float blackKeyX = keyX - blackKeyWidth / 2;
-
-      // Disegna l'ombra dei tasti neri
-      fill(0, 200);
-      rect(blackKeyX + 5, height - pianoHeight + 5, blackKeyWidth, blackKeyHeight, 10);  // Ombra
-      fill(0);
-      rect(blackKeyX, height - pianoHeight, blackKeyWidth, blackKeyHeight, 10);
+  
+  if(!isPlaying){ //<>//
+    keyboard.drawPianoInit();
+    initialization.drawText();
+    initialization.drawPlayButton();
+    myKnob.setVisible(false);
+    myFader.setVisible(false);
+    octaveUp.setVisible(false);
+    octaveDown.setVisible(false);
+    mode.setVisible(false);
+    
+  }else{ //<>//
+    keyboard.drawPianoPlay();
+    keyboard.drawBox();
+    myKnob.setVisible(true);
+    myFader.setVisible(true);
+    octaveUp.setVisible(true);
+    octaveDown.setVisible(true);
+    mode.setVisible(true);
+    
+    if(!beginner){
+      keyboard.writeNoteLabels(octaves,1);
+    }else{
+      keyboard.writeNoteLabels(octaves,0);
     }
+
   }
+
 }
 
-void drawPlayButton() {
-  float buttonWidth = 150;
-  float buttonHeight = 60;
-  float buttonX = width / 2 - buttonWidth / 2;
-  float buttonY = height / 3 + height / 6 - buttonHeight;
 
-  // Verifica se il mouse è sopra il pulsante
-  if (mouseX > buttonX && mouseX < buttonX + buttonWidth && mouseY > buttonY && mouseY < buttonY + buttonHeight) {
-    isMouseOverButton = true;
-  } else {
-    isMouseOverButton = false;
-  }
-
-  // Cambia il colore del pulsante in base allo stato del mouse
-  if (isMouseOverButton) {
-    fill(200);  // Colore quando il mouse è sopra il pulsante
-  } else {
-    fill(255);  // Colore normale del pulsante
-  }
-
-  rect(buttonX, buttonY, buttonWidth, buttonHeight, 10);
-
-  // Disegna il testo "Play" con ombra
-  fill(0);
-  textSize(32);
-  textAlign(CENTER, CENTER);
-
-  // Cambia il colore del testo in base allo stato del mouse
-  if (isMouseOverButton) {
-    fill(100);  // Colore del testo quando il mouse è sopra il pulsante
-  } else {
-    fill(0);  // Colore normale del testo
-  }
-
-  // Disegna l'ombra del testo
-  fill(150, 50);
-  text("Play", buttonX + 3, buttonY + 3, buttonWidth, buttonHeight);
-  fill(0);
-  text("Play", buttonX, buttonY, buttonWidth, buttonHeight);
-}
 
 void mousePressed() {
   float buttonWidth = 150;
@@ -123,7 +133,7 @@ void mousePressed() {
   float buttonY = height / 3 + height / 6 - buttonHeight / 2;
 
   // Controlla se il mouse è sopra il pulsante Play
-  if (isMouseOverButton) {
+  if (isMouseOverButton && mouseX >= buttonX && mouseX <= buttonX + buttonWidth && mouseY >= buttonY && mouseY <= buttonY + buttonHeight) {
     // Cambia il colore del pulsante quando viene premuto
     fill(150);  // Colore del pulsante durante il clic
     rect(buttonX, buttonY, buttonWidth, buttonHeight, 10);
@@ -134,8 +144,43 @@ void mousePressed() {
     } else {
       // Aggiungi azioni per l'inizio della riproduzione
       println("Play pressed. Start playing.");
-      PApplet.main("PlayWindow");
+      isPlaying = true;
+      background(0,0);
       
     }
   }
+}
+
+
+void mySlider(float value){
+  
+  cp5.get(Textlabel.class, "sliderLabel").setText(nf(int(value)));
+}
+
+void octaveUp() {
+  println("octaveUp pressed!");
+  for (int i = 0; i < octaves.length; i++) {
+    octaves[i]++;
+  }
+}
+
+void octaveDown() {
+  println("octaveDown pressed!");
+  for (int i = 0; i < octaves.length; i++) {
+    octaves[i]--;
+  }
+}
+
+void mode(){
+   
+  if(!beginner){
+      mode.setLabel("Beginner");
+      beginner = true;
+      
+  
+  }else{
+      mode.setLabel("Expert");
+      beginner = false;
+  }
+  
 }

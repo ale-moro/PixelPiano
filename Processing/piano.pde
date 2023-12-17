@@ -1,8 +1,11 @@
 class Piano{
   
+  String[] whiteNotes = {"C", "D", "E", "F", "G", "A", "B"};
+  String[] blackNotes = {"C#", "D#", "F#", "G#", "A#"};
 
-  
+
   public void drawPianoInit() {
+    
     for (int i = 0; i < 15; i++) {
       float keyWidth = width / 14;
       float keyX = i * keyWidth;
@@ -28,14 +31,14 @@ class Piano{
   
   public void drawPianoPlay() {
 
-    float margin = width / 6; // Set margin to 1/6 of the width
+    float margin = width / 10; // Set margin to 1/10 of the width
 
     // Disegna il bordo nero attorno al piano
-    fill(0);
-    rect(margin, height/2, width - 2 * margin, pianoHeight, 10);
+    //fill(0);
+    //rect(margin, height/2, width - 2 * margin, pianoHeight, 10);
   
-    for (int i = 0; i < 14; i++) {
-      float keyWidth = (width - 2 * margin) / 14; // Adjust keyWidth based on margins
+    for (int i = 0; i < 21; i++) {
+      float keyWidth = (width - 2 * margin) / 21; // Adjust keyWidth based on margins
       float keyX = margin + i * keyWidth; // Adjust starting position based on margins
   
       // Disegna i tasti bianchi
@@ -56,5 +59,72 @@ class Piano{
       }
     }
   }
+  
+  
+  public void writeNoteLabels(int[] octaves, int flag) {
+    float margin = width / 10;  // Set margin to 1/10 of the width
+    float keyWidth = (width - 2 * margin) / 21;  // Adjust keyWidth based on margins
+    int j=0;
+    
+    if(flag == 0){
+      for (int i = 0; i < 21; i++) {
+        float keyX = margin + i * keyWidth; 
+    
+        // Scrivi la nota sopra il tasto bianco
+        fill(100);
+        textAlign(CENTER, CENTER);
+        textSize(16);
+        if (i < 7) {
+          j = 0;
+        } else if (i < 14) {
+          j = 1;
+        } else {
+          j = 2;
+        }
+          
+        String noteLabel = whiteNotes[i % 7] + str(octaves[j]);
+        text(noteLabel, keyX + keyWidth / 2, height - pianoHeight / 2 - 15);
+    
+      }
+    }else{
+        for (int i = 0; i < 21; i++) {
+          float keyX = margin + i * keyWidth; 
+        
+          // Scrivi la nota sopra il tasto bianco solo se è C
+          if (i % 7 == 0) {
+            fill(100);
+            textAlign(CENTER, CENTER);
+            textSize(16);
+            
+            if (i < 7) {
+              j = 0;
+            } else if (i < 14) {
+              j = 1;
+            } else {
+              j = 2;
+            }
+              
+            String noteLabel = whiteNotes[i % 7] + str(octaves[j]);
+            text(noteLabel, keyX + keyWidth / 2, height - pianoHeight / 2 - 15);
+          } 
+       }
+    }
+  }
+
+  public void drawBox(){
+    
+    // Box
+    float boxHeight = height / 3;
+    float boxWidth = width / 2 ;
+    float boxX = width / 10;
+    float boxY = height / 4 -  boxX;
+    
+    fill(255);
+    rect(boxX, boxY, boxWidth, boxHeight, 10);
+    
+    fill(255);
+    rect(3*boxX/2 + boxWidth , boxY, boxWidth/2, boxHeight,10);
+  }
+ 
 
 }
