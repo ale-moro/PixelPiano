@@ -58,8 +58,8 @@ void setup() {
              .setPosition(3*width/5 + width/8 + 90,height*5/30 + 110)
              .setSize(60,60)
              .setColorBackground(color(0))
-             .setColorForeground(color(150))
-             .setColorActive(color(150));
+             .setColorForeground(color(50))
+             .setColorActive(color(50));
              
   octaveUp.setLabel("+");
   octaveUp.getCaptionLabel().setFont(customFont1);
@@ -68,8 +68,8 @@ void setup() {
                   .setPosition(3*width/5 + width/8, height*5/30 + 110)
                   .setSize(60,60)
                   .setColorBackground(color(0))
-                  .setColorForeground(color(150))
-                  .setColorActive(color(150));
+                  .setColorForeground(color(50))
+                  .setColorActive(color(50));
                
   octaveDown.setLabel("-");
   octaveDown.getCaptionLabel().setFont(customFont1);
@@ -79,8 +79,8 @@ void setup() {
             .setPosition(3*width/5 + width/8 + 16 ,height*5/30 - 15)
             .setSize(120,60)
             .setColorBackground(color(0))
-            .setColorForeground(color(150))
-            .setColorActive(color(150));
+            .setColorForeground(color(50))
+            .setColorActive(color(50));
             
   mode.setLabel("Expert");
   mode.getCaptionLabel().setFont(customFont);
@@ -157,15 +157,32 @@ void mySlider(float value){
 void octaveUp() {
   println("octaveUp pressed!");
   for (int i = 0; i < octaves.length; i++) {
-    octaves[i]++;
+    if(octaves[1] < 6){
+      octaves[i]++;
+    }else{
+      octaves[0] = 5;
+      octaves[1] = 6;
+      octaves[2] = 7;
+    }
   }
+  fill(255);
+  rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);
 }
 
 void octaveDown() {
   println("octaveDown pressed!");
   for (int i = 0; i < octaves.length; i++) {
-    octaves[i]--;
+    if(octaves[1] > 1){
+      octaves[i]--;
+    }else{
+      octaves[0] = 1;
+      octaves[1] = 2;
+      octaves[2] = 3;
+    }
   }
+  
+  fill(255);
+  rect(3*width/5 + width/8,height*5/30 + 110, 70, 70, 10);
 }
 
 void mode(){
@@ -179,5 +196,8 @@ void mode(){
       mode.setLabel("Expert");
       beginner = false;
   }
+  
+  fill(255);
+  rect(3*width/5 + width/8 + 15, height*5/30 -15, 130, 70, 10);
   
 }
