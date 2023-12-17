@@ -1,141 +1,243 @@
 import java.util.Arrays;
+import controlP5.*;
+
 int pianoHeight;
-int[] blackKeys = {1, 2, 4, 5, 6, 8, 9, 11, 12, 13};
 boolean isPlaying = false;
+boolean beginner = false;
 boolean isMouseOverButton = false;
+int[] blackKeys = {1,3, 6, 8, 10, 13, 15,18,20,22,25,27,30,32,34};
+int[] blackKeysInit = {1,2,4,5,6,8,9,11,12,13};
+int[] whiteKeys = {0,2,4,5,7,9,11,12,14,16,17,19,21,23,24,26,28,29,31,33,35};
+color[] pastelColors = new color[15];
+int[] octaves = {3,4,5};
+int shift = 0;
+int[] notesInput = {36,48,51,55};
+int[] notesOutput = new int[5];
+
+
+Piano keyboard;
+Start initialization;
+Fingers fingers;
+ControlP5 cp5;
+
+Knob myKnob;
+Slider myFader;
+Button octaveUp;
+Button octaveDown;
+Button mode;
+Button back;
+
 
 void setup() {
   fullScreen();
+  
+  // Classes initialization
+  initialization = new Start();
+  keyboard = new Piano();
+  cp5 = new ControlP5(this);
+  fingers = new Fingers();
+  
   pianoHeight = height / 3;
+  
+  // Pastel Colors generator
+  for (int i = 0; i < pastelColors.length; i++) {
+    pastelColors[i] = color(random(200, 255), random(200, 255), random(200, 255));
+  }
+  
+  // Knob
+  myKnob = cp5.addKnob("myKnob")
+            .setRange(0, 100)
+            .setValue(0) // Mappare valore nel range e settare value
+            .setPosition(width*11/60, height*5/30)
+            .setRadius(80)
+            .setNumberOfTickMarks(10)
+            .setColorForeground(color(200))
+            .setColorBackground(color(0))
+            .setVisible(false)
+            .setColorActive(color(200));
+            
+  myKnob.getCaptionLabel().setVisible(false);
+  
+  // Fader
+  myFader = cp5.addSlider("mySlider")
+              .setRange(0, 100)
+              .setValue(10)
+              .setPosition(width*28/60 -10, height*5/30)
+              .setSize(60,160)
+              .setColorForeground(color(200))
+              .setColorBackground(color(0))
+              .setVisible(false)
+              .setColorActive(color(200));
+              
+  myFader.getCaptionLabel().setVisible(false);
+
+  // Buttons
+  PFont customFont1 = createFont("Monospaced", 20);
+  octaveUp = cp5.addButton("octaveUp")
+             .setPosition(3*width/5 + width/8 + 90,height*5/30 + 110)
+             .setSize(60,60)
+             .setColorBackground(color(0))
+             .setColorForeground(color(50))
+             .setVisible(false)
+             .setColorActive(color(50));
+             
+  octaveUp.setLabel("+");
+  octaveUp.getCaptionLabel().setFont(customFont1);
+  
+  octaveDown = cp5.addButton("octaveDown")
+                  .setPosition(3*width/5 + width/8, height*5/30 + 110)
+                  .setSize(60,60)
+                  .setColorBackground(color(0))
+                  .setColorForeground(color(50))
+                  .setVisible(false)
+                  .setColorActive(color(50));
+               
+  octaveDown.setLabel("-");
+  octaveDown.getCaptionLabel().setFont(customFont1);
+  
+  PFont customFont = createFont("Monospaced", 20);
+  mode = cp5.addButton("mode")
+            .setPosition(3*width/5 + width/8 + 16 ,height*5/30 - 15)
+            .setSize(120,60)
+            .setColorBackground(color(0))
+            .setColorForeground(color(50))
+            .setVisible(false)
+            .setColorActive(color(50));
+            
+  mode.setLabel("Expert");
+  mode.getCaptionLabel().setFont(customFont);
+  
+  back = cp5.addButton("back")
+          .setPosition(9*width/10 + 5, 9*height/10)
+          .setSize(width/15,40)
+          .setColorBackground(color(0))
+          .setColorForeground(color(50))
+          .setVisible(false)
+          .setColorActive(color(50));
+  
+  back.setLabel("Back");
+  back.getCaptionLabel().setFont(customFont);
+  
+            
+  // Listeners
+  back.addListener(new ButtonClickListener());
+  mode.addListener(new ButtonClickListener());
+  octaveUp.addListener(new ButtonClickListener());
+  octaveDown.addListener(new ButtonClickListener());
+  myFader.addListener(new ButtonClickListener());
+
+        
 }
 
 void draw() {
   background(255);
-  drawText();
-  drawPiano();
-  drawPlayButton();
-}
+  
+  if(!isPlaying){ //<>//
+    keyboard.drawPianoInit();
+    initialization.drawText();
+    initialization.drawPlayButton();
+    myKnob.setVisible(false);
+    myFader.setVisible(false);
+    octaveUp.setVisible(false);
+    octaveDown.setVisible(false);
+    mode.setVisible(false);
+    back.setVisible(false);
 
-void drawText() {
-  fill(0);
-  textMode(SHAPE);
+  }else{ //<>//
+    notesOutput = fingers.conversion(notesInput, shift);
+    keyboard.drawPianoPlay(notesOutput);
+    keyboard.drawBox();
+    myKnob.setVisible(true);
+    myFader.setVisible(true);
+    octaveUp.setVisible(true);
+    octaveDown.setVisible(true);
+    mode.setVisible(true);
+    back.setVisible(true);
+    
 
-  float textX = width / 2;
-  float textY1 = height / 6 - 30;
-  float textY2 = height / 6 + 50;
-
-  // Usa il font monospaced di Processing
-  textFont(createFont("Monospaced", 48));
-
-  // Disegna il titolo "PixelPiano" con ombra
-  textSize(60);
-  textAlign(CENTER, CENTER);
-
-  // Disegna l'ombra del titolo
-  fill(150, 50);
-  text("PixelPiano", textX + 3, textY1 + 3);
-  fill(0);
-  text("PixelPiano", textX, textY1);
-
-  // Disegna la sottotitolo "The Interactive Virtual Piano" con ombra
-  textSize(40);
-  textAlign(CENTER, CENTER);
-
-  // Disegna l'ombra del sottotitolo
-  fill(150, 50);
-  text("The Interactive Virtual Piano", textX + 3, textY2 + 3);
-  fill(0);
-  text("The Interactive Virtual Piano", textX, textY2);
-
-  // Ripristina la modalità di testo in 2D per il disegno successivo
-  textMode(MODEL);
-}
-
-void drawPiano() {
-  for (int i = 0; i < 15; i++) {
-    float keyWidth = width / 14;
-    float keyX = i * keyWidth;
-
-    // Disegna i tasti bianchi
-    fill(255);
-    rect(keyX, height - pianoHeight, keyWidth, pianoHeight, 10);
-
-    // Disegna i tasti neri
-    if (Arrays.binarySearch(blackKeys, i) >= 0) {
-      float blackKeyWidth = keyWidth / 1.5;
-      float blackKeyHeight = pianoHeight / 1.7;
-      float blackKeyX = keyX - blackKeyWidth / 2;
-
-      // Disegna l'ombra dei tasti neri
-      fill(0, 200);
-      rect(blackKeyX + 5, height - pianoHeight + 5, blackKeyWidth, blackKeyHeight, 10);  // Ombra
-      fill(0);
-      rect(blackKeyX, height - pianoHeight, blackKeyWidth, blackKeyHeight, 10);
+    if(!beginner){
+      keyboard.writeNoteLabels(octaves,1);
+    }else{
+      keyboard.writeNoteLabels(octaves,0);
     }
-  }
-}
 
-void drawPlayButton() {
-  float buttonWidth = 150;
-  float buttonHeight = 60;
-  float buttonX = width / 2 - buttonWidth / 2;
-  float buttonY = height / 3 + height / 6 - buttonHeight;
-
-  // Verifica se il mouse è sopra il pulsante
-  if (mouseX > buttonX && mouseX < buttonX + buttonWidth && mouseY > buttonY && mouseY < buttonY + buttonHeight) {
-    isMouseOverButton = true;
-  } else {
-    isMouseOverButton = false;
   }
 
-  // Cambia il colore del pulsante in base allo stato del mouse
-  if (isMouseOverButton) {
-    fill(200);  // Colore quando il mouse è sopra il pulsante
-  } else {
-    fill(255);  // Colore normale del pulsante
-  }
-
-  rect(buttonX, buttonY, buttonWidth, buttonHeight, 10);
-
-  // Disegna il testo "Play" con ombra
-  fill(0);
-  textSize(32);
-  textAlign(CENTER, CENTER);
-
-  // Cambia il colore del testo in base allo stato del mouse
-  if (isMouseOverButton) {
-    fill(100);  // Colore del testo quando il mouse è sopra il pulsante
-  } else {
-    fill(0);  // Colore normale del testo
-  }
-
-  // Disegna l'ombra del testo
-  fill(150, 50);
-  text("Play", buttonX + 3, buttonY + 3, buttonWidth, buttonHeight);
-  fill(0);
-  text("Play", buttonX, buttonY, buttonWidth, buttonHeight);
 }
 
 void mousePressed() {
-  float buttonWidth = 150;
-  float buttonHeight = 60;
-  float buttonX = width / 2 - buttonWidth / 2;
-  float buttonY = height / 3 + height / 6 - buttonHeight / 2;
 
-  // Controlla se il mouse è sopra il pulsante Play
-  if (isMouseOverButton) {
-    // Cambia il colore del pulsante quando viene premuto
-    fill(150);  // Colore del pulsante durante il clic
-    rect(buttonX, buttonY, buttonWidth, buttonHeight, 10);
-    
-    // Esegui azioni aggiuntive in base allo stato di riproduzione (play/pause)
-    if (isPlaying) {
+  if (!isPlaying) {
 
-    } else {
-      // Aggiungi azioni per l'inizio della riproduzione
       println("Play pressed. Start playing.");
-      PApplet.main("PlayWindow");
-      
+      isPlaying = true;
+      background(0,0);   
     }
+}
+
+
+class ButtonClickListener implements ControlListener {
+  public void controlEvent(ControlEvent event) {
+    
+    // Back Listener
+    if (event.isController() && event.getController().getName().equals("back")){
+        isPlaying = false;
+        fill(200);
+        rect(9*width/10 +5, height*9/10, width/15 +10, 50,10);
+    }
+    
+    // OctaveUp listener
+    if (event.isController() && event.getController().getName().equals("octaveUp")){
+        for (int i = 0; i < octaves.length; i++) {
+          if(octaves[1] < 6){
+            octaves[i]++;
+          }else{
+            octaves[0] = 5;
+            octaves[1] = 6;
+            octaves[2] = 7;
+          }
+        }
+        
+        shift -= 12;
+        fill(200);
+        rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);
+        
+    }
+    
+    // OctaveDown listener
+    if (event.isController() && event.getController().getName().equals("octaveDown")){
+        for (int i = 0; i < octaves.length; i++) {
+          if(octaves[1] > 1){
+            octaves[i]--;
+          }else{
+            octaves[0] = 1;
+            octaves[1] = 2;
+            octaves[2] = 3;
+          }
+        }
+        
+        shift += 12;
+        fill(200);
+        rect(3*width/5 + width/8,height*5/30 + 110, 70, 70, 10);
+               
+    }
+    
+    // Mode listener
+    if (event.isController() && event.getController().getName().equals("mode")){
+        if(!beginner){
+            mode.setLabel("Beginner");
+            beginner = true;
+        }else{
+            mode.setLabel("Expert");
+            beginner = false;
+        }
+        
+        fill(200);
+        rect(3*width/5 + width/8 + 15, height*5/30 -15, 130, 70, 10);
+    
+    }
+    
+    // Fader listener
+    if (event.isController() && event.getController().getName().equals("mySlider")){}
   }
 }
