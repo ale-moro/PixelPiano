@@ -1,7 +1,7 @@
 class Piano{
   
   String[] whiteNotes = {"C", "D", "E", "F", "G", "A", "B"};
-
+  
   public void drawPianoInit() {
     
     for (int i = 0; i < 15; i++) {
@@ -13,7 +13,7 @@ class Piano{
       rect(keyX, height - pianoHeight, keyWidth, pianoHeight, 10);
   
       // Black keys
-      if (Arrays.binarySearch(blackKeys, i) >= 0) {
+      if (Arrays.binarySearch(blackKeysInit, i) >= 0) {
         float blackKeyWidth = keyWidth / 1.5;
         float blackKeyHeight = pianoHeight / 1.7;
         float blackKeyX = keyX - blackKeyWidth / 2;
@@ -27,31 +27,53 @@ class Piano{
     }
   }
   
-  public void drawPianoPlay() {
-
+  public void drawPianoPlay(int[] notes) {
+    int j= 0;
+    int k = 0;
     float margin = width / 10; 
     
-    for (int i = 0; i < 21; i++) {
-      float keyWidth = (width - 2 * margin) / 21; 
-      float keyX = margin + i * keyWidth; 
-  
-      // White keys
-      fill(255);
-      rect(keyX, height/2, keyWidth, pianoHeight, 10);
-  
-      // Black keys
-      if (Arrays.binarySearch(blackKeys, i) >= 0) {
-        float blackKeyWidth = keyWidth / 1.5;
-        float blackKeyHeight = pianoHeight / 1.7;
-        float blackKeyX = keyX - blackKeyWidth / 2;
-  
-        // Draw shadow for black keys 
-        fill(0, 200);
-        rect(blackKeyX + 5, height/2 + 5, blackKeyWidth, blackKeyHeight, 10);  // Ombra
-        fill(0);
-        rect(blackKeyX, height/2, blackKeyWidth, blackKeyHeight, 10);
+    // White keys
+    for (int i = 0; i < 36; i++) {
+      float keyWidth = (width - 2 * margin) / 21;
+      float keyX = margin + j * keyWidth; 
+      
+      if(Arrays.binarySearch(whiteKeys,i)>=0){
+        j++;
+        
+        if(Arrays.binarySearch(notes,i) >= 0){
+          fill(150);
+        }else{
+          fill(255);
+        }
+        
+        rect(keyX, height/2, keyWidth, pianoHeight, 10);
       }
     }
+      
+      // Black keys
+      for(int i = 0; i < 36; i++){
+        float keyWidth = (width - 2 * margin) / 21;
+        float keyX = margin + k * keyWidth; 
+        
+        if(Arrays.binarySearch(whiteKeys,i) >=0){
+          k++;
+        }else if (Arrays.binarySearch(blackKeys, i) >= 0) {
+            float blackKeyWidth = keyWidth / 1.5;
+            float blackKeyHeight = pianoHeight / 1.7;
+            float blackKeyX = keyX - blackKeyWidth / 2;
+      
+            // Draw shadow for black keys 
+            fill(0, 200);
+            rect(blackKeyX + 5, height/2 + 5, blackKeyWidth, blackKeyHeight, 10);  
+    
+            if(Arrays.binarySearch(notes,i) >= 0){
+              fill(150);
+            }else{
+              fill(0);
+            }
+            rect(blackKeyX, height/2, blackKeyWidth, blackKeyHeight, 10);
+          }
+        }
   }
   
   

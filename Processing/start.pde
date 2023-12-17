@@ -41,13 +41,42 @@ class Start{
     float buttonHeight = 60;
     float buttonX = width / 2 - buttonWidth / 2;
     float buttonY = height / 3 + height / 6 - buttonHeight;
-    
+  
+    // Check mouse position
+    if (mouseX > buttonX && mouseX < buttonX + buttonWidth && mouseY > buttonY && mouseY < buttonY + buttonHeight) {
+      isMouseOverButton = true;
+    } else {
+      isMouseOverButton = false;
+    }
+  
+    // Change button color
+    if (isMouseOverButton) {
+      fill(200);  
+    } else {
+      fill(255);  
+    }
+  
+    rect(buttonX, buttonY, buttonWidth, buttonHeight, 10);
+  
+    // Draw shadow
     fill(0);
-    rect(buttonX -5, buttonY -5, buttonWidth +10, buttonHeight +10, 10);
-    
-    fill(0,200);
-    rect(buttonX, buttonY, buttonWidth +10, buttonHeight +10, 10);
-
+    textSize(32);
+    textAlign(CENTER, CENTER);
+  
+    // Change text color
+    if (isMouseOverButton) {
+      fill(100);  
+    } else {
+      fill(0);  
+    }
+  
+    // Draw text shadow
+    fill(150, 50);
+    text("Play", buttonX + 3, buttonY + 3, buttonWidth, buttonHeight);
+    fill(0);
+    text("Play", buttonX, buttonY, buttonWidth, buttonHeight);
   }
+
+  
 
 }

@@ -4,9 +4,16 @@ import controlP5.*;
 int pianoHeight;
 boolean isPlaying = false;
 boolean beginner = false;
-int[] blackKeys = {1, 2, 4, 5, 6, 8, 9, 11, 12, 13, 15, 16, 18, 19, 20};
+boolean isMouseOverButton = false;
+int[] blackKeys = {1,3, 6, 8, 10, 13, 15,18,20,22,25,27,30,32,34};
+int[] blackKeysInit = {1,2,4,5,6,8,9,11,12,13};
+int[] whiteKeys = {0,2,4,5,7,9,11,12,14,16,17,19,21,23,24,26,28,29,31,33,35};
 color[] pastelColors = new color[15];
 int[] octaves = {3,4,5};
+int shift = 0;
+int[] notesInput = {36,48,51,55};
+int[] notesOutput = new int[5];
+
 
 Piano keyboard;
 Start initialization;
@@ -19,8 +26,6 @@ Button octaveUp;
 Button octaveDown;
 Button mode;
 Button back;
-Button startBut;
-
 
 
 void setup() {
@@ -46,11 +51,10 @@ void setup() {
             .setPosition(width*11/60, height*5/30)
             .setRadius(80)
             .setNumberOfTickMarks(10)
-            .setColorForeground(color(150))
+            .setColorForeground(color(200))
             .setColorBackground(color(0))
             .setVisible(false)
-            .setLock(true)
-            .setColorActive(color(150));
+            .setColorActive(color(200));
             
   myKnob.getCaptionLabel().setVisible(false);
   
@@ -60,11 +64,10 @@ void setup() {
               .setValue(10)
               .setPosition(width*28/60 -10, height*5/30)
               .setSize(60,160)
-              .setColorForeground(color(150))
+              .setColorForeground(color(200))
               .setColorBackground(color(0))
               .setVisible(false)
-              .setLock(true)
-              .setColorActive(color(150));
+              .setColorActive(color(200));
               
   myFader.getCaptionLabel().setVisible(false);
 
@@ -76,7 +79,6 @@ void setup() {
              .setColorBackground(color(0))
              .setColorForeground(color(50))
              .setVisible(false)
-             .setLock(true)
              .setColorActive(color(50));
              
   octaveUp.setLabel("+");
@@ -88,7 +90,6 @@ void setup() {
                   .setColorBackground(color(0))
                   .setColorForeground(color(50))
                   .setVisible(false)
-                  .setLock(true)
                   .setColorActive(color(50));
                
   octaveDown.setLabel("-");
@@ -101,7 +102,6 @@ void setup() {
             .setColorBackground(color(0))
             .setColorForeground(color(50))
             .setVisible(false)
-            .setLock(true)
             .setColorActive(color(50));
             
   mode.setLabel("Expert");
@@ -113,23 +113,11 @@ void setup() {
           .setColorBackground(color(0))
           .setColorForeground(color(50))
           .setVisible(false)
-          .setLock(true)
           .setColorActive(color(50));
   
   back.setLabel("Back");
   back.getCaptionLabel().setFont(customFont);
   
-  startBut = cp5.addButton("startBut")
-            .setPosition(width / 2 - 150 / 2, height / 3 + height / 6 - 60)
-            .setSize(150,60)
-            .setColorBackground(color(0))
-            .setColorForeground(color(50))
-            .setVisible(false)
-            .setLock(true)
-            .setColorActive(color(50));
-  
-  startBut.setLabel("Play");
-  startBut.getCaptionLabel().setFont(customFont);
             
   // Listeners
   back.addListener(new ButtonClickListener());
@@ -137,7 +125,7 @@ void setup() {
   octaveUp.addListener(new ButtonClickListener());
   octaveDown.addListener(new ButtonClickListener());
   myFader.addListener(new ButtonClickListener());
-  startBut.addListener(new ButtonClickListener());
+
         
 }
 
@@ -148,28 +136,25 @@ void draw() {
     keyboard.drawPianoInit();
     initialization.drawText();
     initialization.drawPlayButton();
-    startBut.setVisible(true);
-    startBut.setLock(false);
-  
+    myKnob.setVisible(false);
+    myFader.setVisible(false);
+    octaveUp.setVisible(false);
+    octaveDown.setVisible(false);
+    mode.setVisible(false);
+    back.setVisible(false);
+
   }else{ //<>//
-    keyboard.drawPianoPlay();
+    notesOutput = fingers.conversion(notesInput, shift);
+    keyboard.drawPianoPlay(notesOutput);
     keyboard.drawBox();
     myKnob.setVisible(true);
-    myKnob.setLock(false);
     myFader.setVisible(true);
-    myFader.setLock(false);
     octaveUp.setVisible(true);
-    octaveUp.setLock(false);
     octaveDown.setVisible(true);
-    octaveDown.setLock(false);
     mode.setVisible(true);
-    mode.setLock(false);
     back.setVisible(true);
-    back.setLock(false);
-    startBut.setVisible(false);
-    startBut.setLock(true);
-
     
+
     if(!beginner){
       keyboard.writeNoteLabels(octaves,1);
     }else{
@@ -180,6 +165,16 @@ void draw() {
 
 }
 
+void mousePressed() {
+
+  if (!isPlaying) {
+
+      println("Play pressed. Start playing.");
+      isPlaying = true;
+      background(0,0);   
+    }
+}
+
 
 class ButtonClickListener implements ControlListener {
   public void controlEvent(ControlEvent event) {
@@ -187,14 +182,8 @@ class ButtonClickListener implements ControlListener {
     // Back Listener
     if (event.isController() && event.getController().getName().equals("back")){
         isPlaying = false;
-        fill(255);
+        fill(200);
         rect(9*width/10 +5, height*9/10, width/15 +10, 50,10);
-        myKnob.setVisible(false);
-        myFader.setVisible(false);
-        octaveUp.setVisible(false);
-        octaveDown.setVisible(false);
-        mode.setVisible(false);
-        back.setVisible(false);
     }
     
     // OctaveUp listener
@@ -208,7 +197,9 @@ class ButtonClickListener implements ControlListener {
             octaves[2] = 7;
           }
         }
-        fill(255);
+        
+        shift -= 12;
+        fill(200);
         rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);
         
     }
@@ -225,7 +216,8 @@ class ButtonClickListener implements ControlListener {
           }
         }
         
-        fill(255);
+        shift += 12;
+        fill(200);
         rect(3*width/5 + width/8,height*5/30 + 110, 70, 70, 10);
                
     }
@@ -240,17 +232,9 @@ class ButtonClickListener implements ControlListener {
             beginner = false;
         }
         
-        fill(255);
+        fill(200);
         rect(3*width/5 + width/8 + 15, height*5/30 -15, 130, 70, 10);
     
-    }
-    
-    // Start listener
-    if (event.isController() && event.getController().getName().equals("startBut")){
-        isPlaying = true;
-        startBut.setVisible(false);
-        fill(255);
-        rect(width / 2 - 150 / 2, height / 3 + height / 6 - 60, 160, 70, 10);
     }
     
     // Fader listener
