@@ -40,7 +40,7 @@ class Piano{
       if(Arrays.binarySearch(whiteKeys,i)>=0){
         j++;
         
-        if(Arrays.binarySearch(notes,i) >= 0){
+        if(Arrays.binarySearch(notes,i) >= 0 && notes[0]!=0){
           fill(150);
         }else{
           fill(255);

@@ -4,7 +4,6 @@ class Fingers{
     
     for(int i = 0; i< fingers.length; i++){
       noteToPlay[i] = fingers[i]%36 + shift; //<>//
-      println(noteToPlay);
     }
     
     return noteToPlay;

@@ -1,17 +1,21 @@
 import java.util.Arrays;
 import controlP5.*;
+import oscP5.*;
+import javax.sound.midi.*;
 
 int pianoHeight;
 boolean isPlaying = false;
 boolean beginner = false;
 boolean isMouseOverButton = false;
+boolean octaveUpLimits = false;
+boolean octaveDownLimits = false;
 int[] blackKeys = {1,3, 6, 8, 10, 13, 15,18,20,22,25,27,30,32,34};
 int[] blackKeysInit = {1,2,4,5,6,8,9,11,12,13};
 int[] whiteKeys = {0,2,4,5,7,9,11,12,14,16,17,19,21,23,24,26,28,29,31,33,35};
 color[] pastelColors = new color[15];
 int[] octaves = {3,4,5};
 int shift = 0;
-int[] notesInput = {36,48,51,55};
+int[] notesInput = new int[5];
 int[] notesOutput = new int[5];
 
 
@@ -19,6 +23,8 @@ Piano keyboard;
 Start initialization;
 Fingers fingers;
 ControlP5 cp5;
+OscP5 oscP5;
+OscMsg msgClass;
 
 Knob myKnob;
 Slider myFader;
@@ -26,6 +32,11 @@ Button octaveUp;
 Button octaveDown;
 Button mode;
 Button back;
+
+MidiDevice.Info[] midiDeviceInfo;
+MidiDevice midiOutputDevice;
+Receiver midiReceiver;
+int prevValue = 0;
 
 
 void setup() {
@@ -36,13 +47,19 @@ void setup() {
   keyboard = new Piano();
   cp5 = new ControlP5(this);
   fingers = new Fingers();
+  msgClass = new OscMsg();
+  oscP5 = new OscP5(this, 12000);
   
+  
+  msgClass.selectMidiOutput("virtualPort");
   pianoHeight = height / 3;
   
   // Pastel Colors generator
   for (int i = 0; i < pastelColors.length; i++) {
     pastelColors[i] = color(random(200, 255), random(200, 255), random(200, 255));
   }
+  
+  
   
   // Knob
   myKnob = cp5.addKnob("myKnob")
@@ -165,6 +182,41 @@ void draw() {
 
 }
 
+
+void oscEvent(OscMessage msg) {
+    try {
+      if (msg.checkAddrPattern("/note_numbers")) {
+        int argumentCount = msg.arguments().length; // Get the number of arguments in the message
+        int[] receivedValues = new int[argumentCount]; 
+  
+        for (int i = 0; i < argumentCount; i++) {
+            int receivedValue = msg.get(i).intValue();
+            receivedValues[i] = receivedValue;
+            }
+        //print("Received values: ");
+        //for (int i = 0; i < receivedValues.length; i++) {
+        //  print(receivedValues[i] + " ");
+        //}
+        //println();
+        int noteNumber = receivedValues[1];
+        notesInput = receivedValues;
+        
+        if(noteNumber!= 0 && noteNumber != prevValue){
+        //msgClass.sendNoteOff(prevValue);
+        //print("Sending note on of index finger: " + noteNumber+"\n");
+        //msgClass.sendNoteOn(noteNumber);
+        }
+        prevValue = noteNumber;
+      } else {
+        println("Error: Unexpected OSC address pattern.");
+      }
+    } catch (Exception e) {
+      println("Error handling OSC message: " + e.getMessage());
+      e.printStackTrace();
+    }
+    
+  }
+
 void mousePressed() {
 
   if (!isPlaying) {
@@ -191,14 +243,18 @@ class ButtonClickListener implements ControlListener {
         for (int i = 0; i < octaves.length; i++) {
           if(octaves[1] < 6){
             octaves[i]++;
+             
           }else{
             octaves[0] = 5;
             octaves[1] = 6;
             octaves[2] = 7;
+            
           }
         }
         
+  
         shift -= 12;
+        println(shift);
         fill(200);
         rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);
         
@@ -207,7 +263,7 @@ class ButtonClickListener implements ControlListener {
     // OctaveDown listener
     if (event.isController() && event.getController().getName().equals("octaveDown")){
         for (int i = 0; i < octaves.length; i++) {
-          if(octaves[1] > 1){
+          if(octaves[0] > 2 ){
             octaves[i]--;
           }else{
             octaves[0] = 1;
@@ -215,8 +271,9 @@ class ButtonClickListener implements ControlListener {
             octaves[2] = 3;
           }
         }
-        
+ 
         shift += 12;
+        println(shift);
         fill(200);
         rect(3*width/5 + width/8,height*5/30 + 110, 70, 70, 10);
                
