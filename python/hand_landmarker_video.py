@@ -35,6 +35,8 @@ camera_mapper = CameraMapper()
 landmark_mapper = LandmarkMapper()
 
 # Hand Landmarks model download
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
 model_path = os.path.abspath('hand_landmarker.task')
 if not os.path.exists(model_path):
     print(f"The model '{model_path}' is already downloaded.")
