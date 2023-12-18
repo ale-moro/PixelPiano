@@ -37,26 +37,10 @@ class Start{
 
 
   public void drawPlayButton() {
-    float buttonWidth = 150;
+ 
     float buttonHeight = 60;
-    float buttonX = width / 2 - buttonWidth / 2;
     float buttonY = height / 3 + height / 6 - buttonHeight;
-  
-    // Check mouse position
-    if (mouseX > buttonX && mouseX < buttonX + buttonWidth && mouseY > buttonY && mouseY < buttonY + buttonHeight) {
-      isMouseOverButton = true;
-    } else {
-      isMouseOverButton = false;
-    }
-  
-    // Change button color
-    if (isMouseOverButton) {
-      fill(200);  
-    } else {
-      fill(255);  
-    }
-  
-    rect(buttonX, buttonY, buttonWidth, buttonHeight, 10);
+
   
     // Draw shadow
     fill(0);
@@ -72,10 +56,9 @@ class Start{
   
     // Draw text shadow
     fill(150, 50);
-    text("Play", buttonX + 3, buttonY + 3, buttonWidth, buttonHeight);
+    text("Click anywhere to start!", width/2-250, buttonY + 3, 500, buttonHeight);
     fill(0);
-    text("Play", buttonX, buttonY, buttonWidth, buttonHeight);
+    text("Click anywhere to start!", width/2-250, buttonY, 500, buttonHeight);
   }
-
  
 }
