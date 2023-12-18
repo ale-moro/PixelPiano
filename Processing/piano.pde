@@ -34,8 +34,8 @@ class Piano{
     
     // White keys
     for (int i = 0; i < 36; i++) {
-      float keyWidth = (width - 2 * margin) / 21;
-      float keyX = margin + j * keyWidth; 
+      float keyWidth = (width - margin) / 21;
+      float keyX = width/20  +  j * keyWidth; 
       
       if(Arrays.binarySearch(whiteKeys,i)>=0){
         j++;
@@ -46,20 +46,20 @@ class Piano{
           fill(255);
         }
         
-        rect(keyX, height/2, keyWidth, pianoHeight, 10);
+        rect(keyX, height/2, keyWidth, 2*height/5, 10);
       }
     }
       
       // Black keys
       for(int i = 0; i < 36; i++){
-        float keyWidth = (width - 2 * margin) / 21;
-        float keyX = margin + k * keyWidth; 
+        float keyWidth = (width - margin) / 21;
+        float keyX = width/20 + k * keyWidth; 
         
         if(Arrays.binarySearch(whiteKeys,i) >=0){
           k++;
         }else if (Arrays.binarySearch(blackKeys, i) >= 0) {
             float blackKeyWidth = keyWidth / 1.5;
-            float blackKeyHeight = pianoHeight / 1.7;
+            float blackKeyHeight = pianoHeight / 1.5;
             float blackKeyX = keyX - blackKeyWidth / 2;
       
             // Draw shadow for black keys 
@@ -79,12 +79,13 @@ class Piano{
   
   public void writeNoteLabels(int[] octaves, int flag) {
     float margin = width / 10;  // Set margin to 1/10 of the width
-    float keyWidth = (width - 2 * margin) / 21;  // Adjust keyWidth based on margins
+    float keyWidth = (width -  margin) / 21;  // Adjust keyWidth based on margins
     int j=0;
+    int pianoH = 2*height/5;
     
     if(flag == 0){
       for (int i = 0; i < 21; i++) {
-        float keyX = margin + i * keyWidth; 
+        float keyX = width/20 + i * keyWidth; 
     
         // Notes visualization
         fill(100);
@@ -99,12 +100,12 @@ class Piano{
         }
           
         String noteLabel = whiteNotes[i % 7] + str(octaves[j]);
-        text(noteLabel, keyX + keyWidth / 2, height - pianoHeight / 2 - 15);
+        text(noteLabel, keyX + keyWidth / 2, height - pianoH*0.30 );
     
       }
     }else{
         for (int i = 0; i < 21; i++) {
-          float keyX = margin + i * keyWidth; 
+          float keyX = width/20 + i * keyWidth; 
         
           // Note visualization only for C
           if (i % 7 == 0) {
@@ -121,7 +122,7 @@ class Piano{
             }
               
             String noteLabel = whiteNotes[i % 7] + str(octaves[j]);
-            text(noteLabel, keyX + keyWidth / 2, height - pianoHeight / 2 - 15);
+            text(noteLabel, keyX + keyWidth / 2, height - pianoH*0.30 );
           } 
        }
     }
@@ -131,9 +132,9 @@ class Piano{
     
     // Box
     float boxHeight = height / 3;
-    float boxWidth = width / 2 ;
-    float boxX = width / 10;
-    float boxY = height / 4 -  boxX;
+    float boxWidth = width*0.58 ;
+    float boxX = width / 20;
+    float boxY = height / 4 -  width/10;
     
     fill(255);
     rect(boxX, boxY, boxWidth, boxHeight, 10);
@@ -156,26 +157,26 @@ class Piano{
     
     // expert/beginner
     fill(0);
-    rect(3*width/5 + width/8 + 10 ,height*5/30 -20, 130,70,10);
+    rect(3*width/5 + width/8 + 30 ,height*5/30 -20, 130,70,10);
     fill(0, 200);
-    rect(3*width/5 + width/8 + 15, height*5/30 -15, 130, 70, 10);
+    rect(3*width/5 + width/8 + 35, height*5/30 -15, 130, 70, 10);
     
     // octaves
     fill(0);
-    rect(3*width/5 + width/8 + 85,height*5/30 + 105, 70,70,10);
+    rect(3*width/5 + width/8 + 105,height*5/30 + 105, 70,70,10);
     fill(0, 200);
-    rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);
+    rect(3*width/5 + width/8 + 110,height*5/30 + 110, 70, 70, 10);
     
     fill(0);
-    rect(3*width/5 + width/8 - 5, height*5/30 + 105, 70,70,10);
+    rect(3*width/5 + width/8 +15, height*5/30 + 105, 70,70,10);
     fill(0, 200);
-    rect(3*width/5 + width/8,height*5/30 + 110, 70, 70, 10);
+    rect(3*width/5 + width/8 +20,height*5/30 + 110, 70, 70, 10);
     
     // back
     fill(0);
-    rect(9*width/10, height*9/10 -5, width/15 +10, 50,10);
+    rect(9*width/10, height*9/10 +15, width/15 +10, 50,10);
     fill(0, 200);
-    rect(9*width/10 +5, height*9/10, width/15 +10, 50,10);
+    rect(9*width/10 +5, height*9/10 +20, width/15 +10, 50,10);
     
   }
  

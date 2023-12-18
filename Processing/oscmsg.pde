@@ -28,7 +28,7 @@ class OscMsg{
       try {
         // Send a MIDI note-on message
         ShortMessage noteOn = new ShortMessage();
-        noteOn.setMessage(ShortMessage.NOTE_ON, 0, noteNumber, 127); // MIDI channel 0, note number 60 (C4), velocity 100
+        noteOn.setMessage(ShortMessage.NOTE_ON, 0, noteNumber - shift, 127); // MIDI channel 0, note number 60 (C4), velocity 100
         midiReceiver.send(noteOn, -1);
       } catch (InvalidMidiDataException e) {
         e.printStackTrace();
@@ -43,7 +43,7 @@ class OscMsg{
       try {
         // Send a MIDI note-off message
         ShortMessage noteOff = new ShortMessage();
-        noteOff.setMessage(ShortMessage.NOTE_OFF, 0, noteNumber, 0); // MIDI channel 0, note number 60 (C4), velocity 0
+        noteOff.setMessage(ShortMessage.NOTE_OFF, 0, noteNumber - shift, 0); // MIDI channel 0, note number 60 (C4), velocity 0
         midiReceiver.send(noteOff, -1);
       } catch (InvalidMidiDataException e) {
         e.printStackTrace();

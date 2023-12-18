@@ -1,6 +1,8 @@
 class Fingers{
   int[] noteToPlay = new int[5];
-  public int[] conversion(int[] fingers, int shift){
+  int[] temp = new int[5];
+  
+  int[] conversion(int[] fingers, int shift){
     
     for(int i = 0; i< fingers.length; i++){
       noteToPlay[i] = fingers[i]%36 + shift; //<>//
@@ -10,7 +12,7 @@ class Fingers{
     
   }
   
-public void positions(float[] coords){
+  public void positions(float[] coords){
     int j=0;
     for(int i = 0; i < coords.length; i+=2){
      
@@ -37,4 +39,26 @@ public void positions(float[] coords){
     }    
     
   }
+  
+  
+  public int[] pressedKeys(int[] notes, int[] sensors, int shift){
+    
+    int[] pressed = new int[5];
+    int j = 0;
+    
+    for(int i=0; i<sensors.length; i++){
+        if(sensors[i]>10){
+          pressed[j] = notes[i];
+          j++;
+        }
+    }
+    
+    println(pressed);
+    temp = conversion(pressed, shift);
+        
+    return temp;
+      
+  }
+  
+ 
 }

@@ -18,6 +18,7 @@ int shift = 0;
 int[] notesInput = new int[5];
 int[] notesOutput = new int[5];
 float[] coordinates = new float[10];
+int[] pressedSens = {0,12,0,12,0};
 
 
 
@@ -93,7 +94,7 @@ void setup() {
   // Buttons
   PFont customFont1 = createFont("Monospaced", 20);
   octaveUp = cp5.addButton("octaveUp")
-             .setPosition(3*width/5 + width/8 + 90,height*5/30 + 110)
+             .setPosition(3*width/5 + width/8 + 110,height*5/30 + 110)
              .setSize(60,60)
              .setColorBackground(color(0))
              .setColorForeground(color(50))
@@ -104,7 +105,7 @@ void setup() {
   octaveUp.getCaptionLabel().setFont(customFont1);
   
   octaveDown = cp5.addButton("octaveDown")
-                  .setPosition(3*width/5 + width/8, height*5/30 + 110)
+                  .setPosition(3*width/5 + width/8 +20, height*5/30 + 110)
                   .setSize(60,60)
                   .setColorBackground(color(0))
                   .setColorForeground(color(50))
@@ -116,7 +117,7 @@ void setup() {
   
   PFont customFont = createFont("Monospaced", 20);
   mode = cp5.addButton("mode")
-            .setPosition(3*width/5 + width/8 + 16 ,height*5/30 - 15)
+            .setPosition(3*width/5 + width/8 + 36 ,height*5/30 - 15)
             .setSize(120,60)
             .setColorBackground(color(0))
             .setColorForeground(color(50))
@@ -127,8 +128,8 @@ void setup() {
   mode.getCaptionLabel().setFont(customFont);
   
   back = cp5.addButton("back")
-          .setPosition(9*width/10 + 5, 9*height/10)
-          .setSize(width/15,40)
+          .setPosition(9*width/10 + 5, 9*height/10 +25)
+          .setSize(width/15,30)
           .setColorBackground(color(0))
           .setColorForeground(color(50))
           .setVisible(false)
@@ -148,8 +149,8 @@ void setup() {
         
 }
 
-void draw() {
-  background(255); //<>//
+void draw() { //<>//
+  background(255);
   
   if(!isPlaying){ //<>//
     keyboard.drawPianoInit();
@@ -159,11 +160,11 @@ void draw() {
     myFader.setVisible(false);
     octaveUp.setVisible(false);
     octaveDown.setVisible(false);
-    mode.setVisible(false);
-    back.setVisible(false); //<>//
+    mode.setVisible(false); //<>//
+    back.setVisible(false);
 
   }else{ //<>//
-    notesOutput = fingers.conversion(notesInput, shift);
+    notesOutput = fingers.pressedKeys(notesInput, pressedSens, shift);
     keyboard.drawPianoPlay(notesOutput);
     keyboard.drawBox();
     myKnob.setVisible(true);
@@ -230,6 +231,8 @@ void oscEvent(OscMessage msg) {
     }
     
   }
+  
+
 
 void mousePressed() {
 
@@ -257,6 +260,7 @@ class ButtonClickListener implements ControlListener {
         for (int i = 0; i < octaves.length; i++) {
           if(octaves[1] < 6){
             octaves[i]++;
+            
              
           }else{
             octaves[0] = 5;
