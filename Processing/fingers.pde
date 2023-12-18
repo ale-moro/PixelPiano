@@ -22,7 +22,7 @@ class Fingers{
       if(toPlay[i]!=-1){
         msgClass.sendNoteOn(toPlay[i] + 24);
       }else{
-        for(int j=0; j < toPlay.length;i++){
+        for(int j=0; j < toPlay.length;j++){
           if(!keyboard.contains(toPlay, prev[j])){
             msgClass.sendNoteOff(prev[j] + 24);
           }
