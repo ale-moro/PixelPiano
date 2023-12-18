@@ -34,6 +34,8 @@ landmark_utils = LandmarkUtils()
 landmark_mapper = LandmarkPianoMapper()
 
 # Hand Landmarks model download
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
 model_path = os.path.abspath('hand_landmarker.task')
 if not os.path.exists(model_path):
     print(f"The model '{model_path}' is already downloaded.")
@@ -45,7 +47,7 @@ def send_osc_active_notes(note_numbers: list):
 
 def send_osc_coords(coords: list):
   flattened_coords = [float(coord) for sublist in coords for coord in sublist]
-  print(flattened_coords)
+  #print(flattened_coords)
   client.send_message('/coords', flattened_coords)
 
 
