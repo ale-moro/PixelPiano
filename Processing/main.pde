@@ -17,7 +17,8 @@ int[] octaves = {3,4,5};
 int shift = 0;
 int[] notesInput = new int[5];
 int[] notesOutput = new int[5];
-float[][] coordinates = new float[5][2];
+float[] coordinates = new float[10];
+
 
 
 Piano keyboard;
@@ -148,8 +149,8 @@ void setup() {
 }
 
 void draw() {
-  background(255);
-   //<>//
+  background(255); //<>//
+  
   if(!isPlaying){ //<>//
     keyboard.drawPianoInit();
     initialization.drawText();
@@ -159,8 +160,8 @@ void draw() {
     octaveUp.setVisible(false);
     octaveDown.setVisible(false);
     mode.setVisible(false);
-    back.setVisible(false);
- //<>//
+    back.setVisible(false); //<>//
+
   }else{ //<>//
     notesOutput = fingers.conversion(notesInput, shift);
     keyboard.drawPianoPlay(notesOutput);
@@ -212,6 +213,15 @@ void oscEvent(OscMessage msg) {
         }
         prevValue = noteNumber;
       } else {
+        println("Error: Unexpected OSC address pattern.");
+      }
+      
+      if(msg.checkAddrPattern("/coords")){
+        int argumentCount = msg.arguments().length; // Get the number of arguments in the message
+        for (int i = 0; i < argumentCount; i++) {
+              coordinates[i] = msg.get(i).floatValue();
+            }
+      }else{
         println("Error: Unexpected OSC address pattern.");
       }
     } catch (Exception e) {
