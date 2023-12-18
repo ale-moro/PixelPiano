@@ -77,6 +77,5 @@ class Start{
     text("Play", buttonX, buttonY, buttonWidth, buttonHeight);
   }
 
-  
-
+ 
 }
