@@ -31,16 +31,14 @@ class Piano{
     int j= 0;
     int k = 0;
     float margin = width / 10; 
-    
     // White keys
     for (int i = 0; i < 36; i++) {
       float keyWidth = (width - margin) / 21;
       float keyX = width/20  +  j * keyWidth; 
-      
+
       if(Arrays.binarySearch(whiteKeys,i)>=0){
         j++;
-        
-        if(Arrays.binarySearch(notes,i) >= 0 && notes[0]!=0){
+        if (contains(notes, i)){
           fill(150);
         }else{
           fill(255);
@@ -66,7 +64,7 @@ class Piano{
             fill(0, 200);
             rect(blackKeyX + 5, height/2 + 5, blackKeyWidth, blackKeyHeight, 10);  
     
-            if(Arrays.binarySearch(notes,i) >= 0){
+            if (contains(notes, i)){
               fill(150);
             }else{
               fill(0);
@@ -179,6 +177,15 @@ class Piano{
     rect(9*width/10 +5, height*9/10 +20, width/15 +10, 50,10);
     
   }
+  
+  boolean contains(int[] array, int key) {
+  for (int value : array) {
+    if (value == key) {
+      return true;
+    }
+  }
+  return false;
+}
  
 
 }
