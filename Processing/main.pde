@@ -166,13 +166,13 @@ void draw() {
     notesOutput = fingers.conversion(notesInput, shift);
     keyboard.drawPianoPlay(notesOutput);
     keyboard.drawBox();
-    fingers.positions(coordinates);
     myKnob.setVisible(true);
     myFader.setVisible(true);
     octaveUp.setVisible(true);
     octaveDown.setVisible(true);
     mode.setVisible(true);
     back.setVisible(true);
+    fingers.positions(coordinates);
     
     
 

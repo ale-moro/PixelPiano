@@ -32,7 +32,7 @@ public void positions(float[] coords){
         fill(color(0,51,153));
       }
       
-      ellipse(coords[j]*width, coords[j+1]*height, 10,10);
+      ellipse(coords[j]*width, coords[j+1]*height, 15,15);
     
     }    
     
