@@ -15,10 +15,10 @@ int[] whiteKeys = {0,2,4,5,7,9,11,12,14,16,17,19,21,23,24,26,28,29,31,33,35};
 color[] pastelColors = new color[15];
 int[] octaves = {3,4,5};
 int shift = 0;
-int[] notesInput = {36,48,52,55};
+int[] notesInput = new int[5];
 int[] notesOutput = new int[5];
 float[] coordinates = new float[10];
-int[] pressedSens = {0,12,0,12,0};
+int[] pressedSens = new int[5];
 
 
 
@@ -217,6 +217,11 @@ void oscEvent(OscMessage msg) {
       
       if (msg.checkAddrPattern("/belapressure")) {
           println("ricevendo");
+          int argumentCount = msg.arguments().length;
+          for(int(i = 0; i< argumentCount; i++){
+            pressedSens[i] = msg.get(i).intValue();
+          }
+          
       }
       
       if(msg.checkAddrPattern("/coords")){
