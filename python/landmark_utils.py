@@ -25,7 +25,7 @@ class LandmarkUtils:
 
     
 class LandmarkPianoMapper:
-    def __init__(self, n_octaves = 2, bottom_C_midi_note=48) -> None:
+    def __init__(self, n_octaves = 3, bottom_C_midi_note=48) -> None:
         self.n_octaves = n_octaves
         self.bottom_C_midi_note = bottom_C_midi_note
         self.black_key_width_factor = 0.5
@@ -37,6 +37,8 @@ class LandmarkPianoMapper:
 
         self.white_keys_y_end = 400
         self.black_keys_y_start = 100
+        self.marginX = 0
+
 
     def create_image_grid(self, image, n_rows, n_columns, return_indices=False):
         """
@@ -51,10 +53,11 @@ class LandmarkPianoMapper:
         list: A grid containing sets of normalized pixel coordinates for the image based on the step sizes.
         """
         # x of each key type
+        self.marginX = round(image.shape[1]/20)
         n_white_keys = self.n_octaves * 7
-        self.white_key_width = round(image.shape[1] / n_white_keys)
+        self.white_key_width = round((image.shape[1] - 2*self.marginX)/ n_white_keys)
         black_key_width = round(self.white_key_width * self.black_key_width_factor)
-        self.white_keys_x_indices = np.array([round(x*self.white_key_width) for x in range(n_white_keys)])
+        self.white_keys_x_indices = np.array([self.marginX + round(x*self.white_key_width) for x in range(n_white_keys)])
         self.black_keys_x_start_indices = np.array([round(key-(1-self.black_key_width_factor)*self.white_key_width/2) for idx, key in enumerate(self.white_keys_x_indices) if idx%7 not in [0, 3]])
         self.black_keys_x_end_indices = np.array([round(idx + black_key_width) for idx in self.black_keys_x_start_indices])
         self.black_keys_x_indices = np.array([[round(key+i) for i in range(black_key_width)] for key in self.black_keys_x_start_indices])
@@ -62,9 +65,9 @@ class LandmarkPianoMapper:
 
         # y of each key type
         self.white_keys_y_start = round(image.shape[0]/2)
-        self.black_keys_y_start = round(image.shape[0]/4)
-        self.white_keys_y_end = round(image.shape[0]*7/8)
-        self.black_keys_y_end = self.white_keys_y_start
+        self.black_keys_y_start = round(image.shape[0]/2)
+        self.white_keys_y_end = round(image.shape[0]/2 + image.shape[0]*2/5)
+        self.black_keys_y_end = round(image.shape[0]/2 + image.shape[0]*2/9)
 
         # display grid
         grid = np.zeros_like(image)
@@ -137,6 +140,8 @@ class LandmarkPianoMapper:
             # skip if out of keyboard (vertically)
             if landmark[1] < self.black_keys_y_start or landmark[1] > self.white_keys_y_end:
                 continue
+            if landmark[0] < self.marginX or landmark[0] > 19*self.marginX:
+                continue
             
             # if in the y region of black keys
             if landmark[1] < self.black_keys_y_end and landmark[0] in self.black_keys_x_indices:
@@ -147,5 +152,5 @@ class LandmarkPianoMapper:
                 key = sum(np.array([1 for num in self.white_keys_x_indices if num <= landmark[0]]))
                 active_notes[idx] = white_key_to_midi_note(key)
 
-        #print('active notes:', active_notes)
+        print('active notes:', active_notes)
         return active_notes
