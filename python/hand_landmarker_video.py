@@ -45,6 +45,12 @@ def send_osc_active_notes(note_numbers: list):
   note_numbers = [int(n) for n in note_numbers]
   client.send_message('/note_numbers', note_numbers)
 
+def send_osc_coords(coords: list):
+  flattened_coords = [float(coord) for sublist in coords for coord in sublist]
+  #print(flattened_coords)
+  client.send_message('/coords', flattened_coords)
+
+
 def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLandmarkerResult):
   """Courtesy of https://github.com/googlesamples/mediapipe/blob/main/examples/hand_landmarker/python/hand_landmarker.ipynb"""
   try:
@@ -126,12 +132,15 @@ def main():
 
       # retrieve and convert landmarks
       landmarks_coords = landmark_utils.xy_fingertips_landmarks(hand_landmarker.result)
+      if len(landmarks_coords) > 0:
+        send_osc_coords(landmarks_coords)
       landmarks_coords = landmark_mapper.scale_landmark_to_video_size(frame, landmarks_coords)
 
       # map landmarks to notes
       midi_notes = landmark_mapper.landmarks_to_midi_notes(landmarks_coords) 
-  
+
       send_osc_active_notes(list(midi_notes))
+
   
       # display frame
       cv2.imshow('frame', frame.astype(np.uint8)) 
