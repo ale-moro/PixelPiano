@@ -149,7 +149,7 @@ void setup() {
 void draw() {
   background(255);
   
-  if(!isPlaying){ //<>// //<>//
+  if(!isPlaying){
     keyboard.drawPianoInit();
     initialization.drawText();
     initialization.drawPlayButton();
@@ -160,7 +160,7 @@ void draw() {
     mode.setVisible(false);
     back.setVisible(false);
 
-  }else{ //<>// //<>//
+  }else{
     notesOutput = fingers.conversion(notesInput, shift);
     keyboard.drawPianoPlay(notesOutput);
     keyboard.drawBox();
@@ -202,10 +202,9 @@ void oscEvent(OscMessage msg) {
         notesInput = receivedValues;
         
         if(noteNumber!= 0 && noteNumber != prevValue){
-
-        msgClass.sendNoteOff(prevValue);
-        print("Sending note on of index finger: " + noteNumber+"\n");
-        msgClass.sendNoteOn(noteNumber);
+        //msgClass.sendNoteOff(prevValue);
+        //print("Sending note on of index finger: " + noteNumber+"\n");
+        //msgClass.sendNoteOn(noteNumber);
         }
         prevValue = noteNumber;
       } else {
@@ -254,7 +253,7 @@ class ButtonClickListener implements ControlListener {
         }
         
   
-        shift -= 12;
+          shift -= 12;
         println(shift);
         fill(200);
         rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);

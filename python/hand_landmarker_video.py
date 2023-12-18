@@ -31,8 +31,7 @@ ip = 'localhost'
 port = 12000 
 client = udp_client.SimpleUDPClient(ip, port)
 landmark_utils = LandmarkUtils()
-camera_mapper = CameraMapper()
-landmark_mapper = LandmarkMapper()
+landmark_mapper = LandmarkPianoMapper()
 
 # Hand Landmarks model download
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -123,17 +122,17 @@ def main():
       hand_landmarker.detect_async(frame)
       frame = draw_landmarks_on_image(frame, hand_landmarker.result)
       # print grid
-      frame, rows_indices, columns_indices = camera_mapper.draw_grid_on_image(frame, return_indices=True)
+      frame, rows_indices, columns_indices = landmark_mapper.draw_grid_on_image(frame, return_indices=True)
 
       # retrieve and convert landmarks
       landmarks_coords = landmark_utils.xy_fingertips_landmarks(hand_landmarker.result)
       landmarks_coords = landmark_mapper.scale_landmark_to_video_size(frame, landmarks_coords)
 
       # map landmarks to notes
-      midi_notes = landmark_mapper.landmarks_to_midi_notes(landmarks_coords, rows_indices, columns_indices) 
+      midi_notes = landmark_mapper.landmarks_to_midi_notes(landmarks_coords) 
   
       send_osc_active_notes(list(midi_notes))
-
+  
       # display frame
       cv2.imshow('frame', frame.astype(np.uint8)) 
       if cv2.waitKey(1) == ord('q'):
