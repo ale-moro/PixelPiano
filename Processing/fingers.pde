@@ -2,13 +2,24 @@ class Fingers{
   int[] noteToPlay = new int[5];
   int[] temp = new int[5];
   
-  int[] conversion(int[] fingers, int shift){
+  public int[] conversion(int[] fingers, int[] sensors, int shift){
     
     for(int i = 0; i< fingers.length; i++){
       noteToPlay[i] = fingers[i]%36 + shift; //<>//
     }
     
-    return noteToPlay;
+    
+    temp = pressedKeys(noteToPlay, sensors);
+    
+    for(int i = 0; i < temp.length; i++){
+      if(temp[i]!=-1){
+        msgClass.sendNoteOn(temp[i] + 24);
+      }else{
+        //msgClass.sendNoteOff(temp[i] + 24);
+      }
+    }
+    
+    return temp;
     
   }
   
@@ -41,22 +52,20 @@ class Fingers{
   }
   
   
-  public int[] pressedKeys(int[] notes, int[] sensors, int shift){
+  public int[] pressedKeys(int[] notesIn, int[] sensors){
     
-    int[] pressed = new int[5];
+    int[] pressed = {-1,-1,-1,-1,-1};
     int j = 0;
     
     for(int i=0; i<sensors.length; i++){
         if(sensors[i]>10){
-          pressed[j] = notes[i];
+          pressed[j] = notesIn[i];
           j++;
         }
     }
-    
-    println(pressed);
-    temp = conversion(pressed, shift);
         
-    return temp;
+        
+    return pressed;
       
   }
   

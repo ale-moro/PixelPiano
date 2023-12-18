@@ -14,8 +14,8 @@ int[] blackKeysInit = {1,2,4,5,6,8,9,11,12,13};
 int[] whiteKeys = {0,2,4,5,7,9,11,12,14,16,17,19,21,23,24,26,28,29,31,33,35};
 color[] pastelColors = new color[15];
 int[] octaves = {3,4,5};
-int shift = 0;
-int[] notesInput = new int[5];
+int shift = -12;
+int[] notesInput = {36,48,52,55};
 int[] notesOutput = new int[5];
 float[] coordinates = new float[10];
 int[] pressedSens = {0,12,0,12,0};
@@ -164,7 +164,7 @@ void draw() { //<>//
     back.setVisible(false);
 
   }else{ //<>//
-    notesOutput = fingers.pressedKeys(notesInput, pressedSens, shift);
+    notesOutput = fingers.conversion(notesInput, pressedSens, shift);
     keyboard.drawPianoPlay(notesOutput);
     keyboard.drawBox();
     myKnob.setVisible(true);
