@@ -215,10 +215,10 @@ void oscEvent(OscMessage msg) {
         //prevValue = noteNumber;
       }
       
-      if (msg.checkAddrPattern("/belapressure")) {
+      if (msg.checkAddrPattern("/belapressure")){
           println("ricevendo");
           int argumentCount = msg.arguments().length;
-          for(int(i = 0; i< argumentCount; i++){
+          for(int i = 0; i< argumentCount; i++){
             pressedSens[i] = msg.get(i).intValue();
           }
           
