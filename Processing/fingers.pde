@@ -1,25 +1,37 @@
 class Fingers{
   int[] noteToPlay = new int[5];
-  int[] temp = new int[5];
+  int[] toPlay = new int[5];
+  int[] prev = new int[5];
   
   public int[] conversion(int[] fingers, int[] sensors, int shift){
     
     for(int i = 0; i< fingers.length; i++){
       noteToPlay[i] = fingers[i]%36 + shift; //<>//
-    }
-    
-    
-    temp = pressedKeys(noteToPlay, sensors);
-    
-    for(int i = 0; i < temp.length; i++){
-      if(temp[i]!=-1){
-        msgClass.sendNoteOn(temp[i] + 24);
-      }else{
-        //msgClass.sendNoteOff(temp[i] + 24);
+      if(noteToPlay[i] < 0){ 
+        noteToPlay[i] += 36;
+      }else if( noteToPlay[i] >= 36){
+        noteToPlay[i] -= 36;
       }
     }
     
-    return temp;
+    
+    toPlay = pressedKeys(noteToPlay, sensors);
+    
+    //println(temp);
+    for(int i = 0; i < toPlay.length; i++){
+      if(toPlay[i]!=-1){
+        msgClass.sendNoteOn(toPlay[i] + 24);
+      }else{
+        for(int j=0; j < toPlay.length;i++){
+          if(!keyboard.contains(toPlay, prev[j])){
+            msgClass.sendNoteOff(prev[j] + 24);
+          }
+        }
+        
+      }
+    }
+    prev = toPlay;
+    return toPlay;
     
   }
   
@@ -45,7 +57,7 @@ class Fingers{
         fill(color(0,51,153));
       }
       
-      ellipse(coords[j]*width, coords[j+1]*height, 15,15);
+      ellipse(coords[j]*width, coords[j+1]*height, 20,20);
     
     }    
     

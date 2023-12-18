@@ -178,7 +178,7 @@ class Piano{
     
   }
   
-  boolean contains(int[] array, int key) {
+  public boolean contains(int[] array, int key) {
   for (int value : array) {
     if (value == key) {
       return true;
