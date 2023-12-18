@@ -19,8 +19,9 @@ class Fingers{
     
     //println(temp);
     for(int i = 0; i < toPlay.length; i++){
-      if(toPlay[i]!=-1){
-        msgClass.sendNoteOn(toPlay[i] + 24);
+      if(toPlay[i]!=-1 || toPlay[i]!=prev[i]){
+            msgClass.sendNoteOff(toPlay[i] + 24);
+        
       }else{
         for(int j=0; j < toPlay.length;j++){
           if(!keyboard.contains(toPlay, prev[j])){
