@@ -17,6 +17,7 @@ int[] octaves = {3,4,5};
 int shift = 0;
 int[] notesInput = new int[5];
 int[] notesOutput = new int[5];
+float[][] coordinates = new float[5][2];
 
 
 Piano keyboard;
@@ -148,8 +149,8 @@ void setup() {
 
 void draw() {
   background(255);
-  
-  if(!isPlaying){ //<>// //<>//
+   //<>//
+  if(!isPlaying){ //<>//
     keyboard.drawPianoInit();
     initialization.drawText();
     initialization.drawPlayButton();
@@ -159,17 +160,19 @@ void draw() {
     octaveDown.setVisible(false);
     mode.setVisible(false);
     back.setVisible(false);
-
-  }else{ //<>// //<>//
+ //<>//
+  }else{ //<>//
     notesOutput = fingers.conversion(notesInput, shift);
     keyboard.drawPianoPlay(notesOutput);
     keyboard.drawBox();
+    fingers.positions(coordinates);
     myKnob.setVisible(true);
     myFader.setVisible(true);
     octaveUp.setVisible(true);
     octaveDown.setVisible(true);
     mode.setVisible(true);
     back.setVisible(true);
+    
     
 
     if(!beginner){
