@@ -14,7 +14,7 @@ int[] blackKeysInit = {1,2,4,5,6,8,9,11,12,13};
 int[] whiteKeys = {0,2,4,5,7,9,11,12,14,16,17,19,21,23,24,26,28,29,31,33,35};
 color[] pastelColors = new color[15];
 int[] octaves = {3,4,5};
-int shift = -12;
+int shift = 0;
 int[] notesInput = {36,48,52,55};
 int[] notesOutput = new int[5];
 float[] coordinates = new float[10];
@@ -196,25 +196,27 @@ void oscEvent(OscMessage msg) {
   
         for (int i = 0; i < argumentCount; i++) {
             int receivedValue = msg.get(i).intValue();
-            receivedValues[i] = receivedValue;
+            receivedValues[i] = receivedValue-12-shift;
             }
-        //print("Received values: ");
-        //for (int i = 0; i < receivedValues.length; i++) {
-        //  print(receivedValues[i] + " ");
-        //}
-        //println();
+       // print("Received values: ");
+       // for (int i = 0; i < receivedValues.length; i++) {
+       //   //print(receivedValues[i] + " ");
+       // }
+       //// println();
         int noteNumber = receivedValues[1];
         notesInput = receivedValues;
         
-        if(noteNumber!= 0 && noteNumber != prevValue){
+        //if(noteNumber!= 0 && noteNumber != prevValue){
 
-        msgClass.sendNoteOff(prevValue);
-        print("Sending note on of index finger: " + noteNumber+"\n");
-        msgClass.sendNoteOn(noteNumber);
-        }
-        prevValue = noteNumber;
-      } else {
-        println("Error: Unexpected OSC address pattern.");
+        //msgClass.sendNoteOff(prevValue);
+        //print("Sending note on of index finger: " + noteNumber+"\n");
+        //msgClass.sendNoteOn(noteNumber);
+        //}
+        //prevValue = noteNumber;
+      }
+      
+      if (msg.checkAddrPattern("/belapressure")) {
+          println("ricevendo");
       }
       
       if(msg.checkAddrPattern("/coords")){
@@ -222,8 +224,6 @@ void oscEvent(OscMessage msg) {
         for (int i = 0; i < argumentCount; i++) {
               coordinates[i] = msg.get(i).floatValue();
             }
-      }else{
-        println("Error: Unexpected OSC address pattern.");
       }
     } catch (Exception e) {
       println("Error handling OSC message: " + e.getMessage());
