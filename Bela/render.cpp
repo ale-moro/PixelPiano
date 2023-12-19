@@ -42,13 +42,13 @@ bool setup(BelaContext *context, void *userData){
 
 void render(BelaContext *context, void *userData)
 {
-	static float velocity[num_fingers] = {10., 10., 10., 10., 10.};
-	static int velocity_int[num_fingers] = {10, 10, 10, 10, 10};
+	static float velocity[num_fingers] = {0., 0., 0., 0., 0.};
+	static int velocity_int[num_fingers] = {0, 0, 0, 0, 0};
 
 	for(unsigned int n = 0; n < context->audioFrames; n++) {
 		for(unsigned int channel_n = 0; channel_n < gNumChannels; channel_n++) {
 			if(gAudioFramesPerAnalogFrame && !(n % gAudioFramesPerAnalogFrame)) {
-				velocity[channel_n] = map(analogRead(context, n/gAudioFramesPerAnalogFrame, channel_n), 0, 1, 1, 9);
+				velocity[channel_n] = map(analogRead(context, n/gAudioFramesPerAnalogFrame, channel_n), 0, 1, 128, 0);
 				velocity[channel_n] = round(velocity[channel_n]);
 				velocity_int[channel_n] = (int) velocity[channel_n];
 			}
@@ -63,6 +63,7 @@ void render(BelaContext *context, void *userData)
 	    .add((int)velocity_int[3])
 	    .add((int)velocity_int[4])
 	    .send();
+	 //rt_printf("\n%i", velocity_int[0]);
 }
 
 void cleanup(BelaContext *context, void *userData)
