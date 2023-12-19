@@ -18,7 +18,8 @@ int shift = 0;
 int[] notesInput = new int[5];
 int[] notesOutput = new int[5];
 float[] coordinates = new float[10];
-int[] pressedSens = {0,12,0,12,0};
+int[] pressedSens = new int[5];
+int[] prevPressureValues = new int[5];
 
 
 
@@ -39,8 +40,7 @@ Button back;
 MidiDevice.Info[] midiDeviceInfo;
 MidiDevice midiOutputDevice;
 Receiver midiReceiver;
-int prevValue = 0;
-
+int prevNoteValue = 0;
 
 void setup() {
   fullScreen();
@@ -53,16 +53,13 @@ void setup() {
   msgClass = new OscMsg();
   oscP5 = new OscP5(this, 12000);
   
-  
-  msgClass.selectMidiOutput("virtualPort");
+  msgClass.selectMidiOutput("Microsoft GS Wavetable Synth");
   pianoHeight = height / 3;
   
   // Pastel Colors generator
   for (int i = 0; i < pastelColors.length; i++) {
     pastelColors[i] = color(random(200, 255), random(200, 255), random(200, 255));
   }
-  
-  
   
   // Knob
   myKnob = cp5.addKnob("myKnob")
@@ -164,7 +161,7 @@ void draw() { //<>//
     back.setVisible(false);
 
   }else{ //<>//
-    notesOutput = fingers.pressedKeys(notesInput, pressedSens, shift);
+    notesOutput = fingers.conversion(notesInput, pressedSens, prevPressureValues, shift);
     keyboard.drawPianoPlay(notesOutput);
     keyboard.drawBox();
     myKnob.setVisible(true);
@@ -175,18 +172,13 @@ void draw() { //<>//
     back.setVisible(true);
     fingers.positions(coordinates);
     
-    
-
     if(!beginner){
       keyboard.writeNoteLabels(octaves,1);
-    }else{
+    } else {
       keyboard.writeNoteLabels(octaves,0);
     }
-
   }
-
 }
-
 
 void oscEvent(OscMessage msg) {
     try {
@@ -196,25 +188,21 @@ void oscEvent(OscMessage msg) {
   
         for (int i = 0; i < argumentCount; i++) {
             int receivedValue = msg.get(i).intValue();
-            receivedValues[i] = receivedValue;
+            receivedValues[i] = receivedValue-12-shift;
             }
-        //print("Received values: ");
-        //for (int i = 0; i < receivedValues.length; i++) {
-        //  print(receivedValues[i] + " ");
-        //}
-        //println();
+
         int noteNumber = receivedValues[1];
         notesInput = receivedValues;
-        
-        if(noteNumber!= 0 && noteNumber != prevValue){
-
-        msgClass.sendNoteOff(prevValue);
-        print("Sending note on of index finger: " + noteNumber+"\n");
-        msgClass.sendNoteOn(noteNumber);
-        }
-        prevValue = noteNumber;
-      } else {
-        println("Error: Unexpected OSC address pattern.");
+        print(noteNumber + "\n");
+        prevNoteValue = noteNumber;
+      }
+      
+      if (msg.checkAddrPattern("/belapressure")){
+          int argumentCount = msg.arguments().length;
+          for(int i = 0; i< argumentCount; i++){
+             prevPressureValues[i] = pressedSens[i];
+             pressedSens[i] = msg.get(i).intValue();
+          } 
       }
       
       if(msg.checkAddrPattern("/coords")){
@@ -222,22 +210,15 @@ void oscEvent(OscMessage msg) {
         for (int i = 0; i < argumentCount; i++) {
               coordinates[i] = msg.get(i).floatValue();
             }
-      }else{
-        println("Error: Unexpected OSC address pattern.");
       }
     } catch (Exception e) {
       println("Error handling OSC message: " + e.getMessage());
       e.printStackTrace();
-    }
-    
+    } 
   }
   
-
-
 void mousePressed() {
-
   if (!isPlaying) {
-
       println("Play pressed. Start playing.");
       isPlaying = true;
       background(0,0);   
@@ -246,36 +227,29 @@ void mousePressed() {
 
 
 class ButtonClickListener implements ControlListener {
+  
   public void controlEvent(ControlEvent event) {
-    
     // Back Listener
     if (event.isController() && event.getController().getName().equals("back")){
         isPlaying = false;
         fill(200);
         rect(9*width/10 +5, height*9/10, width/15 +10, 50,10);
     }
-    
     // OctaveUp listener
     if (event.isController() && event.getController().getName().equals("octaveUp")){
         for (int i = 0; i < octaves.length; i++) {
           if(octaves[1] < 6){
-            octaves[i]++;
-            
-             
-          }else{
+            octaves[i]++;  
+          } else {
             octaves[0] = 5;
             octaves[1] = 6;
-            octaves[2] = 7;
-            
+            octaves[2] = 7; 
           }
-        }
-        
-  
+        } 
         shift -= 12;
         println(shift);
         fill(200);
-        rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);
-        
+        rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);     
     }
     
     // OctaveDown listener
@@ -289,12 +263,10 @@ class ButtonClickListener implements ControlListener {
             octaves[2] = 3;
           }
         }
- 
         shift += 12;
         println(shift);
         fill(200);
-        rect(3*width/5 + width/8,height*5/30 + 110, 70, 70, 10);
-               
+        rect(3*width/5 + width/8,height*5/30 + 110, 70, 70, 10);         
     }
     
     // Mode listener
@@ -306,10 +278,8 @@ class ButtonClickListener implements ControlListener {
             mode.setLabel("Expert");
             beginner = false;
         }
-        
         fill(200);
         rect(3*width/5 + width/8 + 15, height*5/30 -15, 130, 70, 10);
-    
     }
     
     // Fader listener

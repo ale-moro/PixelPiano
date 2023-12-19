@@ -22,7 +22,6 @@ class OscMsg{
     }
   }
 
-
   public void sendNoteOn(int noteNumber) {
     if (midiReceiver != null) {
       try {
@@ -50,10 +49,6 @@ class OscMsg{
       }
     } else {
       println("MIDI receiver not available.");
-    }
-    
+    }  
   }
-  
-
-
 }
