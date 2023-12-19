@@ -23,6 +23,7 @@ int[] prevPressureValues = new int[5];
 
 
 
+
 Piano keyboard;
 Start initialization;
 Fingers fingers;
@@ -198,11 +199,13 @@ void oscEvent(OscMessage msg) {
       }
       
       if (msg.checkAddrPattern("/belapressure")){
+
           int argumentCount = msg.arguments().length;
           for(int i = 0; i< argumentCount; i++){
              prevPressureValues[i] = pressedSens[i];
              pressedSens[i] = msg.get(i).intValue();
           } 
+
       }
       
       if(msg.checkAddrPattern("/coords")){

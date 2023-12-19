@@ -1,11 +1,18 @@
 class Fingers{
   int[] noteToPlay = new int[5];
-  int[] temp = new int[5];
+  int[] toPlay = new int[5];
+  int[] prev = new int[5];
   
   public int[] conversion(int[] fingers, int[] sensors, int[] prevSensors, int shift){
     for(int i = 0; i< fingers.length; i++){
       noteToPlay[i] = fingers[i]%36 + shift; //<>//
+      if(noteToPlay[i] < 0){ 
+        noteToPlay[i] += 36;
+      }else if( noteToPlay[i] >= 36){
+        noteToPlay[i] -= 36;
+      }
     }
+
     temp = pressedKeys(noteToPlay, sensors, prevSensors);
 
     for(int i = 0; i < temp.length; i++){
@@ -16,6 +23,7 @@ class Fingers{
       }
     }
     return temp;
+
   }
   
   public void positions(float[] coords){
@@ -38,8 +46,10 @@ class Fingers{
         // Finger 5
         fill(color(0,51,153));
       }
+
       ellipse(coords[j]*width, coords[j+1]*height, 15,15);
     }      
+
   }
   
   
