@@ -46,7 +46,7 @@ def send_osc_active_notes(note_numbers: list):
   client.send_message('/note_numbers', note_numbers)
 
 def send_osc_coords(coords: list):
-  flattened_coords = [float(coord) for sublist in coords for coord in sublist]
+  flattened_coords = [round(float(coord),2) for sublist in coords for coord in sublist]
   #print(flattened_coords)
   client.send_message('/coords', flattened_coords)
 
@@ -123,7 +123,7 @@ def main():
       # pull frame
       ret, frame = cap.read()
       # mirror frame
-      frame = cv2.flip(frame, 1)
+      #frame = cv2.flip(frame, 1)
       # print landmarks
       hand_landmarker.detect_async(frame)
       frame = draw_landmarks_on_image(frame, hand_landmarker.result)
