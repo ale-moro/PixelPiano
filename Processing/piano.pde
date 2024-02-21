@@ -1,8 +1,24 @@
+
+
 class Piano{
-  
+  int pianoHeight;
+  int[] whiteKeys = {0,2,4,5,7,9,11,12,14,16,17,19,21,23,24,26,28,29,31,33,35};
+  int[] blackKeys = {1, 3, 6, 8, 10, 13, 15,18,20,22,25,27,30,32,34};
+  int[] blackKeysInit = {1,2,4,5,6,8,9,11,12,13};
+
   String[] whiteNotes = {"C", "D", "E", "F", "G", "A", "B"};
+
+  public void draw(boolean isPlayPage, int[] notes){
+    if(!isPlayPage){
+      this.drawPianoInit();
+    } else {
+      this.drawPianoPlay(notes);
+    }
+  }
   
   public void drawPianoInit() {
+    this.pianoHeight = height / 3;
+
     
     for (int i = 0; i < 15; i++) {
       float keyWidth = width / 14;
@@ -101,7 +117,7 @@ class Piano{
         text(noteLabel, keyX + keyWidth / 2, height - pianoH*0.30 );
     
       }
-    }else{
+    } else {
         for (int i = 0; i < 21; i++) {
           float keyX = width/20 + i * keyWidth; 
         
@@ -186,6 +202,4 @@ class Piano{
   }
   return false;
 }
- 
-
 }
