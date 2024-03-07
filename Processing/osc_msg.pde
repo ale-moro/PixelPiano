@@ -1,4 +1,4 @@
-class OscMsg{
+class OscMsg {
   
   public void selectMidiOutput(String outputDeviceName) {
     try {

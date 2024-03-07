@@ -1,4 +1,6 @@
-class PlayPage {
+class PlayPage implements Page{
+  int pageIndex = PLAY_PAGE_INDEX;
+  boolean isVisible;
   Knob myKnob;
   Slider myFader;
   Button octaveUp;
@@ -6,16 +8,12 @@ class PlayPage {
   Button mode;
   Button back;
   Fingers fingers;
-  Piano keyboard;
-
-  PFont customFont;
-  PFont customFont1;
+  PlayPagePiano keyboard;
 
   public PlayPage() {
     this.fingers = new Fingers();
-    this.keyboard = new Piano();
-    this.customFont = createFont("Monospaced", 20);
-    this.customFont1 = createFont("Monospaced", 20);
+    this.keyboard = new PlayPagePiano();
+    this.isVisible = false;
 
     // Knob
     this.myKnob = cp5.addKnob("myKnob")
@@ -51,7 +49,7 @@ class PlayPage {
               .setVisible(false)
               .setColorActive(color(50));      
     this.octaveUp.setLabel("+");
-    this.octaveUp.getCaptionLabel().setFont(this.customFont1);
+    this.octaveUp.getCaptionLabel().setFont(customFont);
     
     this.octaveDown = cp5.addButton("octaveDown")
                     .setPosition(3*width/5 + width/8 +20, height*5/30 + 110)
@@ -61,7 +59,7 @@ class PlayPage {
                     .setVisible(false)
                     .setColorActive(color(50));
     this.octaveDown.setLabel("-");
-    this.octaveDown.getCaptionLabel().setFont(this.customFont1);
+    this.octaveDown.getCaptionLabel().setFont(customFont);
 
     this.mode = cp5.addButton("mode")
         .setPosition(3*width/5 + width/8 + 36 ,height*5/30 - 15)
@@ -83,46 +81,65 @@ class PlayPage {
     this.back.setLabel("Back");
     this.back.getCaptionLabel().setFont(customFont);
     
-    // Listeners
-    this.back.addListener(new ButtonClickListener());
-    this.mode.addListener(new ButtonClickListener());
-    this.octaveUp.addListener(new ButtonClickListener());
-    this.octaveDown.addListener(new ButtonClickListener());
-    this.myFader.addListener(new ButtonClickListener());
+    this.addListeners();
   }
 
-  public void draw(boolean isVisible){
-    this.setPageVisibile(isVisible);
+  public int getID(){
+      return this.pageIndex;
+  }
 
-    if(isVisible){
-      notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
+  public void addListeners() {
+    this.back.addListener(buttonClickListener);
+    this.mode.addListener(buttonClickListener);
+    this.octaveUp.addListener(buttonClickListener);
+    this.octaveDown.addListener(buttonClickListener);
+    this.myFader.addListener(buttonClickListener);
+  }
+
+  public void removeListeners() {
+    this.back.removeListener(buttonClickListener);
+    this.mode.removeListener(buttonClickListener);
+    this.octaveUp.removeListener(buttonClickListener);
+    this.octaveDown.removeListener(buttonClickListener);
+    this.myFader.removeListener(buttonClickListener);
+  }
+
+  public void setVisibility(boolean isVisible){
+    this.isVisible = isVisible;
+    this.myKnob.setVisible(this.isVisible);
+    this.myFader.setVisible(this.isVisible);
+    this.octaveUp.setVisible(this.isVisible);
+    this.octaveDown.setVisible(this.isVisible);
+    this.mode.setVisible(this.isVisible); 
+    this.back.setVisible(this.isVisible);
+  }
+
+  public void draw(){
+    if(this.isVisible){
+      // outer box
       this.keyboard.drawBox();
-      this.fingers.positions(coordinates);
+      notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
+      // keyboard
+      this.keyboard.setNotes(notesOutput);
+      this.keyboard.draw();
+      // note labes on the keyboard
       if(!beginner){
         this.keyboard.writeNoteLabels(octaves,1);
       } else {
         this.keyboard.writeNoteLabels(octaves,0);
       }
+      // fingers' positions
+      this.fingers.positions(coordinates);
     }
   }
 
-  public void setPageVisibile(boolean isVisible){
-    this.keyboard.draw(isVisible, notesOutput);
-    this.myKnob.setVisible(isVisible);
-    this.myFader.setVisible(isVisible);
-    this.octaveUp.setVisible(isVisible);
-    this.octaveDown.setVisible(isVisible);
-    this.mode.setVisible(isVisible); 
-    this.back.setVisible(isVisible);
-  }
-
-  public void backButtonPressed(){
+  private void backButtonPressed(){
     fill(200);
-    rect(9*width/10 +5, height*9/10, width/15 +10, 50,10);
-    println("isPlaying back btn", isPlaying);
+    rect(9*width/10+5, height*9/10, width/15+10, 50,10);
+    println("Active page index", activePageIndex);
   }
 
-  public void octaveUpButtonPressed(){
+  private void octaveUpButtonPressed(){
     for (int i = 0; i < octaves.length; i++) {
       if(octaves[1] < 6){
         octaves[i]++;
@@ -139,7 +156,7 @@ class PlayPage {
     rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);
   }
 
-  public void octaveDownButtonPressed(){
+  private void octaveDownButtonPressed(){
     for (int i = 0; i < octaves.length; i++) {
       if(octaves[0] > 2 ){
         octaves[i]--;
@@ -155,18 +172,18 @@ class PlayPage {
     rect(3*width/5 + width/8,height*5/30 + 110, 70, 70, 10);  
   }
 
-  public void modeButtonPressed(){
+  private void modeButtonPressed(){
     if(!beginner){
-        mode.setLabel("Beginner");
+        this.mode.setLabel("Beginner");
         beginner = true;
     } else {
-        mode.setLabel("Expert");
+        this.mode.setLabel("Expert");
         beginner = false;
     } 
     fill(200);
     rect(3*width/5 + width/8 + 15, height*5/30 -15, 130, 70, 10);
   }
   
-  public void faderPressed(){
+  private void faderPressed(){
   }
 }

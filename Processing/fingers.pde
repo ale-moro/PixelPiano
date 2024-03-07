@@ -38,7 +38,6 @@ class Fingers {
     }
     prev = toPlay;
     return toPlay;
-    
   }
   
   public void positions(float[] coords){
@@ -63,15 +62,12 @@ class Fingers {
         fill(color(0,51,153));
       }
       
-      ellipse(coords[j]*width, coords[j+1]*height, 20,20);
-    
+      ellipse(coords[j]*width, coords[j+1]*height, 20,20);  
     }    
-    
   }
   
   
   public int[] pressedKeys(int[] notesIn, int[] sensors){
-    
     int[] pressed = {-1,-1,-1,-1,-1};
     int j = 0;
     
@@ -81,14 +77,9 @@ class Fingers {
           j++;
         }
     }
-    
     //println(pressed);
     //println(notesIn);
-    
-        
-    return pressed;
-      
+    return pressed; 
   }
   
- 
 }

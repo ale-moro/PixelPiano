@@ -1,4 +1,3 @@
-
 void oscEvent(OscMessage msg) {
     try {
       if (msg.checkAddrPattern("/note_numbers")) {

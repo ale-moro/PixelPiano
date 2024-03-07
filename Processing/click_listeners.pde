@@ -1,39 +1,47 @@
 // Global click listener
 void keyPressed() {
-  if (!isPlaying) {  // handles switching from welcome page to play page
-      println("Play pressed. Start playing.");
-      isPlaying = true;
-      background(0, 0);   
-    }
+  if (activePage.getID() == START_PAGE_INDEX) {  // handles switching from welcome page to play page
+    println("Active page index", MODE_SELECTION_PAGE_INDEX);
+    navigationController.changePage(startPage, modeSelectionPage);
+    println(activePage);
+    fill(255, 255);
+  }
 }
 
 class ButtonClickListener implements ControlListener {
   public void controlEvent(ControlEvent event) {
+    println(event);
+    println("CLICK: ", event.getName());
+    // MODE SELECTION PAGE
+    // FreePlayMode listener
+    if (event.isController() && event.getName().equals("freePlay")) {
+      navigationController.changePage(modeSelectionPage, freePlayPage);
+    }
+    // PianoHeroMode listener
+    else if (event.isController() && event.getName().equals("pianoHero")) {
+      navigationController.changePage(modeSelectionPage, pianoHeroPage);
+    }
     
+    // PLAY PAGE
     // Back Listener
-    if (event.isController() && event.getController().getName().equals("back") && event.getId()==-1){
-      isPlaying = false;
-      playPage.backButtonPressed();
+    if (event.isController() && event.getController().getName().equals("back")){
+      navigationController.changePage(freePlayPage, modeSelectionPage);
     }
-    
     // OctaveUp listener
-    if (event.isController() && event.getController().getName().equals("octaveUp")){
-      playPage.octaveUpButtonPressed();
+    else if (event.isController() && event.getController().getName().equals("octaveUp")){
+      freePlayPage.octaveUpButtonPressed();
     }
-    
     // OctaveDown listener
     if (event.isController() && event.getController().getName().equals("octaveDown")){
-      playPage.octaveDownButtonPressed();
+      freePlayPage.octaveDownButtonPressed();
     }
-    
     // Mode listener
     if (event.isController() && event.getController().getName().equals("mode")){
-      playPage.modeButtonPressed();
+      freePlayPage.modeButtonPressed();
     }
-    
     // Fader listener
     if (event.isController() && event.getController().getName().equals("mySlider")){
-      playPage.faderPressed();
+      freePlayPage.faderPressed();
     }
   }
 }
