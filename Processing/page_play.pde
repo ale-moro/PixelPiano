@@ -1,30 +1,49 @@
-class PlayPage implements Page{
+class PlayPage implements Page {
   int pageIndex = PLAY_PAGE_INDEX;
   boolean isVisible;
+  float[] inactivePosition;
   Knob myKnob;
+  float[] myKnobPosition;
+  boolean beginnerMode;
   Slider myFader;
-  Button octaveUp;
-  Button octaveDown;
-  Button mode;
-  Button back;
+  float[] myFaderPosition;
+  Button octaveUpButton;
+  float[] octaveUpButtonPosition;
+  Button octaveDownButton;
+  float[] octaveDownButtonPosition;
+  Button modeButton;
+  float[] modeButtonPosition;
+  Button backButton;
+  float[] backButtonPosition;
   Fingers fingers;
   PlayPagePiano keyboard;
+  ButtonClickListener buttonClickListener;
 
   public PlayPage() {
     this.fingers = new Fingers();
     this.keyboard = new PlayPagePiano();
+    this.buttonClickListener = new ButtonClickListener();
     this.isVisible = false;
+    this.beginnerMode = false;
+    
+    this.myKnobPosition = new float[] {width*11/60, height*5/30};
+    this.myFaderPosition = new float[] {width*28/60 - 10, height*5/30};
+    this.octaveUpButtonPosition = new float[] {3*width/5 + width/8 + 110,height*5/30 + 110};
+    this.octaveDownButtonPosition = new float[] {3*width/5 + width/8 +20, height*5/30 + 110};
+    this.modeButtonPosition = new float[] {3*width/5 + width/8 + 36 ,height*5/30 - 15};
+    this.backButtonPosition = new float[] {9*width/10 + 5, 9*height/10 +25};
+    this.inactivePosition = new float[] {-1000, -1000};  
 
     // Knob
     this.myKnob = cp5.addKnob("myKnob")
               .setRange(0, 100)
               .setValue(0) // Mappare valore nel range e settare value
-              .setPosition(width*11/60, height*5/30)
+              .setPosition(this.inactivePosition)
               .setRadius(80)
               .setNumberOfTickMarks(10)
               .setColorForeground(color(200))
               .setColorBackground(color(0))
-              .setVisible(false)
+              .setVisible(true)
               .setColorActive(color(200));
     this.myKnob.getCaptionLabel().setVisible(false);
     
@@ -32,55 +51,54 @@ class PlayPage implements Page{
     this.myFader = cp5.addSlider("mySlider")
                 .setRange(0, 100)
                 .setValue(10)
-                .setPosition(width*28/60 -10, height*5/30)
+                .setPosition(this.inactivePosition)
                 .setSize(60,160)
                 .setColorForeground(color(200))
                 .setColorBackground(color(0))
-                .setVisible(false)
+                .setVisible(true)
                 .setColorActive(color(200));
     this.myFader.getCaptionLabel().setVisible(false);
 
     // Octaves Buttons
-    this.octaveUp = cp5.addButton("octaveUp")
-              .setPosition(3*width/5 + width/8 + 110,height*5/30 + 110)
+    this.octaveUpButton = cp5.addButton("octaveUpButton")
+              .setPosition(this.inactivePosition)
               .setSize(60,60)
               .setColorBackground(color(0))
               .setColorForeground(color(50))
-              .setVisible(false)
+              .setVisible(true)
               .setColorActive(color(50));      
-    this.octaveUp.setLabel("+");
-    this.octaveUp.getCaptionLabel().setFont(customFont);
+    this.octaveUpButton.setLabel("+");
+    this.octaveUpButton.getCaptionLabel().setFont(customFont);
     
-    this.octaveDown = cp5.addButton("octaveDown")
-                    .setPosition(3*width/5 + width/8 +20, height*5/30 + 110)
+    this.octaveDownButton = cp5.addButton("octaveDownButton")
+                    .setPosition(this.inactivePosition)
                     .setSize(60,60)
                     .setColorBackground(color(0))
                     .setColorForeground(color(50))
-                    .setVisible(false)
+                    .setVisible(true)
                     .setColorActive(color(50));
-    this.octaveDown.setLabel("-");
-    this.octaveDown.getCaptionLabel().setFont(customFont);
+    this.octaveDownButton.setLabel("-");
+    this.octaveDownButton.getCaptionLabel().setFont(customFont);
 
-    this.mode = cp5.addButton("mode")
-        .setPosition(3*width/5 + width/8 + 36 ,height*5/30 - 15)
+    this.modeButton = cp5.addButton("modeButton")
+        .setPosition(this.inactivePosition)
         .setSize(120,60)
         .setColorBackground(color(0))
         .setColorForeground(color(50))
-        .setVisible(false)
+        .setVisible(true)
         .setColorActive(color(50));
-    this.mode.setLabel("Expert");
-    this.mode.getCaptionLabel().setFont(customFont);
+    this.modeButton.setLabel("Expert");
+    this.modeButton.getCaptionLabel().setFont(customFont);
     
-    this.back = cp5.addButton("back")
-            .setPosition(9*width/10 + 5, 9*height/10 +25)
+    this.backButton = cp5.addButton("backButton")
+            .setPosition(this.inactivePosition)
             .setSize(width/15,30)
             .setColorBackground(color(0))
             .setColorForeground(color(50))
-            .setVisible(false)
+            .setVisible(true)
             .setColorActive(color(50));
-    this.back.setLabel("Back");
-    this.back.getCaptionLabel().setFont(customFont);
-    
+    this.backButton.setLabel("Back");
+    this.backButton.getCaptionLabel().setFont(customFont);
     this.addListeners();
   }
 
@@ -89,29 +107,40 @@ class PlayPage implements Page{
   }
 
   public void addListeners() {
-    this.back.addListener(buttonClickListener);
-    this.mode.addListener(buttonClickListener);
-    this.octaveUp.addListener(buttonClickListener);
-    this.octaveDown.addListener(buttonClickListener);
-    this.myFader.addListener(buttonClickListener);
+    this.buttonClickListener = new ButtonClickListener();
+    this.backButton.addListener(this.buttonClickListener);
+    this.modeButton.addListener(this.buttonClickListener);
+    this.octaveUpButton.addListener(this.buttonClickListener);
+    this.octaveDownButton.addListener(this.buttonClickListener);
+    this.myFader.addListener(this.buttonClickListener);
   }
 
   public void removeListeners() {
-    this.back.removeListener(buttonClickListener);
-    this.mode.removeListener(buttonClickListener);
-    this.octaveUp.removeListener(buttonClickListener);
-    this.octaveDown.removeListener(buttonClickListener);
-    this.myFader.removeListener(buttonClickListener);
+    this.backButton.removeListener(this.buttonClickListener);
+    this.modeButton.removeListener(this.buttonClickListener);
+    this.octaveUpButton.removeListener(this.buttonClickListener);
+    this.octaveDownButton.removeListener(this.buttonClickListener);
+    this.myFader.removeListener(this.buttonClickListener);
+
   }
 
   public void setVisibility(boolean isVisible){
     this.isVisible = isVisible;
-    this.myKnob.setVisible(this.isVisible);
-    this.myFader.setVisible(this.isVisible);
-    this.octaveUp.setVisible(this.isVisible);
-    this.octaveDown.setVisible(this.isVisible);
-    this.mode.setVisible(this.isVisible); 
-    this.back.setVisible(this.isVisible);
+
+    if (this.isVisible) {
+      println(this, "set visible position");
+      this.backButton.setPosition(this.backButtonPosition);
+      this.modeButton.setPosition(this.modeButtonPosition);
+      this.octaveUpButton.setPosition(this.octaveUpButtonPosition);
+      this.octaveDownButton.setPosition(this.octaveDownButtonPosition);
+      this.myFader.setPosition(this.myFaderPosition);     
+    } else {
+      this.backButton.setPosition(this.inactivePosition);
+      this.modeButton.setPosition(this.inactivePosition);
+      this.octaveUpButton.setPosition(this.inactivePosition);
+      this.octaveDownButton.setPosition(this.inactivePosition);
+      this.myFader.setPosition(this.inactivePosition);
+    }
   }
 
   public void draw(){
@@ -123,7 +152,7 @@ class PlayPage implements Page{
       this.keyboard.setNotes(notesOutput);
       this.keyboard.draw();
       // note labes on the keyboard
-      if(!beginner){
+      if(!this.beginnerMode){
         this.keyboard.writeNoteLabels(octaves,1);
       } else {
         this.keyboard.writeNoteLabels(octaves,0);
@@ -173,12 +202,12 @@ class PlayPage implements Page{
   }
 
   private void modeButtonPressed(){
-    if(!beginner){
-        this.mode.setLabel("Beginner");
-        beginner = true;
+    if(!this.beginnerMode){
+        this.modeButton.setLabel("Beginner");
+        this.beginnerMode = true;
     } else {
-        this.mode.setLabel("Expert");
-        beginner = false;
+        this.modeButton.setLabel("Expert");
+        this.beginnerMode = false;
     } 
     fill(200);
     rect(3*width/5 + width/8 + 15, height*5/30 -15, 130, 70, 10);

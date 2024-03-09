@@ -6,7 +6,6 @@ import javax.sound.midi.*;
 
 int activePageIndex = START_PAGE_INDEX;
 Page activePage;
-boolean beginner = false;
 
 int[] octaves = {3, 4, 5};
 int shift = 0;
@@ -22,7 +21,6 @@ PianoHeroPage pianoHeroPage;
 ControlP5 cp5;
 OscP5 oscP5;
 OscMsg msgClass;
-ButtonClickListener buttonClickListener;
 NavigationController navigationController;
 
 
@@ -47,7 +45,6 @@ void setup() {
 
   // Classes initialization
   cp5 = new ControlP5(this);
-  buttonClickListener = new ButtonClickListener();
   navigationController = new NavigationController();
   msgClass = new OscMsg();
   oscP5 = new OscP5(this, 12000);
