@@ -8,4 +8,6 @@ public interface Page {
     public void removeListeners();
 
     public void setVisibility(boolean isVisible);
+
+    public void handleButtonClick(ControlEvent event);
 }

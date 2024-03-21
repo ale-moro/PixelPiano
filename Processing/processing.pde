@@ -23,7 +23,6 @@ OscP5 oscP5;
 OscMsg msgClass;
 NavigationController navigationController;
 
-
 MidiDevice.Info[] midiDeviceInfo;
 MidiDevice midiOutputDevice;
 Receiver midiReceiver;
@@ -54,7 +53,6 @@ void setup() {
   pianoHeroPage = new PianoHeroPage();
   msgClass.selectMidiOutput("virtualPort");
   activePage = startPage;
-
 }
 
 void draw() { 

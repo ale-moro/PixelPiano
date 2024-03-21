@@ -10,7 +10,7 @@ class ModeSelectionPage implements Page {
 
   public ModeSelectionPage() {
     this.isVisible = false;
-    this.buttonClickListener = new ButtonClickListener();
+    this.buttonClickListener = new ButtonClickListener(this);
     this.pianoHeroButtonPosition = new float[]{width/2 - 100, height/2 + 50};
     this.freePlayButtonPosition = new float[]{width/2 - 100, height/2 - 50};
     this.inactivePosition = new float[] {-1000, -1000};  
@@ -65,21 +65,26 @@ class ModeSelectionPage implements Page {
       this.freePlayButton.setPosition(this.inactivePosition);
       this.pianoHeroButton.setPosition(this.inactivePosition);
     }
-    // this.freePlayButton.setVisible(this.isVisible);
-    // this.pianoHeroButton.setVisible(this.isVisible);
-        
-    // this.freePlayButton.setBroadcast(this.isVisible); 
-    // this.pianoHeroButton.setBroadcast(this.isVisible);
+  }
 
-    // this.freePlayButton.setUpdate(this.isVisible); 
-    // this.pianoHeroButton.setUpdate(this.isVisible);
-
-    // this.freePlayButton.setUserInteraction(this.isVisible);
-    // this.pianoHeroButton.setUserInteraction(this.isVisible);
+  public void handleButtonClick(ControlEvent event) {
+    if (!event.isController()) return;
+    String buttonName = event.getName();
+    
+    switch (buttonName) {
+      case "freePlayButton":
+        navigationController.changePage(activePage, freePlayPage);
+        break;
+      case "pianoHeroButton":
+        navigationController.changePage(activePage, pianoHeroPage);
+        break;
+    }
   }
 
   public void draw(){
   }
+  
 }
+
     
     

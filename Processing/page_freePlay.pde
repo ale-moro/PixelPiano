@@ -22,7 +22,7 @@ class PlayPage implements Page {
   public PlayPage() {
     this.fingers = new Fingers();
     this.keyboard = new PlayPagePiano();
-    this.buttonClickListener = new ButtonClickListener();
+    this.buttonClickListener = new ButtonClickListener(this);
     this.isVisible = false;
     this.beginnerMode = false;
     
@@ -90,7 +90,7 @@ class PlayPage implements Page {
     this.modeButton.setLabel("Expert");
     this.modeButton.getCaptionLabel().setFont(customFont);
     
-    this.backButton = cp5.addButton("backButton")
+    this.backButton = cp5.addButton("freePlayBackButton")
             .setPosition(this.inactivePosition)
             .setSize(width/15,30)
             .setColorBackground(color(0))
@@ -107,7 +107,6 @@ class PlayPage implements Page {
   }
 
   public void addListeners() {
-    this.buttonClickListener = new ButtonClickListener();
     this.backButton.addListener(this.buttonClickListener);
     this.modeButton.addListener(this.buttonClickListener);
     this.octaveUpButton.addListener(this.buttonClickListener);
@@ -115,18 +114,16 @@ class PlayPage implements Page {
     this.myFader.addListener(this.buttonClickListener);
   }
 
-  public void removeListeners() {
+  public void removeListeners() { // WARNING not safe
     this.backButton.removeListener(this.buttonClickListener);
     this.modeButton.removeListener(this.buttonClickListener);
     this.octaveUpButton.removeListener(this.buttonClickListener);
     this.octaveDownButton.removeListener(this.buttonClickListener);
     this.myFader.removeListener(this.buttonClickListener);
-
   }
 
   public void setVisibility(boolean isVisible){
     this.isVisible = isVisible;
-
     if (this.isVisible) {
       println(this, "set visible position");
       this.backButton.setPosition(this.backButtonPosition);
@@ -161,6 +158,30 @@ class PlayPage implements Page {
       this.fingers.positions(coordinates);
     }
   }
+
+  public void handleButtonClick(ControlEvent event) {
+    if (!event.isController()) return;
+    
+    String buttonName = event.getController().getName();
+    
+    switch (buttonName) {
+        case "freePlayBackButton":
+            navigationController.changePage(activePage, modeSelectionPage);
+            break;
+        case "octaveUpButton":
+            freePlayPage.octaveUpButtonPressed();
+            break;
+        case "octaveDownButton":
+            freePlayPage.octaveDownButtonPressed();
+            break;
+        case "modeButton":
+            freePlayPage.modeButtonPressed();
+            break;
+        case "mySlider":
+            freePlayPage.faderPressed();
+            break;
+      }
+    }
 
   private void backButtonPressed(){
     fill(200);

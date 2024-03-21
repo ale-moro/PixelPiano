@@ -15,6 +15,7 @@ class StartPage implements Page {
   public void addListeners(){}
   public void removeListeners(){}
   public void setVisibility(boolean isVisible){}
+  public void handleButtonClick(ControlEvent event){}
   
   public void draw(){
     drawText();
@@ -57,7 +58,6 @@ class StartPage implements Page {
   }
 
   private void drawPlayButton() {
- 
     float buttonHeight = 60;
     float buttonY = height / 3 + height / 6 - buttonHeight;
 
@@ -66,7 +66,6 @@ class StartPage implements Page {
     textSize(32);
     textAlign(CENTER, CENTER);
 
-  
     // Draw text shadow
     fill(196, 50);
     text(START_TITLE, width/2-250, buttonY+3, 500, buttonHeight);
