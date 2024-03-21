@@ -1,6 +1,29 @@
-class Start{
+String START_TITLE = "Press any key to start";
 
-    public void drawText() {
+class StartPage implements Page {
+  int pageIndex;
+  InitPagePiano keyboard;
+
+  public StartPage(){
+    keyboard = new InitPagePiano();
+  }
+
+  public int getID(){
+      return this.pageIndex;
+  }
+
+  public void addListeners(){}
+  public void removeListeners(){}
+  public void setVisibility(boolean isVisible){}
+  public void handleButtonClick(ControlEvent event){}
+  
+  public void draw(){
+    drawText();
+    drawPlayButton();
+    keyboard.draw();
+  }
+
+  private void drawText() {
     fill(0);
     textMode(SHAPE);
   
@@ -34,31 +57,20 @@ class Start{
     textMode(MODEL);
   }
 
-
-
-  public void drawPlayButton() {
- 
+  private void drawPlayButton() {
     float buttonHeight = 60;
     float buttonY = height / 3 + height / 6 - buttonHeight;
 
-  
     // Draw shadow
     fill(0);
     textSize(32);
     textAlign(CENTER, CENTER);
-  
-    // Change text color
-    if (isMouseOverButton) {
-      fill(100);  
-    } else {
-      fill(0);  
-    }
-  
+
     // Draw text shadow
-    fill(150, 50);
-    text("Click anywhere to start!", width/2-250, buttonY + 3, 500, buttonHeight);
-    fill(0);
-    text("Click anywhere to start!", width/2-250, buttonY, 500, buttonHeight);
+    fill(196, 50);
+    text(START_TITLE, width/2-250, buttonY+3, 500, buttonHeight);
+    fill(128);
+    text(START_TITLE, width/2-250, buttonY, 500, buttonHeight);
   }
  
 }

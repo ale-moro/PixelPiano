@@ -1,28 +1,24 @@
-class Fingers{
+class Fingers {
   int[] noteToPlay = new int[5];
   int[] toPlay = new int[5];
   int[] prev = new int[5];
   
-  public int[] conversion(int[] fingers, int[] sensors, int shift){
+  public int[] getPressedNotes(int[] fingers, int[] sensors, int shift, Piano keyboard){
     
     for(int i = 0; i< fingers.length; i++){
       //println("conversione out: " + noteToPlay[i]);
         if(noteToPlay[i] == 0){
           //println("conversione in: " + noteToPlay[i]);
           noteToPlay[i] = -1;
-        }else{
+        } else {
           noteToPlay[i] = fingers[i]%36 + shift;
           if(noteToPlay[i] < 0){ 
             noteToPlay[i] += 36;
           }else if( noteToPlay[i] >= 36){
             noteToPlay[i] -= 36;
           }
-        
       }
- //<>//
-
     }
-    
     
     toPlay = pressedKeys(noteToPlay, sensors);
     
@@ -32,18 +28,16 @@ class Fingers{
       if(toPlay[i]!=-1 && toPlay[i] != prev[i]){
         //println("im in");
         msgClass.sendNoteOn(toPlay[i] + 24);
-      }else{
+      } else {
         for(int j=0; j < toPlay.length;j++){
           if(!keyboard.contains(toPlay, prev[j])){
             msgClass.sendNoteOff(prev[j] + 24);
           }
-        }
-        
+        }  
       }
     }
     prev = toPlay;
     return toPlay;
-    
   }
   
   public void positions(float[] coords){
@@ -68,15 +62,12 @@ class Fingers{
         fill(color(0,51,153));
       }
       
-      ellipse(coords[j]*width, coords[j+1]*height, 20,20);
-    
+      ellipse(coords[j]*width, coords[j+1]*height, 20,20);  
     }    
-    
   }
   
   
   public int[] pressedKeys(int[] notesIn, int[] sensors){
-    
     int[] pressed = {-1,-1,-1,-1,-1};
     int j = 0;
     
@@ -86,14 +77,9 @@ class Fingers{
           j++;
         }
     }
-    
     //println(pressed);
     //println(notesIn);
-    
-        
-    return pressed;
-      
+    return pressed; 
   }
   
- 
 }
