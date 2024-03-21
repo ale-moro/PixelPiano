@@ -4,6 +4,7 @@ public class MidiLoader {
     Sequence sequence;
     String midiFilePath;
     File midiFile;
+    
 
     public MidiLoader(){
         selectInput("Select a MIDI file:", "MIDIfileSelected");
