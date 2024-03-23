@@ -10,11 +10,11 @@ class PianoHeroPage implements Page {
 
   public PianoHeroPage() {
 
-    this.midiLoader = new MidiLoader("C:\\Users\\Marco Furio Colombo\\Desktop\\PixelPiano\\Processing\\BWV_0578.mid");
+    this.midiLoader = new MidiLoader();
 
     this.buttonClickListener = new ButtonClickListener(this);
     this.backButtonPosition = new float[] {9*width/10 + 5, 9*height/10 +25};
-    this.loadMidiButtonPosition = new float[] {5*width/10 + 5, 2*height/10 + 60};
+    this.loadMidiButtonPosition = new float[] {width/2 + 10, 2*height/10 + 60};
     this.inactivePosition = new float[] {-1000, -1000};
 
     this.backButton = cp5.addButton("pianoHeroBackButton")
@@ -29,7 +29,7 @@ class PianoHeroPage implements Page {
 
     this.loadMidiButton = cp5.addButton("loadMidiButton")
         .setPosition(this.inactivePosition)
-        .setSize(width/15,30)
+        .setSize(width/6,30)
         .setColorBackground(color(0))
         .setColorForeground(color(50))
         .setVisible(true)
@@ -46,14 +46,18 @@ class PianoHeroPage implements Page {
 
   public void addListeners(){
     this.backButton.addListener(this.buttonClickListener); 
+    this.loadMidiButton.addListener(this.buttonClickListener); 
+
   }
   public void removeListeners(){}
 
   public void setVisibility(boolean isVisible){
     if(isVisible){
       this.backButton.setPosition(this.backButtonPosition);
+      this.loadMidiButton.setPosition(this.loadMidiButtonPosition);
     } else {
       this.backButton.setPosition(this.inactivePosition);
+      this.loadMidiButton.setPosition(this.inactivePosition);
     } 
   }
 
@@ -65,7 +69,8 @@ class PianoHeroPage implements Page {
       navigationController.changePage(activePage, modeSelectionPage);
     }
     if ("loadMidiButton".equals(buttonName)) {
-      this.midiLoader.loadMidi();
+      println("Loading Midi File");
+      this.midiLoader.printMidiFileInfo("C:\\Users\\Marco Furio Colombo\\Desktop\\PixelPiano\\Processing\\BWV_0578.mid");
     }
   }
 

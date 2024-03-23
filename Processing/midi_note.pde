@@ -42,6 +42,7 @@ public class MidiNote {
     public void print() {
         System.out.println(this.toString());
     }
+    
     public void print(String prefix) {
         System.out.println(prefix + this.toString());
     }
