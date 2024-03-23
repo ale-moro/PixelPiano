@@ -1,60 +1,81 @@
 import javax.sound.midi.*;
 
 public class MidiLoader {
-    Sequence sequence;
-    String midiFilePath;
-    File midiFile;
-    MidiSequenceAnalyzer analyzer;
+  private Sequence midiSequence;
+  private GameNoteSequence gameNoteSequence;
+  private String midiFilePath;
+  private File midiFile;
 
-    public MidiLoader(){
-      this.analyzer = new MidiSequenceAnalyzer();
-    }
+  // MidiSequence info  
+  private MidiSequenceAnalyzer analyzer;
+  private float divisionType;
+  private long microsecondLength;
+  private int resolution;
+  private int numTracks;
 
 
+  public MidiLoader(){
+    this.midiSequence = null;
+    this.gameNoteSequence = new GameNoteSequence();
+    this.midiFilePath = "";
+    this.midiFile = null;
+    this.analyzer = new MidiSequenceAnalyzer();
+
+    // MidiSequence info  
+    this.divisionType = 0;
+    this.microsecondLength = 0;
+    this.resolution = 0;
+    this.numTracks = 0;
+  }
+  
   public void printMidiFileInfo(String midiFilePath){
-    this.midiFilePath = midiFilePath;
-    this.midiFile = new File(this.midiFilePath);
-    println("MIDI file: " + this.midiFile.getAbsolutePath());
-    try {
-      // Load a MIDI sequence from a file
-      Sequence s = MidiSystem.getSequence(this.midiFile);
+    Sequence s = getMidiSequence(midiFilePath);
+    // print Sequence info
+    printMidiInfo(s);
+    extractMidiInfo(s);
 
-      // print Sequence info
-      printMidiInfo(s);
+    // print Track info
+    Track[] tracks = s.getTracks();
 
-      // print Track info
-      Track[] tracks = s.getTracks();
+    println("Tracks: " + tracks.length);
+    for(int i = 0; i < tracks.length; i++) {
+      Track t = tracks[i];
+      printTrackInfo(t, i);
 
-      println("Tracks: " + tracks.length);
-      for(int i = 0; i < tracks.length; i++) {
-        Track t = tracks[i];
-        printTrackInfo(t, i);
-
-        // print MIDI events info
-        for (int k = 0; k < min(t.size(), 20); ++k) {
-          MidiEvent e = t.get(k);
-          printMessage(e.getMessage(), e.getTick()); 
-        }
+      // print MIDI events info
+      for (int k = 0; k < min(t.size(), 20); ++k) {
+        MidiEvent e = t.get(k);
+        printMessage(e.getMessage(), e.getTick()); 
       }
-    } catch(Exception e) {
-        println("Error: " + e); 
-    } 
+    }
+  }
+
+  // GameNoteSequence from a file
+  public GameNoteSequence computeGameNoteSequence(String midiFilePath){
+    Sequence s = getMidiSequence(midiFilePath);
+    this.gameNoteSequence = new GameNoteSequence(s);
+    return this.gameNoteSequence;
+  }
+
+  // GameNoteSequence from a Sequence
+  public GameNoteSequence computeGameNoteSequence(Sequence s){
+    this.gameNoteSequence = new GameNoteSequence(s);
+    return this.gameNoteSequence;
   }
 
   public void setFilePath(String path) {
       this.midiFilePath = path;
   }
 
-  public Sequence loadMidiSequence(String path) {
+  public Sequence loadMidiFile(String path) {
     try {
-        // Load a MIDI sequence from a file
-        this.sequence = MidiSystem.getSequence(new File(this.midiFilePath));
+        // Load a MIDI midiSequence from a file
+        this.midiSequence = MidiSystem.getSequence(new File(this.midiFilePath));
 
     } catch (IOException | InvalidMidiDataException e) {
         e.printStackTrace();
     }
-    return this.sequence;
-
+    return this.midiSequence;
   }
 
   void MIDIfileSelected(File selection) {
@@ -65,6 +86,42 @@ public class MidiLoader {
       this.midiFilePath = selection.getAbsolutePath();
     }
   }
+
+  private void extractMidiInfo(Sequence s){
+    this.divisionType = s.getDivisionType();
+    this.microsecondLength = s.getMicrosecondLength();
+    this.resolution = s.getResolution();
+    this.numTracks = s.getTracks().length;
+    this.analyzer.analyze(s);
+  }
+
+  private boolean isNoteMessage(MidiMessage msg) {
+    if (msg instanceof ShortMessage) {
+      ShortMessage sm = (ShortMessage) msg;
+      if(sm.getCommand()==ShortMessage.NOTE_ON || sm.getCommand()==ShortMessage.NOTE_OFF) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  Sequence getMidiSequence(){
+    return this.midiSequence;
+  }
+
+  Sequence getMidiSequence(String midiFilePath){
+    this.midiFilePath = midiFilePath;
+    this.midiFile = new File(this.midiFilePath);
+    try {
+      this.midiSequence = MidiSystem.getSequence(this.midiFile);
+    } catch(Exception e) {
+        println("Error: " + e); 
+    } 
+    return this.midiSequence;
+  }
+
+  // ============================================= PRINTING METHODS =============================================
+
   private void printMessage(MidiMessage msg, long timeStamp) {
     // print notes
     if (msg instanceof ShortMessage){
@@ -110,13 +167,6 @@ public class MidiLoader {
     println("    Duration (ticks): " + t.ticks());
   }
 
-  private boolean isNoteMessage(MidiMessage msg) {
-    if (msg instanceof ShortMessage) {
-      ShortMessage sm = (ShortMessage) msg;
-      if(sm.getCommand()==ShortMessage.NOTE_ON || sm.getCommand()==ShortMessage.NOTE_OFF) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // =======================================================================================
+
 }

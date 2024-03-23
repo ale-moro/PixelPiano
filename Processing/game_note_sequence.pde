@@ -12,7 +12,7 @@ public class GameNoteSequence {
 
     // Create GameNote objects from MIDI sequence
     public ArrayList<GameNote> createFromMidiSequence(Sequence midiSequence) {
-        // TODO - WIP - need to figure out how to get the correct note durations
+        MidiSequenceAnalyzer analyzer = new MidiSequenceAnalyzer(midiSequence);
         this.sequence = new ArrayList<GameNote>();
         Track[] tracks = midiSequence.getTracks();
         for (Track track : tracks) {
@@ -23,9 +23,24 @@ public class GameNoteSequence {
                     ShortMessage sm = (ShortMessage) message;
                     int note = sm.getData1();
                     int velocity = sm.getData2();
+                    long timestamp = event.getTick();
+                    GameNote gameNote = new GameNote(note, timestamp, analyzer.getTickMs(), velocity);
                     if (sm.getCommand() == ShortMessage.NOTE_ON && velocity != 0) {
-                        long timestamp = event.getTick();
-                        GameNote gameNote = new GameNote(note, velocity, timestamp);
+                        // Find the duration of the note - look for the noteOff event
+                        for (int j = i + 1; j < track.size(); j++) {
+                            MidiEvent nextEvent = track.get(j);
+                            MidiMessage nextMessage = nextEvent.getMessage();
+                            if (nextMessage instanceof ShortMessage) {
+                                ShortMessage nextSM = (ShortMessage) nextMessage;
+                                int nextNote = nextSM.getData1();
+                                if (nextSM.getCommand() == ShortMessage.NOTE_OFF && nextNote == note) {
+                                    long duration = nextEvent.getTick() - event.getTick();
+                                    gameNote.setTicksDuration(duration);
+                                    gameNote.setDurationMs(Math.round(duration * analyzer.getTickMs()));
+                                    break;
+                                }
+                            }
+                        }
                         this.sequence.add(gameNote);
                     }
                 }
@@ -43,12 +58,11 @@ public class GameNoteSequence {
         this.sequence = sequence;
     }
 
-    // Getters and setters for sequence and track
-    public ArrayList<GameNote> getSequence() {
-        return sequence;
+    public int getSize() {
+        return sequence.size();
     }
 
-    public void setSequence(ArrayList<GameNote> sequence) {
-        this.sequence = sequence;
+    public int size() {
+        return sequence.size();
     }
 }
