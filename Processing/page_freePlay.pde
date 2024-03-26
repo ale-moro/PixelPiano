@@ -112,6 +112,7 @@ class PlayPage implements Page {
     this.octaveUpButton.addListener(this.buttonClickListener);
     this.octaveDownButton.addListener(this.buttonClickListener);
     this.myFader.addListener(this.buttonClickListener);
+    this.myKnob.addListener(this.buttonClickListener);
   }
 
   public void removeListeners() { // WARNING not safe
@@ -120,6 +121,7 @@ class PlayPage implements Page {
     this.octaveUpButton.removeListener(this.buttonClickListener);
     this.octaveDownButton.removeListener(this.buttonClickListener);
     this.myFader.removeListener(this.buttonClickListener);
+    this.myKnob.removeListener(this.buttonClickListener);
   }
 
   public void setVisibility(boolean isVisible){
@@ -130,13 +132,15 @@ class PlayPage implements Page {
       this.modeButton.setPosition(this.modeButtonPosition);
       this.octaveUpButton.setPosition(this.octaveUpButtonPosition);
       this.octaveDownButton.setPosition(this.octaveDownButtonPosition);
-      this.myFader.setPosition(this.myFaderPosition);     
+      this.myFader.setPosition(this.myFaderPosition); 
+      this.myKnob.setPosition(this.myKnobPosition);    
     } else {
       this.backButton.setPosition(this.inactivePosition);
       this.modeButton.setPosition(this.inactivePosition);
       this.octaveUpButton.setPosition(this.inactivePosition);
       this.octaveDownButton.setPosition(this.inactivePosition);
       this.myFader.setPosition(this.inactivePosition);
+      this.myKnob.setPosition(this.inactivePosition);
     }
   }
 
@@ -179,6 +183,9 @@ class PlayPage implements Page {
             break;
         case "mySlider":
             freePlayPage.faderPressed();
+            break;
+        case "myFader":
+            freePlayPage.knobPressed();
             break;
       }
     }
@@ -235,5 +242,9 @@ class PlayPage implements Page {
   }
   
   private void faderPressed(){
+  }
+
+  private void knobPressed(){
+    println("knobPressed");
   }
 }
