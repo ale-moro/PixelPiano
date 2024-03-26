@@ -13,7 +13,6 @@ public class MidiLoader {
   private int resolution;
   private int numTracks;
 
-
   public MidiLoader(){
     this.midiSequence = null;
     this.gameNoteSequence = new GameNoteSequence();

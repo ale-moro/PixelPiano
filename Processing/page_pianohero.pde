@@ -7,13 +7,28 @@ class PianoHeroPage implements Page {
   float[] loadMidiButtonPosition;
   float[] inactivePosition;
   ButtonClickListener buttonClickListener;
+  Fingers fingers;
+  PlayPagePiano keyboard;
+  float pianoHeight;
+  float keyWidth;
+  float margin;
+  float velocity = 3;
+  float rectY = 0;
+ 
   MidiLoader midiLoader;
 
   public PianoHeroPage() {
-
-    this.midiLoader = new MidiLoader();
-
+  
+    // this.midiLoader = new MidiLoader();
+    this.fingers = new Fingers();
+    this.keyboard = new PlayPagePiano();
     this.buttonClickListener = new ButtonClickListener(this);
+    this.pianoHeight = height/3;
+    this.margin = width / 10;
+    this.keyWidth = (width -  margin) / 21;
+
+    selectInput("Select a MIDI file:", "MIDIfileSelected");
+    
     this.backButtonPosition = new float[] {9*width/10 + 5, 9*height/10 +25};
     this.loadMidiButtonPosition = new float[] {width/2 + 10, 2*height/10 + 60};
     this.inactivePosition = new float[] {-1000, -1000};
@@ -78,9 +93,35 @@ class PianoHeroPage implements Page {
       println("GameNoteSequence size: " + gameNoteSequence.size());
     }
   }
+  
+  
+
 
  public void draw() {
-  }
+      
+      notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
+      // keyboard
+      this.keyboard.setNotes(notesOutput);
+      this.keyboard.draw();
+      // fingers' positions
+      this.fingers.positions(coordinates);
+
+        
+       
+      fill(80);
+      rect(width/2, rectY += velocity ,keyWidth, this.pianoHeight, 10);
+      if (rectY + pianoHeight >= height - height / 3 - pianoHeight/2) {
+          velocity = 0;
+       }
+       
+       if(velocity == 0){
+         rectY++;
+        }
+        
+      }
+     
+  
+
 }
     
     
