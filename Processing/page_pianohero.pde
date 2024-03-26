@@ -4,14 +4,27 @@ class PianoHeroPage implements Page {
   float[] backButtonPosition;
   float[] inactivePosition;
   ButtonClickListener buttonClickListener;
+  Fingers fingers;
+  PlayPagePiano keyboard;
+  float pianoHeight;
+  float keyWidth;
+  float margin;
+  float velocity = 3;
+  float rectY = 0;
+  
+
 
   MidiLoader midiLoader;
 
   public PianoHeroPage() {
 
     // this.midiLoader = new MidiLoader();
-
+    this.fingers = new Fingers();
+    this.keyboard = new PlayPagePiano();
     this.buttonClickListener = new ButtonClickListener(this);
+    this.pianoHeight = height/3;
+    this.margin = width / 10;
+    this.keyWidth = (width -  margin) / 21;
 
     selectInput("Select a MIDI file:", "MIDIfileSelected");
 
@@ -55,9 +68,35 @@ class PianoHeroPage implements Page {
       navigationController.changePage(activePage, modeSelectionPage);
     }
   }
+  
+  
+
 
  public void draw() {
-  }
+      
+      notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
+      // keyboard
+      this.keyboard.setNotes(notesOutput);
+      this.keyboard.draw();
+      // fingers' positions
+      this.fingers.positions(coordinates);
+
+        
+       
+      fill(80);
+      rect(width/2, rectY += velocity ,keyWidth, this.pianoHeight, 10);
+      if (rectY + pianoHeight >= height - height / 3 - pianoHeight/2) {
+          velocity = 0;
+       }
+       
+       if(velocity == 0){
+         rectY++;
+        }
+        
+      }
+     
+  
+
 }
     
     
