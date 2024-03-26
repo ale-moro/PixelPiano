@@ -124,6 +124,8 @@ class PianoHeroPage implements Page {
       fill(0,255,0);
       rect( keyboard.getCoord(i) , heights[i],  definekey(i)  , rectHeight[i], 10);
     
+    }else{
+      heights[i] = -10000000;
     }
   
   }
