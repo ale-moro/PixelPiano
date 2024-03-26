@@ -25,6 +25,8 @@ MARGIN = 10  # pixels
 FONT_SIZE = 10
 FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
+flattened_coords_prev = np.zeros(10)
+
 
 #ip = '192.168.1.176'
 ip = 'localhost'
@@ -45,10 +47,13 @@ def send_osc_active_notes(note_numbers: list):
   note_numbers = [int(n) for n in note_numbers]
   client.send_message('/note_numbers', note_numbers)
 
-def send_osc_coords(coords: list):
-  flattened_coords = [round(float(coord),2) for sublist in coords for coord in sublist]
-  #print(flattened_coords)
-  client.send_message('/coords', flattened_coords)
+def send_osc_coords(coords: list, flattened_coords_prev=flattened_coords_prev):
+  
+  flattened_coords = np.array([round(float(coord),4) for sublist in coords for coord in sublist])
+  avg_coords = (flattened_coords + flattened_coords_prev)/2
+  # print(flattened_coords)
+  flattened_coords_prev = avg_coords
+  client.send_message('/coords', avg_coords)
 
 
 def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLandmarkerResult):
@@ -119,11 +124,12 @@ def main():
    # access webcam
    cap = cv2.VideoCapture(0)
    hand_landmarker = landmarker_and_result()
+   
    while True:
       # pull frame
       ret, frame = cap.read()
       # mirror frame
-      #frame = cv2.flip(frame, 1)
+      frame = cv2.flip(frame, 1)
       # print landmarks
       hand_landmarker.detect_async(frame)
       frame = draw_landmarks_on_image(frame, hand_landmarker.result)
