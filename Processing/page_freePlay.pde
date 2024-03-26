@@ -54,7 +54,7 @@ class PlayPage implements Page {
                 .setPosition(this.inactivePosition)
                 .setSize(60,160)
                 .setColorForeground(color(200))
-                .setColorBackground(color(0))
+                .setColorBackground(color(0,0,0,1))
                 .setVisible(true)
                 .setColorActive(color(200));
     this.myFader.getCaptionLabel().setVisible(false);
@@ -63,7 +63,7 @@ class PlayPage implements Page {
     this.octaveUpButton = cp5.addButton("octaveUpButton")
               .setPosition(this.inactivePosition)
               .setSize(60,60)
-              .setColorBackground(color(0))
+              .setColorBackground(color(0,0,0,1))
               .setColorForeground(color(50))
               .setVisible(true)
               .setColorActive(color(50));      
@@ -73,7 +73,7 @@ class PlayPage implements Page {
     this.octaveDownButton = cp5.addButton("octaveDownButton")
                     .setPosition(this.inactivePosition)
                     .setSize(60,60)
-                    .setColorBackground(color(0))
+                    .setColorBackground(color(0,0,0,1))
                     .setColorForeground(color(50))
                     .setVisible(true)
                     .setColorActive(color(50));
@@ -83,7 +83,7 @@ class PlayPage implements Page {
     this.modeButton = cp5.addButton("modeButton")
         .setPosition(this.inactivePosition)
         .setSize(120,60)
-        .setColorBackground(color(0))
+        .setColorBackground(color(0,0,0,1))
         .setColorForeground(color(50))
         .setVisible(true)
         .setColorActive(color(50));
@@ -93,7 +93,7 @@ class PlayPage implements Page {
     this.backButton = cp5.addButton("freePlayBackButton")
             .setPosition(this.inactivePosition)
             .setSize(width/15,30)
-            .setColorBackground(color(0))
+            .setColorBackground(color(0,0,0,1))
             .setColorForeground(color(50))
             .setVisible(true)
             .setColorActive(color(50));
