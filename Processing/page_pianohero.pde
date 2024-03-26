@@ -1,7 +1,10 @@
+
 class PianoHeroPage implements Page {
   int pageIndex = PIANO_HERO_PAGE_INDEX;
   Button backButton;
+  Button loadMidiButton;
   float[] backButtonPosition;
+  float[] loadMidiButtonPosition;
   float[] inactivePosition;
   ButtonClickListener buttonClickListener;
   Fingers fingers;
@@ -11,13 +14,11 @@ class PianoHeroPage implements Page {
   float margin;
   float velocity = 3;
   float rectY = 0;
-  
-
-
+ 
   MidiLoader midiLoader;
 
   public PianoHeroPage() {
-
+  
     // this.midiLoader = new MidiLoader();
     this.fingers = new Fingers();
     this.keyboard = new PlayPagePiano();
@@ -27,8 +28,9 @@ class PianoHeroPage implements Page {
     this.keyWidth = (width -  margin) / 21;
 
     selectInput("Select a MIDI file:", "MIDIfileSelected");
-
+    
     this.backButtonPosition = new float[] {9*width/10 + 5, 9*height/10 +25};
+    this.loadMidiButtonPosition = new float[] {width/2 + 10, 2*height/10 + 60};
     this.inactivePosition = new float[] {-1000, -1000};
 
     this.backButton = cp5.addButton("pianoHeroBackButton")
@@ -40,6 +42,17 @@ class PianoHeroPage implements Page {
             .setColorActive(color(50));
     this.backButton.setLabel("Back");
     this.backButton.getCaptionLabel().setFont(customFont);
+
+    this.loadMidiButton = cp5.addButton("loadMidiButton")
+        .setPosition(this.inactivePosition)
+        .setSize(width/6,30)
+        .setColorBackground(color(0))
+        .setColorForeground(color(50))
+        .setVisible(true)
+        .setColorActive(color(50));
+    this.loadMidiButton.setLabel("Load Midi File");
+    this.loadMidiButton.getCaptionLabel().setFont(customFont);
+
     this.addListeners();
   }
 
@@ -49,14 +62,18 @@ class PianoHeroPage implements Page {
 
   public void addListeners(){
     this.backButton.addListener(this.buttonClickListener); 
+    this.loadMidiButton.addListener(this.buttonClickListener); 
+
   }
   public void removeListeners(){}
 
   public void setVisibility(boolean isVisible){
     if(isVisible){
       this.backButton.setPosition(this.backButtonPosition);
+      this.loadMidiButton.setPosition(this.loadMidiButtonPosition);
     } else {
       this.backButton.setPosition(this.inactivePosition);
+      this.loadMidiButton.setPosition(this.inactivePosition);
     } 
   }
 
@@ -66,6 +83,14 @@ class PianoHeroPage implements Page {
     
     if ("pianoHeroBackButton".equals(buttonName)) {
       navigationController.changePage(activePage, modeSelectionPage);
+    }
+    if ("loadMidiButton".equals(buttonName)) {
+      println("Loading Midi File");
+      String midiFileName = "BWV_0578.mid";
+      String midiFilePath = sketchPath() + "\\" + midiFileName;
+      GameNoteSequence gameNoteSequence = this.midiLoader.computeGameNoteSequence(midiFilePath);
+      println("GameNoteSequence: " + gameNoteSequence);
+      println("GameNoteSequence size: " + gameNoteSequence.size());
     }
   }
   

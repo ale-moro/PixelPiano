@@ -54,7 +54,7 @@ class PlayPage implements Page {
                 .setPosition(this.inactivePosition)
                 .setSize(60,160)
                 .setColorForeground(color(200))
-                .setColorBackground(color(0))
+                .setColorBackground(color(0,0,0,1))
                 .setVisible(true)
                 .setColorActive(color(200));
     this.myFader.getCaptionLabel().setVisible(false);
@@ -63,7 +63,7 @@ class PlayPage implements Page {
     this.octaveUpButton = cp5.addButton("octaveUpButton")
               .setPosition(this.inactivePosition)
               .setSize(60,60)
-              .setColorBackground(color(0))
+              .setColorBackground(color(0,0,0,1))
               .setColorForeground(color(50))
               .setVisible(true)
               .setColorActive(color(50));      
@@ -73,7 +73,7 @@ class PlayPage implements Page {
     this.octaveDownButton = cp5.addButton("octaveDownButton")
                     .setPosition(this.inactivePosition)
                     .setSize(60,60)
-                    .setColorBackground(color(0))
+                    .setColorBackground(color(0,0,0,1))
                     .setColorForeground(color(50))
                     .setVisible(true)
                     .setColorActive(color(50));
@@ -83,7 +83,7 @@ class PlayPage implements Page {
     this.modeButton = cp5.addButton("modeButton")
         .setPosition(this.inactivePosition)
         .setSize(120,60)
-        .setColorBackground(color(0))
+        .setColorBackground(color(0,0,0,1))
         .setColorForeground(color(50))
         .setVisible(true)
         .setColorActive(color(50));
@@ -93,7 +93,7 @@ class PlayPage implements Page {
     this.backButton = cp5.addButton("freePlayBackButton")
             .setPosition(this.inactivePosition)
             .setSize(width/15,30)
-            .setColorBackground(color(0))
+            .setColorBackground(color(0,0,0,1))
             .setColorForeground(color(50))
             .setVisible(true)
             .setColorActive(color(50));
@@ -112,6 +112,7 @@ class PlayPage implements Page {
     this.octaveUpButton.addListener(this.buttonClickListener);
     this.octaveDownButton.addListener(this.buttonClickListener);
     this.myFader.addListener(this.buttonClickListener);
+    this.myKnob.addListener(this.buttonClickListener);
   }
 
   public void removeListeners() { // WARNING not safe
@@ -120,6 +121,7 @@ class PlayPage implements Page {
     this.octaveUpButton.removeListener(this.buttonClickListener);
     this.octaveDownButton.removeListener(this.buttonClickListener);
     this.myFader.removeListener(this.buttonClickListener);
+    this.myKnob.removeListener(this.buttonClickListener);
   }
 
   public void setVisibility(boolean isVisible){
@@ -130,13 +132,15 @@ class PlayPage implements Page {
       this.modeButton.setPosition(this.modeButtonPosition);
       this.octaveUpButton.setPosition(this.octaveUpButtonPosition);
       this.octaveDownButton.setPosition(this.octaveDownButtonPosition);
-      this.myFader.setPosition(this.myFaderPosition);     
+      this.myFader.setPosition(this.myFaderPosition); 
+      this.myKnob.setPosition(this.myKnobPosition);    
     } else {
       this.backButton.setPosition(this.inactivePosition);
       this.modeButton.setPosition(this.inactivePosition);
       this.octaveUpButton.setPosition(this.inactivePosition);
       this.octaveDownButton.setPosition(this.inactivePosition);
       this.myFader.setPosition(this.inactivePosition);
+      this.myKnob.setPosition(this.inactivePosition);
     }
   }
 
@@ -179,6 +183,9 @@ class PlayPage implements Page {
             break;
         case "mySlider":
             freePlayPage.faderPressed();
+            break;
+        case "myFader":
+            freePlayPage.knobPressed();
             break;
       }
     }
@@ -235,5 +242,9 @@ class PlayPage implements Page {
   }
   
   private void faderPressed(){
+  }
+
+  private void knobPressed(){
+    println("knobPressed");
   }
 }
