@@ -1,3 +1,4 @@
+
 class PianoHeroPage implements Page {
   int pageIndex = PIANO_HERO_PAGE_INDEX;
   Button backButton;
@@ -70,8 +71,9 @@ class PianoHeroPage implements Page {
     }
     if ("loadMidiButton".equals(buttonName)) {
       println("Loading Midi File");
-      // this.midiLoader.printMidiFileInfo("C:\\Users\\Marco Furio Colombo\\Desktop\\PixelPiano\\Processing\\BWV_0578.mid");
-      GameNoteSequence gameNoteSequence = this.midiLoader.computeGameNoteSequence("C:\\Users\\Marco Furio Colombo\\Desktop\\PixelPiano\\Processing\\BWV_0578.mid");
+      String midiFileName = "BWV_0578.mid";
+      String midiFilePath = sketchPath() + "\\" + midiFileName;
+      GameNoteSequence gameNoteSequence = this.midiLoader.computeGameNoteSequence(midiFilePath);
       println("GameNoteSequence: " + gameNoteSequence);
       println("GameNoteSequence size: " + gameNoteSequence.size());
     }
