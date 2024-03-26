@@ -53,8 +53,8 @@ public abstract class Piano {
     rect(width*28/60 - 15, height*5/30, 100, 175, 10); 
     
     // knob
-    fill(0, 200);
-    ellipse(width*11/60 +85, height*5/30 +85, 160, 160);
+    //fill(0, 200,0,1);
+    //ellipse(width*11/60 +85, height*5/30 +85, 160, 160);
     
     // expert/beginner
     fill(0);
