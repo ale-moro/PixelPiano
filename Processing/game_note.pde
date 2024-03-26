@@ -103,4 +103,10 @@ public class GameNote {
     public void setDurationMs(int durationMs) {
         this.durationMs = durationMs;
     }
+
+    public int[] getOneHotNoteCode() {
+        int[] oneHotNote = new int[36];
+        oneHotNote[this.code % 36] = 1;
+        return oneHotNote;
+    }
 }

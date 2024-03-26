@@ -46,4 +46,10 @@ public class MidiNote {
     public void print(String prefix) {
         System.out.println(prefix + this.toString());
     }
+
+    public int[] getOneHotNoteCode() {
+        int[] oneHotNote = new int[36];
+        oneHotNote[this.key % 36] = 1;
+        return oneHotNote;
+    }
 }
