@@ -9,19 +9,23 @@ class PianoHeroPage implements Page {
   ButtonClickListener buttonClickListener;
   Fingers fingers;
   PlayPagePiano keyboard;
+  int currentTime=0;
+  int prevTime=0;
+  int diff;
   float pianoHeight;
   float keyWidth;
   float margin;
   float velocity = 1;
   float rectY = 0;
   float barLength;
+  float speed = 3;
   float[] heights = new float[36];
   float[] rectHeight = new float[36];
   int[] blackKeys = {1,3,6,8,10,13,15,18,20,22,25,27,30,32,34};
   float[][] played = {
   {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, 
-  {0, 0}, {0, 0}, {0, 0}, {0, 0}, {1, 0.5}, {0, 0}, {0, 0}, {0, 0}, 
-  {1, 0.2}, {0, 0}, {0, 0}, {1, 0.7}, {0, 0}, {0, 0}, {0, 0}, {1, 1}, 
+  {0, 0}, {0, 0}, {0, 0}, {0, 0}, {1, 1}, {0, 0}, {1, 0.5}, {0, 0}, 
+  {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, 
   {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, 
   {0, 0}, {0, 0}, {0, 0}, {0, 0}
   };
@@ -113,12 +117,12 @@ class PianoHeroPage implements Page {
         
     if (rectHeight[i] >0){
       
-      heights[i]++;
+      heights[i] = heights[i] + speed;
     
       rectHeight[i] = min(rectHeight[i], barLength);
     
       if(heights[i] + barLength > height/2){
-        rectHeight[i]--;
+        rectHeight[i] = rectHeight[i] - speed;
       }
       
       fill(0,255,0);
@@ -133,7 +137,9 @@ class PianoHeroPage implements Page {
 
 
  public void draw() {
-      
+     //prevTime = currentTime;
+     //currentTime = millis();
+     //diff = currentTime - prevTime;
       notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
       // keyboard
       this.keyboard.setNotes(notesOutput);
@@ -142,15 +148,15 @@ class PianoHeroPage implements Page {
       this.fingers.positions(coordinates);
       for(int i = 0; i<played.length; i++){
      
-        barLength = played[i][1]/0.001;
-        drawRect( i, barLength);
+        barLength = played[i][1]*1000/30*speed;
+        drawRect(i, barLength);
       
       }
-      
-      delay(10);
- }
+
      
-  
+     //println(currentTime, prevTime, diff);
+     delay(10);
+ }
 
 }
     
