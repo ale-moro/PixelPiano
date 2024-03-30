@@ -4,6 +4,7 @@ public abstract class Piano {
   int[] blackKeysInit = {1,2,4,5,6,8,9,11,12,13};
   String[] whiteNotes = {"C", "D", "E", "F", "G", "A", "B"};
   int pianoHeight = 0;
+  float[] coordX = new float[36];
 
   public Piano(){
     this.pianoHeight = height/3;
@@ -136,6 +137,14 @@ class PlayPagePiano extends Piano {
     this.notes = notes;
   }
 
+  public void Coord(int i, float x){
+    coordX[i] = x;
+  }
+  
+  public float getCoord(int i){
+      return coordX[i];
+  }
+  
   public void draw(){
     int j = 0;
     int k = 0;
@@ -147,6 +156,7 @@ class PlayPagePiano extends Piano {
       float keyX = width/20  +  j * keyWidth; 
 
       if(Arrays.binarySearch(whiteKeys,i)>=0){
+        Coord(i,keyX);
         j++;
         if (contains(this.notes, i)){
           fill(150);
@@ -168,6 +178,7 @@ class PlayPagePiano extends Piano {
           float blackKeyWidth = keyWidth / 1.5;
           float blackKeyHeight = this.pianoHeight / 1.5;
           float blackKeyX = keyX - blackKeyWidth / 2;
+          Coord(i,blackKeyX);
     
           // Draw shadow for black keys 
           fill(0, 200);
