@@ -1,4 +1,5 @@
 
+
 class PianoHeroPage implements Page {
   int pageIndex = PIANO_HERO_PAGE_INDEX;
   Button backButton;
@@ -12,6 +13,8 @@ class PianoHeroPage implements Page {
   int currentTime=0;
   int prevTime=0;
   int diff;
+  int index = 0;
+  ArrayList<FallingNote> fallingNotes;
   float pianoHeight;
   float keyWidth;
   float margin;
@@ -23,11 +26,7 @@ class PianoHeroPage implements Page {
   float[] rectHeight = new float[36];
   int[] blackKeys = {1,3,6,8,10,13,15,18,20,22,25,27,30,32,34};
   float[][] played = {
-  {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, 
-  {0, 0}, {0, 0}, {0, 0}, {0, 0}, {1, 1}, {0, 0}, {1, 0.5}, {0, 0}, 
-  {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, 
-  {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, 
-  {0, 0}, {0, 0}, {0, 0}, {0, 0}
+  {40, 1, 7}, {43,0.5,10},{40, 0.25, 10}, {40,0.25,11}
   };
   MidiLoader midiLoader;
 
@@ -64,6 +63,9 @@ class PianoHeroPage implements Page {
     for(int j = 0; j<rectHeight.length; j++){
       rectHeight[j] = Float.POSITIVE_INFINITY;
     }
+    
+    fallingNotes = new ArrayList<FallingNote>();
+    this.keyboard.draw();
   }
 
   public int getID(){
@@ -143,21 +145,62 @@ class PianoHeroPage implements Page {
       notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
       // keyboard
       this.keyboard.setNotes(notesOutput);
-      this.keyboard.draw();
+      
       // fingers' positions
       this.fingers.positions(coordinates);
-      for(int i = 0; i<played.length; i++){
-     
-        barLength = played[i][1]*1000/30*speed;
-        drawRect(i, barLength);
+
+    if (index<played.length && millis()/1000 > played[index][2]){
       
+      int noteNumber = (int)played[index][0]%36; //<>//
+
+      FallingNote note = new FallingNote(keyboard.getCoord(noteNumber), -played[index][1]*1000/30*speed, definekey(noteNumber), played[index][1]*1000/30*speed, speed); //<>//
+
+      fallingNotes.add(note);
+      index++;
+    }
+    
+    for (int i = fallingNotes.size()-1; i >= 0; i--) {
+      FallingNote note = fallingNotes.get(i);
+      note.update();
+      note.draw();
+      if (note.isOffScreen()) {
+        fallingNotes.remove(i);
       }
 
-     
+    }
+     //this.keyboard.draw();
      //println(currentTime, prevTime, diff);
+     this.keyboard.draw();
      delay(10);
  }
 
+};
+
+
+class FallingNote {
+  float x, y;
+  float width, rectHeight;
+  float speed;
+
+  FallingNote(float x, float y, float width, float rectHeight, float speed) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.rectHeight = rectHeight;
+    this.speed = speed;
+  }
+
+  void draw() {
+    fill(0,255,0);
+    rect(x, y, width, rectHeight, 10);
+  }
+
+  void update() {
+    y += speed;
+  }
+
+  boolean isOffScreen() {
+    return y > height/2;
+  }
 }
-    
     
