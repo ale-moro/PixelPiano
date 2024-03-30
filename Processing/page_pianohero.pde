@@ -12,9 +12,19 @@ class PianoHeroPage implements Page {
   float pianoHeight;
   float keyWidth;
   float margin;
-  float velocity = 3;
+  float velocity = 1;
   float rectY = 0;
- 
+  float barLength;
+  float[] heights = new float[36];
+  float[] rectHeight = new float[36];
+  int[] blackKeys = {1,3,6,8,10,13,15,18,20,22,25,27,30,32,34};
+  float[][] played = {
+  {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, 
+  {0, 0}, {0, 0}, {0, 0}, {0, 0}, {1, 0.5}, {0, 0}, {0, 0}, {0, 0}, 
+  {1, 0.2}, {0, 0}, {0, 0}, {1, 0.7}, {0, 0}, {0, 0}, {0, 0}, {1, 1}, 
+  {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, 
+  {0, 0}, {0, 0}, {0, 0}, {0, 0}
+  };
   MidiLoader midiLoader;
 
   public PianoHeroPage() {
@@ -27,10 +37,9 @@ class PianoHeroPage implements Page {
     this.margin = width / 10;
     this.keyWidth = (width -  margin) / 21;
 
-    selectInput("Select a MIDI file:", "MIDIfileSelected");
+    //selectInput("Select a MIDI file:", "MIDIfileSelected");
     
     this.backButtonPosition = new float[] {9*width/10 + 5, 9*height/10 +25};
-    this.loadMidiButtonPosition = new float[] {width/2 + 10, 2*height/10 + 60};
     this.inactivePosition = new float[] {-1000, -1000};
 
     this.backButton = cp5.addButton("pianoHeroBackButton")
@@ -42,18 +51,15 @@ class PianoHeroPage implements Page {
             .setColorActive(color(50));
     this.backButton.setLabel("Back");
     this.backButton.getCaptionLabel().setFont(customFont);
-
-    this.loadMidiButton = cp5.addButton("loadMidiButton")
-        .setPosition(this.inactivePosition)
-        .setSize(width/6,30)
-        .setColorBackground(color(0))
-        .setColorForeground(color(50))
-        .setVisible(true)
-        .setColorActive(color(50));
-    this.loadMidiButton.setLabel("Load Midi File");
-    this.loadMidiButton.getCaptionLabel().setFont(customFont);
-
     this.addListeners();
+    
+    for(int i = 0; i<heights.length; i++){
+        heights[i] = -1000000;
+    }
+    
+    for(int j = 0; j<rectHeight.length; j++){
+      rectHeight[j] = Float.POSITIVE_INFINITY;
+    }
   }
 
   public int getID(){
@@ -62,7 +68,7 @@ class PianoHeroPage implements Page {
 
   public void addListeners(){
     this.backButton.addListener(this.buttonClickListener); 
-    this.loadMidiButton.addListener(this.buttonClickListener); 
+    
 
   }
   public void removeListeners(){}
@@ -70,10 +76,10 @@ class PianoHeroPage implements Page {
   public void setVisibility(boolean isVisible){
     if(isVisible){
       this.backButton.setPosition(this.backButtonPosition);
-      this.loadMidiButton.setPosition(this.loadMidiButtonPosition);
+      
     } else {
       this.backButton.setPosition(this.inactivePosition);
-      this.loadMidiButton.setPosition(this.inactivePosition);
+      
     } 
   }
 
@@ -84,17 +90,46 @@ class PianoHeroPage implements Page {
     if ("pianoHeroBackButton".equals(buttonName)) {
       navigationController.changePage(activePage, modeSelectionPage);
     }
-    if ("loadMidiButton".equals(buttonName)) {
-      println("Loading Midi File");
-      String midiFileName = "BWV_0578.mid";
-      String midiFilePath = sketchPath() + "\\" + midiFileName;
-      GameNoteSequence gameNoteSequence = this.midiLoader.computeGameNoteSequence(midiFilePath);
-      println("GameNoteSequence: " + gameNoteSequence);
-      println("GameNoteSequence size: " + gameNoteSequence.size());
-    }
+    
   }
   
+   public float definekey(int inx){
   
+        if(Arrays.binarySearch(blackKeys, inx )>=0){ 
+          keyWidth = ((width - margin) / 21) / 1.5;
+        }else{
+          keyWidth = (width - margin) / 21;
+        }
+        
+        return keyWidth;
+  }
+
+
+  public void drawRect(int i, float barLength){
+    
+    if(heights[i] < -100000){
+      heights[i] = -barLength;
+    }
+        
+    if (rectHeight[i] >0){
+      
+      heights[i]++;
+    
+      rectHeight[i] = min(rectHeight[i], barLength);
+    
+      if(heights[i] + barLength > height/2){
+        rectHeight[i]--;
+      }
+      
+      fill(0,255,0);
+      rect( keyboard.getCoord(i) , heights[i],  definekey(i)  , rectHeight[i], 10);
+    
+    }else{
+      heights[i] = -10000000;
+    }
+  
+  }
+
 
 
  public void draw() {
@@ -105,20 +140,15 @@ class PianoHeroPage implements Page {
       this.keyboard.draw();
       // fingers' positions
       this.fingers.positions(coordinates);
-
-        
-       
-      fill(80);
-      rect(width/2, rectY += velocity ,keyWidth, this.pianoHeight, 10);
-      if (rectY + pianoHeight >= height - height / 3 - pianoHeight/2) {
-          velocity = 0;
-       }
-       
-       if(velocity == 0){
-         rectY++;
-        }
-        
+      for(int i = 0; i<played.length; i++){
+     
+        barLength = played[i][1]/0.001;
+        drawRect( i, barLength);
+      
       }
+      
+      delay(10);
+ }
      
   
 
