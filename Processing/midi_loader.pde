@@ -1,5 +1,14 @@
 import javax.sound.midi.*;
 
+void MIDIfileSelected(File selection) {
+  if (selection == null) {
+    println("Window was closed or the user hit cancel.");
+  } else {
+    println("User selected " + selection.getAbsolutePath());
+    midiLoaderSelectedMIDIFilePath = selection.getAbsolutePath();
+  }
+}
+
 public class MidiLoader {
   private Sequence midiSequence;
   private GameNoteSequence gameNoteSequence;
@@ -16,7 +25,7 @@ public class MidiLoader {
   public MidiLoader(){
     this.midiSequence = null;
     this.gameNoteSequence = new GameNoteSequence();
-    this.midiFilePath = "";
+    this.midiFilePath = midiLoaderSelectedMIDIFilePath;
     this.midiFile = null;
     this.analyzer = new MidiSequenceAnalyzer();
 
@@ -27,31 +36,24 @@ public class MidiLoader {
     this.numTracks = 0;
   }
   
-  public void printMidiFileInfo(String midiFilePath){
-    Sequence s = getMidiSequence(midiFilePath);
-    // print Sequence info
-    printMidiInfo(s);
-    extractMidiInfo(s);
-
-    // print Track info
-    Track[] tracks = s.getTracks();
-
-    println("Tracks: " + tracks.length);
-    for(int i = 0; i < tracks.length; i++) {
-      Track t = tracks[i];
-      printTrackInfo(t, i);
-
-      // print MIDI events info
-      for (int k = 0; k < min(t.size(), 20); ++k) {
-        MidiEvent e = t.get(k);
-        printMessage(e.getMessage(), e.getTick()); 
-      }
+  // ============================================= computeGameNoteSequence =============================================
+  // GameNoteSequence from a file
+  public GameNoteSequence computeGameNoteSequence(){
+    this.midiFilePath = midiLoaderSelectedMIDIFilePath;
+    println("computeGameNoteSequence - Selected MIDI file: " + this.midiFilePath);
+    if(this.midiFilePath == "") {
+      throw new RuntimeException("No MIDI file path provided. Use setFilePath() method before calling computeGameNoteSequence().");
     }
+    Sequence s = getMidiSequence(this.midiFilePath);
+    this.gameNoteSequence = new GameNoteSequence(s);
+    println("computeGameNoteSequence - GameNoteSequence computed. len: " + this.gameNoteSequence.getSequence().size() + " notes.");
+    return this.gameNoteSequence;
   }
 
   // GameNoteSequence from a file
   public GameNoteSequence computeGameNoteSequence(String midiFilePath){
-    Sequence s = getMidiSequence(midiFilePath);
+    println("computeGameNoteSequence - Selected MIDI file: " + this.midiFilePath);
+    Sequence s = getMidiSequence(this.midiFilePath);
     this.gameNoteSequence = new GameNoteSequence(s);
     return this.gameNoteSequence;
   }
@@ -61,29 +63,20 @@ public class MidiLoader {
     this.gameNoteSequence = new GameNoteSequence(s);
     return this.gameNoteSequence;
   }
+  // =======================================================================================
 
   public void setFilePath(String path) {
       this.midiFilePath = path;
   }
-
-  public Sequence loadMidiFile(String path) {
-    try {
-        // Load a MIDI midiSequence from a file
-        this.midiSequence = MidiSystem.getSequence(new File(this.midiFilePath));
-
-    } catch (IOException | InvalidMidiDataException e) {
-        e.printStackTrace();
-    }
-    return this.midiSequence;
+  public String setMidiFilePath() {
+    selectInput("Select a MIDI file:", "MIDIfileSelected");
+    this.midiFilePath = midiLoaderSelectedMIDIFilePath; 
+    return this.midiFilePath;
   }
 
-  void MIDIfileSelected(File selection) {
-    if (selection == null) {
-      println("Window was closed or the user hit cancel.");
-    } else {
-      println("User selected " + selection.getAbsolutePath());
-      this.midiFilePath = selection.getAbsolutePath();
-    }
+  public void setMidiFilePath(String path) {
+    midiLoaderSelectedMIDIFilePath = path;
+    this.midiFilePath = path;
   }
 
   private void extractMidiInfo(Sequence s){
@@ -120,6 +113,28 @@ public class MidiLoader {
   }
 
   // ============================================= PRINTING METHODS =============================================
+
+    public void printMidiFileInfo(String midiFilePath){
+    Sequence s = getMidiSequence(this.midiFilePath);
+    // print Sequence info
+    printMidiInfo(s);
+    extractMidiInfo(s);
+
+    // print Track info
+    Track[] tracks = s.getTracks();
+
+    println("Tracks: " + tracks.length);
+    for(int i = 0; i < tracks.length; i++) {
+      Track t = tracks[i];
+      printTrackInfo(t, i);
+
+      // print MIDI events info
+      for (int k = 0; k < min(t.size(), 20); ++k) {
+        MidiEvent e = t.get(k);
+        printMessage(e.getMessage(), e.getTick()); 
+      }
+    }
+  }
 
   private void printMessage(MidiMessage msg, long timeStamp) {
     // print notes
@@ -165,7 +180,5 @@ public class MidiLoader {
     println("    Events: " + t.size());
     println("    Duration (ticks): " + t.ticks());
   }
-
   // =======================================================================================
-
 }

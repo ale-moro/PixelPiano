@@ -7,6 +7,10 @@ class ModeSelectionPage implements Page {
   float[] inactivePosition;
   boolean isVisible;
   ButtonClickListener buttonClickListener;
+  String pageTitle;
+  float titleX;
+  float titleY;
+  float titleYshadow;
 
   public ModeSelectionPage() {
     this.isVisible = false;
@@ -15,29 +19,26 @@ class ModeSelectionPage implements Page {
     this.freePlayButtonPosition = new float[]{width/2 - 100, height/2 - 50};
     this.inactivePosition = new float[] {-1000, -1000};  
 
+    // Draw the title
+    this.pageTitle = "Select a Mode to Play";
+    this.titleX = width / 2;
+    this.titleY = height / 6 - 30;
+    this.titleYshadow = height / 6 - 30;
+
     // Create and customize "Free Play" button
     this.freePlayButton = cp5.addButton("freePlayButton")
-       .setPosition(this.inactivePosition)
-       .setSize(200, 50)
-       .setColorBackground(color(0))
-       .setColorForeground(color(50))
-       .setVisible(true)
-       .setColorActive(color(50));
+       .setSize(200, 50);
+    styleManager.setDefaultButtonStyle(this.freePlayButton);
     this.freePlayButton.setLabel("Free Play");
-    this.freePlayButton.getCaptionLabel().setFont(customFont);
     
     // Create and customize "Piano Hero" button
     this.pianoHeroButton = cp5.addButton("pianoHeroButton")
-       .setPosition(this.inactivePosition)
-       .setSize(200, 50)
-       .setColorBackground(color(0))
-       .setColorForeground(color(50))
-       .setVisible(true\)
-       .setColorActive(color(50));
+       .setSize(200, 50);
+    styleManager.setDefaultButtonStyle(this.pianoHeroButton);
     this.pianoHeroButton.setLabel("Piano Hero");
-    this.pianoHeroButton.getCaptionLabel().setFont(customFont);
     this.addListeners(); 
   }
+
 
   public int getID(){
     return this.pageIndex;
@@ -81,7 +82,20 @@ class ModeSelectionPage implements Page {
     }
   }
 
+  private void drawTitle(){
+    // Draw the title
+    textSize(60);
+    textAlign(CENTER, CENTER);
+  
+    // Draw the shadow
+    fill(150, 50);
+    text(this.pageTitle, titleX + 3, titleY + 3);
+    fill(0);
+    text(this.pageTitle, titleX, titleYshadow);
+  }
+
   public void draw(){
+    drawTitle();
   }
   
 }
