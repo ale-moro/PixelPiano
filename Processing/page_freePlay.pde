@@ -37,12 +37,12 @@ class PlayPage implements Page {
     // Knob
     this.myKnob = cp5.addKnob("myKnob")
               .setRange(0, 100)
-              .setValue(0) // Mappare valore nel range e settare value
+              .setValue(0) // todo: Mappare valore nel range e settare value
               .setPosition(this.inactivePosition)
               .setRadius(80)
               .setNumberOfTickMarks(10)
               .setColorForeground(color(200))
-              .setColorBackground(color(0))
+              .setColorBackground(color(0,0,0,1))
               .setVisible(true)
               .setColorActive(color(200));
     this.myKnob.getCaptionLabel().setVisible(false);
