@@ -72,5 +72,5 @@ class StartPage implements Page {
     fill(128);
     text(START_TITLE, width/2-250, buttonY, 500, buttonHeight);
   }
- 
+
 }
