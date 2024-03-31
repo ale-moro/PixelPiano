@@ -132,16 +132,6 @@ class PianoHeroPage implements Page {
   }
 
   public void draw() {
-    notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
-    
-    // keyboard
-    this.keyboard.setNotes(notesOutput);
-    this.keyboard.draw();
-
-    // fingers' positions
-    this.fingers.positions(coordinates);
-
-  public void draw() {
     //prevTime = currentTime;
     //currentTime = millis();
     //diff = currentTime - prevTime;
