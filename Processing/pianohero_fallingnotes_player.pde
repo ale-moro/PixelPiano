@@ -47,9 +47,9 @@ class FallingNotesPlayer {
                 int noteNumber = (int) this.noteSequence.get(index).getCode() % 36;
                 note = new FallingNote(
                     this.keyboard.getCoord(noteNumber),
-                    -this.noteSequence.get(index).getDurationMs()/30*this.speed,
+                    -this.noteSequence.get(index).getDurationMs()/80*this.speed,
                     defineKey(noteNumber),
-                    this.noteSequence.get(index).getDurationMs()/30*this.speed,
+                    this.noteSequence.get(index).getDurationMs()/80*this.speed,
                     this.speed
                 );
                 this.fallingNotes.add(note);

@@ -46,7 +46,7 @@ class PianoHeroPage implements Page {
     this.keyWidth = (width -  this.margin) / 21;
     this.noteSequence = new GameNoteSequence();
 
-    this.midiFilesDropdownItemList = new String[] {"BWV_0578.mid", "HesaPirate.mid"};
+    this.midiFilesDropdownItemList = new String[] {"assets\\BWV_0578.mid", "assets\\HesaPirate.mid"};
     this.midiFilePath = sketchPath() + "\\" + this.midiFilesDropdownItemList[0];
 
     this.midiLoader = new MidiLoader();
