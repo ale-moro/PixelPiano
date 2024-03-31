@@ -35,9 +35,7 @@ class PianoHeroPage implements Page {
   float[] heights = new float[36];
   float[] rectHeight = new float[36];
   int[] blackKeys = {1,3,6,8,10,13,15,18,20,22,25,27,30,32,34};
-  float[][] played = {
-    {40, 1, 7}, {43,0.5,10},{40, 0.25, 10}, {40,0.25,11}
-  };
+  ArrayList<float[]> played = new ArrayList<float[]>();
 
   MidiLoader midiLoader;
   GameNoteSequence noteSequence;
@@ -58,6 +56,19 @@ class PianoHeroPage implements Page {
 
     this.buttonsSetup();
     this.textSetup();
+
+    float[] noteInput = {40., 1., 7.};
+    this.played.add(noteInput);
+    noteInput = new float[]{43, 0.5, 10};
+    this.played.add(noteInput);
+    noteInput = new float[]{40, 0.25, 10};
+    this.played.add(noteInput);
+    noteInput = new float[]{40, 0.25, 11};
+    this.played.add(noteInput);
+    println("played");
+    for (int i = 0; i < this.played.size(); ++i) {
+      println("i : " + i + " | " + this.played.get(i)[0] + " - " + this.played.get(i)[1] + " - " + this.played.get(i)[2]);
+    }
 
     for(int i = 0; i<heights.length; i++){
         heights[i] = -1000000;
@@ -90,6 +101,17 @@ class PianoHeroPage implements Page {
     } else if ("pianoHeroPrepareMidiButton".equals(buttonName)) {
       this.noteSequence = this.midiLoader.computeGameNoteSequence();
       this.midiFilePath = this.midiLoader.getMidiFilePath();
+      float[] noteInput;
+      for (int i = 0; i < this.noteSequence.size(); ++i) {
+        GameNote note = this.noteSequence.get(i);
+        noteInput = new float[]{(float) note.getCode(), (float) note.getDurationMs(), note.getTimestampMs()};
+        this.played.add(noteInput);
+
+      }
+      for (int i = 0; i < 50; ++i) {
+        println("i : " + i + " | " + this.played.get(i)[0] + " - " + this.played.get(i)[1] + " - " + this.played.get(i)[2]);
+      }
+
 
     } else if ("pianoHeroStartMidiButton".equals(buttonName)) {
       
@@ -116,10 +138,9 @@ class PianoHeroPage implements Page {
     //diff = currentTime - prevTime;
     //println(currentTime, prevTime, diff);
 
-
-    if (index<played.length && millis()/1000 > played[index][2]){
-      int noteNumber = (int)played[index][0]%36;
-      FallingNote note = new FallingNote(keyboard.getCoord(noteNumber), -played[index][1]*1000/30*speed, defineKey(noteNumber), played[index][1]*1000/30*speed, speed); //<>//
+    if (index<played.size() && millis()/1000 > played.get(index)[2]){
+      int noteNumber = (int) played.get(index)[0]%36;
+      FallingNote note = new FallingNote(keyboard.getCoord(noteNumber), -played.get(index)[1]*1000/30*speed, defineKey(noteNumber), played.get(index)[1]*1000/30*speed, speed); //<>//
 
       fallingNotes.add(note);
       index++;
@@ -132,9 +153,8 @@ class PianoHeroPage implements Page {
       if (note.isOffScreen()) {
         fallingNotes.remove(i);
       }
-
     }
-    
+
     // fingers
     notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
     this.fingers.positions(coordinates);
@@ -148,7 +168,6 @@ class PianoHeroPage implements Page {
 
      delay(10);
   }
-  
 
   private void buttonsSetup(){
     this.buttonClickListener = new ButtonClickListener(this);
@@ -187,7 +206,6 @@ class PianoHeroPage implements Page {
     this.startMidiButton.setLabel("Start");
     this.addListeners();
   }
-
   
   public void setVisibility(boolean isVisible){
     if(isVisible){
