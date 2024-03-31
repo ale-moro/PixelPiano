@@ -1,5 +1,6 @@
 
 class PianoHeroPage implements Page {
+  
   String midiFilePath;
   int pageIndex = PIANO_HERO_PAGE_INDEX;
   DropdownList midiFilesDropdown;
@@ -42,7 +43,6 @@ class PianoHeroPage implements Page {
   GameNoteSequence noteSequence;
 
   public PianoHeroPage() {
-    
     this.fingers = new Fingers();
     this.keyboard = new PlayPagePiano();
 
@@ -68,7 +68,6 @@ class PianoHeroPage implements Page {
     }
     
     fallingNotes = new ArrayList<FallingNote>();
-    this.keyboard.draw();
   }
 
   public int getID(){
@@ -111,43 +110,16 @@ class PianoHeroPage implements Page {
     return keyWidth;
   }
 
-  public void drawRect(int i, float barLength){
-    if(heights[i] < -100000){
-      heights[i] = -barLength;
-    }
-        
-    if (rectHeight[i] >0){
-      heights[i] = heights[i] + speed;
-      rectHeight[i] = min(rectHeight[i], barLength);
-    
-      if(heights[i] + barLength > height/2) {
-        rectHeight[i] = rectHeight[i] - speed;
-      }
-      fill(0,255,0);
-      rect( keyboard.getCoord(i) , heights[i],  defineKey(i)  , rectHeight[i], 10);
-    } else {
-      heights[i] = -10000000;
-    }
-  }
-
   public void draw() {
     //prevTime = currentTime;
     //currentTime = millis();
     //diff = currentTime - prevTime;
     //println(currentTime, prevTime, diff);
 
-    notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
-
-    // keyboard
-    this.keyboard.setNotes(notesOutput);
-    this.keyboard.draw();
-
-    // fingers' positions
-    this.fingers.positions(coordinates);
 
     if (index<played.length && millis()/1000 > played[index][2]){
-      int noteNumber = (int)played[index][0]%36; //<>//
-      FallingNote note = new FallingNote(keyboard.getCoord(noteNumber), -played[index][1]*1000/30*speed, definekey(noteNumber), played[index][1]*1000/30*speed, speed); //<>//
+      int noteNumber = (int)played[index][0]%36;
+      FallingNote note = new FallingNote(keyboard.getCoord(noteNumber), -played[index][1]*1000/30*speed, defineKey(noteNumber), played[index][1]*1000/30*speed, speed); //<>//
 
       fallingNotes.add(note);
       index++;
@@ -162,8 +134,21 @@ class PianoHeroPage implements Page {
       }
 
     }
+    
+    // fingers
+    notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
+    this.fingers.positions(coordinates);
+
+    // keyboard
+    this.keyboard.setNotes(notesOutput);
+    this.keyboard.draw();
+
+    // text 
+    this.drawText();
+
      delay(10);
   }
+  
 
   private void buttonsSetup(){
     this.buttonClickListener = new ButtonClickListener(this);
@@ -177,7 +162,7 @@ class PianoHeroPage implements Page {
     this.inactivePosition = new float[] {-1000, -1000};
 
     this.midiFilesDropdown = cp5.addDropdownList("pianoHeroMidiFilesDropdown")
-      .setSize(width/5, 300)
+      .setSize(width/5, 300);
     this.setDropdownStyle(this.midiFilesDropdown);
     this.midiFilesDropdown.addItems(this.midiFilesDropdownItemList);
 
@@ -262,31 +247,3 @@ class PianoHeroPage implements Page {
     text(midiFileName, this.midiNameTextPosition[0], this.midiNameTextPosition[1]);
   }
 }
-
-class FallingNote {
-  float x, y;
-  float width, rectHeight;
-  float speed;
-
-  FallingNote(float x, float y, float width, float rectHeight, float speed) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.rectHeight = rectHeight;
-    this.speed = speed;
-  }
-
-  void draw() {
-    fill(0,255,0);
-    rect(x, y, width, rectHeight, 10);
-  }
-
-  void update() {
-    y += speed;
-  }
-
-  boolean isOffScreen() {
-    return y > height/2;
-  }
-}
-    
