@@ -61,44 +61,29 @@ class PlayPage implements Page {
 
     // Octaves Buttons
     this.octaveUpButton = cp5.addButton("octaveUpButton")
-              .setPosition(this.inactivePosition)
-              .setSize(60,60)
-              .setColorBackground(color(0,0,0,1))
-              .setColorForeground(color(50))
-              .setVisible(true)
-              .setColorActive(color(50));      
+    .setSize(60,60);
+    styleManager.setDefaultButtonStyle(this.octaveUpButton);
+    this.octaveUpButton.setColorBackground(color(0,0,0,1));
     this.octaveUpButton.setLabel("+");
-    this.octaveUpButton.getCaptionLabel().setFont(customFont);
     
-    this.octaveDownButton = cp5.addButton("octaveDownButton")
-                    .setPosition(this.inactivePosition)
-                    .setSize(60,60)
-                    .setColorBackground(color(0,0,0,1))
-                    .setColorForeground(color(50))
-                    .setVisible(true)
-                    .setColorActive(color(50));
+    this.octaveDownButton = cp5.addButton("octaveDownButton");
+    styleManager.setDefaultButtonStyle(this.octaveDownButton);
+    this.octaveDownButton.setSize(60,60);
+    this.octaveDownButton.setColorBackground(color(0,0,0,1));
     this.octaveDownButton.setLabel("-");
-    this.octaveDownButton.getCaptionLabel().setFont(customFont);
 
-    this.modeButton = cp5.addButton("modeButton")
-        .setPosition(this.inactivePosition)
-        .setSize(120,60)
-        .setColorBackground(color(0,0,0,1))
-        .setColorForeground(color(50))
-        .setVisible(true)
-        .setColorActive(color(50));
+    this.modeButton = cp5.addButton("modeButton");
+    styleManager.setDefaultButtonStyle(this.modeButton);
+    this.modeButton.setSize(120,60);
+    this.modeButton.setColorBackground(color(0,0,0,1));
     this.modeButton.setLabel("Expert");
-    this.modeButton.getCaptionLabel().setFont(customFont);
     
-    this.backButton = cp5.addButton("freePlayBackButton")
-            .setPosition(this.inactivePosition)
-            .setSize(width/15,30)
-            .setColorBackground(color(0,0,0,1))
-            .setColorForeground(color(50))
-            .setVisible(true)
-            .setColorActive(color(50));
+    this.backButton = cp5.addButton("freePlayBackButton");
+    styleManager.setDefaultButtonStyle(this.backButton);
+    this.backButton.setSize(width/15,30);
+    this.backButton.setColorBackground(color(0,0,0,1));
     this.backButton.setLabel("Back");
-    this.backButton.getCaptionLabel().setFont(customFont);
+
     this.addListeners();
   }
 

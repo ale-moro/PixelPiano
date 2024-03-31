@@ -18,9 +18,29 @@ public class ButtonClickListener implements ControlListener {
 
     @Override
     public void controlEvent(ControlEvent event) {
-        println(event);
-        println("CLICK: ", event.getName());
-        
-        this.page.handleButtonClick(event);
+      println(event);
+      println("CLICK: ", event.getName());
+      if (event.isGroup()) {
+          println("group CLICK: ", event.getGroup().getValue());
+      }
+      
+      this.page.handleButtonClick(event);
+    }
+}
+
+public class GroupControlListener implements ControlListener {
+    
+    private final Page page;
+    
+    public GroupControlListener(Page page) {
+      this.page = page;
+    }
+
+    @Override
+    public void controlEvent(ControlEvent event) {
+      println(event);
+      println("CLICK: ", event.getName());
+      
+      this.page.handleButtonClick(event);
     }
 }
