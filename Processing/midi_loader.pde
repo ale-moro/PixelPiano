@@ -79,6 +79,10 @@ public class MidiLoader {
     this.midiFilePath = path;
   }
 
+  public String getMidiFilePath() {
+    return this.midiFilePath;
+  } 
+
   private void extractMidiInfo(Sequence s){
     this.divisionType = s.getDivisionType();
     this.microsecondLength = s.getMicrosecondLength();

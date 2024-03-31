@@ -58,6 +58,9 @@ void setup() {
   pianoHeroPage = new PianoHeroPage();
   msgClass.selectMidiOutput("virtualPort");
   activePage = startPage;
+
+  midiLoaderSelectedMIDIFilePath = pianoHeroPage.getMidiFilesDropdownItemList()[0];
+
 }
 
 void draw() { 
