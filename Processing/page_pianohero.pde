@@ -1,5 +1,6 @@
 
 class PianoHeroPage implements Page {
+  
   String midiFilePath;
   int pageIndex = PIANO_HERO_PAGE_INDEX;
   DropdownList midiFilesDropdown;
@@ -174,6 +175,7 @@ class PianoHeroPage implements Page {
     }
      delay(10);
   }
+  
 
   private void buttonsSetup(){
     this.buttonClickListener = new ButtonClickListener(this);
