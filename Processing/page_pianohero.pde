@@ -36,7 +36,7 @@ class PianoHeroPage implements Page {
   float[] rectHeight = new float[36];
   int[] blackKeys = {1,3,6,8,10,13,15,18,20,22,25,27,30,32,34};
   float[][] played = {
-    {40, 1, 7}, {43,0.5,10},{40, 0.25, 10}, {40,0.25,11}
+    {40, 1000, 7000}, {43,500,10000},{40, 250, 10000}, {40,250,11000}
   };
 
   MidiLoader midiLoader;
@@ -117,9 +117,9 @@ class PianoHeroPage implements Page {
     //println(currentTime, prevTime, diff);
 
 
-    if (index<played.length && millis()/1000 > played[index][2]){
+    if (index<played.length && millis()> played[index][2]){
       int noteNumber = (int)played[index][0]%36;
-      FallingNote note = new FallingNote(keyboard.getCoord(noteNumber), -played[index][1]*1000/30*speed, defineKey(noteNumber), played[index][1]*1000/30*speed, speed); //<>//
+      FallingNote note = new FallingNote(keyboard.getCoord(noteNumber), -played[index][1]/30*speed, defineKey(noteNumber), played[index][1]/30*speed, speed); //<>//
 
       fallingNotes.add(note);
       index++;
@@ -135,13 +135,14 @@ class PianoHeroPage implements Page {
 
     }
     
+    
+     // keyboard
+    this.keyboard.setNotes(notesOutput);
+    this.keyboard.draw();
+    
     // fingers
     notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
     this.fingers.positions(coordinates);
-
-    // keyboard
-    this.keyboard.setNotes(notesOutput);
-    this.keyboard.draw();
 
     // text 
     this.drawText();
@@ -150,9 +151,9 @@ class PianoHeroPage implements Page {
   }
   
 
-  private void buttonsSetup(){
+  private void buttonsSetup(){ //<>//
     this.buttonClickListener = new ButtonClickListener(this);
-    this.groupControlListener = new GroupControlListener(this); 
+    this.groupControlListener = new GroupControlListener(this);  //<>//
 
     this.midiFilesDropdownPosition = new float[] {width/20, height/20};
     this.backButtonPosition = new float[] {9*width/10 + 5, 9*height/10 + 25};
