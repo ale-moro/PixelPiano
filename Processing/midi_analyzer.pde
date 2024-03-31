@@ -10,9 +10,9 @@ public class MidiSequenceAnalyzer {
 
     // Method to analyze the sequence and calculate BPM and quarter note duration
     public void analyze(Sequence sequence) {
-        this.bpm = calculateBPM(sequence);
-        this.quarterNoteDurationMs = calculateQuarterNoteDurationMs(sequence, bpm);
-        this.tickMs = calculateTickLength(sequence);
+        this.bpm = this.calculateBPM(sequence);
+        this.quarterNoteDurationMs = this.calculateQuarterNoteDurationMs(sequence, bpm);
+        this.tickMs = this.calculateTickLength(sequence);
     }
 
     // Method to calculate BPM (Beats Per Minute)
@@ -44,11 +44,11 @@ public class MidiSequenceAnalyzer {
 
     // Getter for tick duration in milliseconds
     public float getTickMs() {
-        return tickMs;
+        return tickMs/1000;
     } 
 
     // Getter for quarter note duration in milliseconds
     public long getQuarterNoteDurationMs() {
-        return quarterNoteDurationMs;
+        return quarterNoteDurationMs/1000;
     }
 }
