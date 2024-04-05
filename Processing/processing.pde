@@ -59,7 +59,7 @@ void setup() {
   msgClass.selectMidiOutput("virtualPort");
   activePage = startPage;
 
-  midiLoaderSelectedMIDIFilePath = sketchPath() + "\\" + pianoHeroPage.getMidiFilesDropdownItemList()[0];
+  midiLoaderSelectedMIDIFilePath = pianoHeroPage.getMidiFilesDropdownItemList()[0];
 
 }
 

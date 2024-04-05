@@ -39,15 +39,12 @@ public class MidiLoader {
   // ============================================= computeGameNoteSequence =============================================
   // GameNoteSequence from a file
   public GameNoteSequence computeGameNoteSequence(){
-    // get MIDI file
     this.midiFilePath = midiLoaderSelectedMIDIFilePath;
     println("computeGameNoteSequence - Selected MIDI file: " + this.midiFilePath);
     if(this.midiFilePath == "") {
       throw new RuntimeException("No MIDI file path provided. Use setFilePath() method before calling computeGameNoteSequence().");
     }
-    // get MIDI sequence
-    Sequence s = this.getMidiSequence(this.midiFilePath);
-    // get GameNoteSequence
+    Sequence s = getMidiSequence(this.midiFilePath);
     this.gameNoteSequence = new GameNoteSequence(s);
     println("computeGameNoteSequence - GameNoteSequence computed. len: " + this.gameNoteSequence.getSequence().size() + " notes.");
     return this.gameNoteSequence;
@@ -56,7 +53,7 @@ public class MidiLoader {
   // GameNoteSequence from a file
   public GameNoteSequence computeGameNoteSequence(String midiFilePath){
     println("computeGameNoteSequence - Selected MIDI file: " + this.midiFilePath);
-    Sequence s = this.getMidiSequence(this.midiFilePath);
+    Sequence s = getMidiSequence(this.midiFilePath);
     this.gameNoteSequence = new GameNoteSequence(s);
     return this.gameNoteSequence;
   }
@@ -122,10 +119,10 @@ public class MidiLoader {
   // ============================================= PRINTING METHODS =============================================
 
     public void printMidiFileInfo(String midiFilePath){
-    Sequence s = this.getMidiSequence(this.midiFilePath);
+    Sequence s = getMidiSequence(this.midiFilePath);
     // print Sequence info
-    this.printMidiInfo(s);
-    this.extractMidiInfo(s);
+    printMidiInfo(s);
+    extractMidiInfo(s);
 
     // print Track info
     Track[] tracks = s.getTracks();
@@ -133,12 +130,12 @@ public class MidiLoader {
     println("Tracks: " + tracks.length);
     for(int i = 0; i < tracks.length; i++) {
       Track t = tracks[i];
-      this.printTrackInfo(t, i);
+      printTrackInfo(t, i);
 
       // print MIDI events info
       for (int k = 0; k < min(t.size(), 20); ++k) {
         MidiEvent e = t.get(k);
-        this.printMessage(e.getMessage(), e.getTick()); 
+        printMessage(e.getMessage(), e.getTick()); 
       }
     }
   }
