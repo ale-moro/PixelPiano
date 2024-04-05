@@ -65,4 +65,12 @@ public class GameNoteSequence {
     public int size() {
         return sequence.size();
     }
+
+    public GameNote get(int index) {
+        return sequence.get(index);
+    }
+
+    public void add(GameNote gameNote) {
+        sequence.add(gameNote);
+    }
 }
