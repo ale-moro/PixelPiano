@@ -111,13 +111,13 @@ class PianoHeroPage implements Page {
   }
 
   public void draw() {
-    //prevTime = currentTime;
-    //currentTime = millis();
-    //diff = currentTime - prevTime;
-    //println(currentTime, prevTime, diff);
+    prevTime = currentTime;
+    currentTime = millis();
+    diff = currentTime - prevTime;
+    println(diff);
 
 
-    if (index<played.length && millis()> played[index][2]){
+    if (index<played.length && millis() > played[index][2]){
       int noteNumber = (int)played[index][0]%36;
       FallingNote note = new FallingNote(keyboard.getCoord(noteNumber), -played[index][1]/30*speed, defineKey(noteNumber), played[index][1]/30*speed, speed); //<>//
 
@@ -146,14 +146,16 @@ class PianoHeroPage implements Page {
 
     // text 
     this.drawText();
-
-     delay(10);
+    if (30-diff >0){
+      delay(30-diff);
+    }
+     
   }
-  
+   //<>//
 
   private void buttonsSetup(){ //<>//
     this.buttonClickListener = new ButtonClickListener(this);
-    this.groupControlListener = new GroupControlListener(this);  //<>//
+    this.groupControlListener = new GroupControlListener(this); 
 
     this.midiFilesDropdownPosition = new float[] {width/20, height/20};
     this.backButtonPosition = new float[] {9*width/10 + 5, 9*height/10 + 25};
