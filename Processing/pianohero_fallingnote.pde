@@ -2,17 +2,24 @@ class FallingNote {
   float x, y;
   float width, rectHeight;
   float speed;
+  boolean bw;
 
-  FallingNote(float x, float y, float width, float rectHeight, float speed) {
+  FallingNote(float x, float y, float width, float rectHeight, float speed, boolean bw) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.rectHeight = rectHeight;
     this.speed = speed;
+    this.bw = bw;
   }
 
   void draw() {
-    fill(0,255,0);
+    if (!bw){      
+      fill(0,255,0);
+    }
+    else{
+      fill(0,180,0);
+    }
     rect(x, y, width, rectHeight, 10);
   }
 

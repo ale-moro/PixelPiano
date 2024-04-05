@@ -27,15 +27,10 @@ class PianoHeroPage implements Page {
   float keyWidth;
   float margin;
   float rectY = 0;
-  float barLength;
-  float[] heights = new float[36];
-  float[] rectHeight = new float[36];
-  ArrayList<float[]> played = new ArrayList<float[]>();
 
   MidiLoader midiLoader;
   GameNoteSequence noteSequence;
   FallingNotesPlayer fallingNotesPlayer; 
-  ArrayList<FallingNote> fallingNotes;
 
   public PianoHeroPage() {
     this.fingers = new Fingers();
@@ -46,7 +41,7 @@ class PianoHeroPage implements Page {
     this.keyWidth = (width -  this.margin) / 21;
     this.noteSequence = new GameNoteSequence();
 
-    this.midiFilesDropdownItemList = new String[] {"assets\\BWV_0578.mid", "assets\\HesaPirate.mid"};
+    this.midiFilesDropdownItemList = new String[] {"assets\\BWV_0578.mid", "assets\\HesaPirate.mid", "assets\\test.mid"};
     this.midiFilePath = sketchPath() + "\\" + this.midiFilesDropdownItemList[0];
 
     this.midiLoader = new MidiLoader();
@@ -56,15 +51,7 @@ class PianoHeroPage implements Page {
 
     this.fallingNotesPlayer = new FallingNotesPlayer(this.noteSequence, this.keyboard, this.margin);
 
-    for(int i = 0; i<heights.length; i++){
-        heights[i] = -1000000;
-    }
-    
-    for(int j = 0; j<rectHeight.length; j++){
-      rectHeight[j] = Float.POSITIVE_INFINITY;
-    }
-    
-    fallingNotes = new ArrayList<FallingNote>();
+   
   }
 
   public int getID(){
@@ -106,12 +93,9 @@ class PianoHeroPage implements Page {
   }
   
   public void draw() {
-    //prevTime = currentTime;
-    //currentTime = millis();
-    //diff = currentTime - prevTime;
-    //println(currentTime, prevTime, diff);
 
-    this.fallingNotesPlayer.draw();
+
+    this.fallingNotesPlayer.draw(); //<>//
 
      // keyboard
     this.keyboard.setNotes(notesOutput);
@@ -124,7 +108,6 @@ class PianoHeroPage implements Page {
     // text 
     this.drawText();
 
-     delay(10);
   }
 
   private void buttonsSetup(){ //<>//
