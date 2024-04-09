@@ -106,8 +106,8 @@ class PlayPage implements Page {
     float boxY = height / 4 -  width/10;
     
     fill(255); // todo: make this transparent
+    stroke(0);
     rect(boxX, boxY, boxWidth, boxHeight, 10);
-    fill(255);
     rect(3*boxX/2 + boxWidth , boxY, boxWidth/2, boxHeight,10);  
   }
 
@@ -161,6 +161,7 @@ class PlayPage implements Page {
 
   private void backButtonPressed(){
     fill(200);
+    stroke(0);
     rect(9*width/10+5, height*9/10, width/15+10, 50,10);
     println("Active page index", activePageIndex);
   }
@@ -179,6 +180,7 @@ class PlayPage implements Page {
     shift -= 12;
     println(shift);
     fill(200);
+    stroke(0);
     rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);
   }
 
@@ -195,6 +197,7 @@ class PlayPage implements Page {
     shift += 12;
     println(shift);
     fill(200);
+    stroke(0);
     rect(3*width/5 + width/8,height*5/30 + 110, 70, 70, 10);  
   }
 
@@ -207,6 +210,7 @@ class PlayPage implements Page {
         this.beginnerMode = false;
     } 
     fill(200);
+    stroke(0);
     rect(3*width/5 + width/8 + 15, height*5/30 -15, 130, 70, 10);
   }
   
@@ -251,7 +255,6 @@ class PlayPage implements Page {
     this.octaveUpButton = cp5.addButton("octaveUpButton")
     .setSize(60,60);
     styleManager.setDefaultButtonStyle(this.octaveUpButton);
-    this.octaveUpButton.setColorBackground(color(0,0,0,1));
     this.octaveUpButton.setLabel("+");
     
     this.octaveDownButton = cp5.addButton("octaveDownButton");

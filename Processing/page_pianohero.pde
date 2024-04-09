@@ -118,8 +118,9 @@ class PianoHeroPage implements Page {
     //currentTime = millis();
     //diff = currentTime - prevTime;
     //println(currentTime, prevTime, diff);
-    fill(128);
-    rect(0, 0, width, height/2);
+    fill(255);
+    noStroke(); 
+    rect(0, 0, width, keyboard.getPianoY());
 
     this.fallingNotesPlayer.draw();
 

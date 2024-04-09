@@ -13,6 +13,7 @@ class FallingNote {
 
   void draw() {
     fill(0,255,0);
+    stroke(0, 196, 0);
     rect(x, y, width, rectHeight, 10);
   }
 

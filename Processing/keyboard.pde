@@ -34,8 +34,9 @@ class InitPagePiano extends Piano {
     for (int i = 0; i < 15; i++) {
       float keyWidth = width / 14;
       float keyX = i * keyWidth;
-  
+
       // White keys
+      stroke(255);
       fill(pastelColors[i]);
       rect(keyX, height - this.pianoHeight, keyWidth, this.pianoHeight, 10);
   
@@ -47,8 +48,10 @@ class InitPagePiano extends Piano {
   
         // Draw shadow for black keys
         fill(0, 200);
+        stroke(0);
         rect(blackKeyX + 5, height - this.pianoHeight + 5, blackKeyWidth, blackKeyHeight, 10);
         fill(0);
+        stroke(200);
         rect(blackKeyX, height - this.pianoHeight, blackKeyWidth, blackKeyHeight, 10);
       }
     }
@@ -67,7 +70,7 @@ class PlayPagePiano extends Piano {
 
   int[] notes = {};
 
-  public PlayPagePiano(){
+  public PlayPagePiano() {
     this.pianoHeight = 2*height / 5;
     this.pianoX = width / 20;
     this.pianoY = height / 2;
@@ -78,21 +81,6 @@ class PlayPagePiano extends Piano {
     this.blackKeyHeight = this.pianoHeight / 1.75;
   }
 
-  public void setNotes(int[] notes){
-    this.notes = notes;
-  }
-
-  public void Coord(int i, float x){
-    coordX[i] = x;
-  }
-  
-  public float getCoord(int i){
-      return coordX[i];
-  }
-
-  public float height(){
-    return this.pianoHeight;
-  }
 
   public void draw(){
     int j = 0;
@@ -110,6 +98,7 @@ class PlayPagePiano extends Piano {
         } else {
           fill(255);
         }
+        stroke(0);
         rect(keyX, this.pianoY, this.whiteKeyWidth, this.whiteKeyHeight, 10);
       }
     }
@@ -126,6 +115,7 @@ class PlayPagePiano extends Piano {
     
           // Draw shadow for black keys 
           fill(0, 200);
+          stroke(0);
           rect(blackKeyX + 5, this.pianoY + 5, this.blackKeyWidth, this.blackKeyHeight, 10);  
   
           if(contains(this.notes, i)){
@@ -133,6 +123,7 @@ class PlayPagePiano extends Piano {
           } else {
             fill(0);
           }
+          stroke(255); // todo: nice or set to stroke(0)?
           rect(blackKeyX, this.pianoY, this.blackKeyWidth, this.blackKeyHeight, 10);
         }
     } 
@@ -156,4 +147,58 @@ class PlayPagePiano extends Piano {
       } 
     }
   }
+
+  
+  // ================== Getters and Setters ==================
+  // Getters  
+  public float height() {
+    return this.pianoHeight;
+  }
+
+  public float getPianoX() {
+    return pianoX;
+  }
+
+  public float getPianoY() {
+    return pianoY;
+  }
+
+  public float getMarginX() {
+    return marginX;
+  }
+
+  public float getWhiteKeyWidth() {
+    return whiteKeyWidth;
+  }
+
+  public float getBlackKeyWidth() {
+    return blackKeyWidth;
+  }
+
+  public float getWhiteKeyHeight() {
+    return whiteKeyHeight;
+  }
+
+  public float getBlackKeyHeight() {
+    return blackKeyHeight;
+  }
+
+  public int[] getNotes() {
+    return notes;
+  }
+
+  public float getCoord(int i) {
+    return coordX[i];
+  }
+
+  public void Coord(int i, float x){
+    coordX[i] = x;
+  }
+
+  // Setters
+  public void setNotes(int[] notes) {
+    this.notes = notes;
+  }
+  // =============================================
+  
 }

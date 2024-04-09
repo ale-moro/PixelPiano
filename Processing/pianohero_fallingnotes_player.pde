@@ -3,7 +3,7 @@ class FallingNotesPlayer {
     boolean isPlaying; 
     ArrayList<FallingNote> fallingNotes;
     int index = 0;
-    float speed = 6;
+    float speed = 10;
     PlayPagePiano keyboard;
     int[] blackKeys = {1,3,6,8,10,13,15,18,20,22,25,27,30,32,34};
     long startTime = 0;
@@ -51,7 +51,7 @@ class FallingNotesPlayer {
     public void draw() {
         if (this.isPlaying) {
             FallingNote note;
-            println("millis: " + (millis() - this.startTime));
+            // println("millis: " + (millis() - this.startTime));
 
             if (index < this.noteSequence.size() && (millis() - this.startTime) > this.noteSequence.get(index).getTimestampMs()){
                 int noteNumber = (int) this.noteSequence.get(index).getCode() % 36;
