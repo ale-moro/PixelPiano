@@ -33,52 +33,6 @@ public abstract class Piano {
     }
   }
 
-  public void drawBox(){
-    // Box
-    float boxHeight = height / 3;
-    float boxWidth = width*0.58 ;
-    float boxX = width / 20;
-    float boxY = height / 4 -  width/10;
-    
-    fill(255);
-    rect(boxX, boxY, boxWidth, boxHeight, 10);
-    fill(255);
-    rect(3*boxX/2 + boxWidth , boxY, boxWidth/2, boxHeight,10);
-    
-    // Mini boxes
-  
-    // fader
-    fill(0);
-    rect(width*28/60 - 20, height*5/30 - 5, 100,175,10);
-    fill(0, 200);
-    rect(width*28/60 - 15, height*5/30, 100, 175, 10); 
-    
-    // knob
-    //fill(0, 200,0,1);
-    //ellipse(width*11/60 +85, height*5/30 +85, 160, 160);
-    
-    // expert/beginner
-    fill(0);
-    rect(3*width/5 + width/8 + 30 ,height*5/30 -20, 130,70,10);
-    fill(0, 200);
-    rect(3*width/5 + width/8 + 35, height*5/30 -15, 130, 70, 10);
-    
-    // octaves
-    fill(0);
-    rect(3*width/5 + width/8 + 105,height*5/30 + 105, 70,70,10);
-    fill(0, 200);
-    rect(3*width/5 + width/8 + 110,height*5/30 + 110, 70, 70, 10);
-    fill(0);
-    rect(3*width/5 + width/8 +15, height*5/30 + 105, 70,70,10);
-    fill(0, 200);
-    rect(3*width/5 + width/8 +20,height*5/30 + 110, 70, 70, 10);
-    
-    // back
-    fill(0);
-    rect(9*width/10, height*9/10 +15, width/15 +10, 50,10);
-    fill(0, 200);
-    rect(9*width/10 +5, height*9/10 +20, width/15 +10, 50,10);
-  }
 
   public boolean contains(int[] array, int key) {
     for (int value : array) {

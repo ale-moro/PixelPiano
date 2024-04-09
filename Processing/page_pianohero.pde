@@ -9,10 +9,12 @@ class PianoHeroPage implements Page {
   Button loadMidiButton;
   Button prepareMidiButton;
   Button startMidiButton;
+  Button restartMidiButton;
   float[] midiFilesDropdownPosition;
   float[] backButtonPosition;
   float[] loadMidiButtonPosition;
   float[] startMidiButtonPosition;
+  float[] restartMidiButtonPosition;
   float[] prepareMidiButtonPosition;
   float[] inactivePosition;
   float[] midiNameTextPosition;
@@ -41,12 +43,12 @@ class PianoHeroPage implements Page {
     this.fingers = new Fingers();
     this.keyboard = new PlayPagePiano();
 
-    this.pianoHeight = height/3;
+    this.pianoHeight = height / 3;
     this.margin = width / 10;
     this.keyWidth = (width -  this.margin) / 21;
     this.noteSequence = new GameNoteSequence();
 
-    this.midiFilesDropdownItemList = new String[] {"assets\\BWV_0578.mid", "assets\\HesaPirate.mid"};
+    this.midiFilesDropdownItemList = new String[] {"assets\\BWV_0578.mid", "assets\\HesaPirate.mid", "assets\\Dr Dre - Still Dre.mid"};
     this.midiFilePath = sketchPath() + "\\" + this.midiFilesDropdownItemList[0];
 
     this.midiLoader = new MidiLoader();
@@ -96,7 +98,11 @@ class PianoHeroPage implements Page {
         this.startMidiButton.setLabel("Stop");
       } else {
         this.startMidiButton.setLabel("Start");
-      }      
+      }
+    } else if ("pianoHeroRestartMidiButton".equals(buttonName)) {
+      this.fallingNotesPlayer.restart();      
+      this.startMidiButton.setLabel("Start");
+
     } else if ("pianoHeroMidiFilesDropdown".equals(buttonName)) {   
       println("value: " + this.midiFilesDropdown.getValue());
       this.midiFilePath = sketchPath() + "\\" + this.midiFilesDropdownItemList[round(this.midiFilesDropdown.getValue())];
@@ -104,16 +110,19 @@ class PianoHeroPage implements Page {
       print("Set new midi file path: " + this.midiFilePath);
     }
   }
+
+  public void setup() {}
   
   public void draw() {
     //prevTime = currentTime;
     //currentTime = millis();
     //diff = currentTime - prevTime;
     //println(currentTime, prevTime, diff);
+    background(255);
 
     this.fallingNotesPlayer.draw();
 
-     // keyboard
+    // keyboard
     this.keyboard.setNotes(notesOutput);
     this.keyboard.draw();
     
@@ -123,19 +132,21 @@ class PianoHeroPage implements Page {
 
     // text 
     this.drawText();
-
-     delay(10);
   }
 
-  private void buttonsSetup(){ //<>//
+  private void buttonsSetup(){ 
     this.buttonClickListener = new ButtonClickListener(this);
-    this.groupControlListener = new GroupControlListener(this);  //<>//
+    this.groupControlListener = new GroupControlListener(this); 
+    float bottomButtonRowY = 9.3*height/10;
 
+    this.midiNameTextPosition = new float[] {4*width/20, bottomButtonRowY + 11};
+    
     this.midiFilesDropdownPosition = new float[] {width/20, height/20};
-    this.backButtonPosition = new float[] {9*width/10 + 5, 9*height/10 + 25};
-    this.loadMidiButtonPosition = new float[] {width/20 , 9*height/10 + 25}; 
-    this.prepareMidiButtonPosition = new float[] {5.5*width/10, 9*height/10 + 25};
-    this.startMidiButtonPosition = new float[] {7.25*width/10, 9*height/10 + 25};
+    this.backButtonPosition = new float[] {9*width/10 + 5, bottomButtonRowY};
+    this.loadMidiButtonPosition = new float[] {width/20 , bottomButtonRowY}; 
+    this.prepareMidiButtonPosition = new float[] {5.1*width/10, bottomButtonRowY};
+    this.startMidiButtonPosition = new float[] {6.8*width/10 + 3, bottomButtonRowY};
+    this.restartMidiButtonPosition = new float[] {7.7*width/10, bottomButtonRowY};
     this.inactivePosition = new float[] {-1000, -1000};
 
     this.midiFilesDropdown = cp5.addDropdownList("pianoHeroMidiFilesDropdown")
@@ -159,11 +170,17 @@ class PianoHeroPage implements Page {
     this.prepareMidiButton.setLabel("Prepare Midi File");
       
     this.startMidiButton = cp5.addButton("pianoHeroStartMidiButton")
-      .setSize(width/10,30);
+      .setSize(width/12,30);
     styleManager.setDefaultButtonStyle(this.startMidiButton);
     this.startMidiButton.setLabel("Start");
+
+    this.restartMidiButton = cp5.addButton("pianoHeroRestartMidiButton")
+      .setSize(width/12,30);
+      styleManager.setDefaultButtonStyle(this.restartMidiButton);
+      this.restartMidiButton.setLabel("Restart");
     this.addListeners();
   }
+
   
   public void setVisibility(boolean isVisible){
     if(isVisible){
@@ -171,12 +188,14 @@ class PianoHeroPage implements Page {
       this.loadMidiButton.setPosition(this.loadMidiButtonPosition);
       this.prepareMidiButton.setPosition(this.prepareMidiButtonPosition);
       this.startMidiButton.setPosition(this.startMidiButtonPosition);
+      this.restartMidiButton.setPosition(this.restartMidiButtonPosition);
       this.midiFilesDropdown.setPosition(this.midiFilesDropdownPosition);
     } else {
       this.backButton.setPosition(this.inactivePosition);
       this.loadMidiButton.setPosition(this.inactivePosition); 
       this.prepareMidiButton.setPosition(this.inactivePosition);
       this.startMidiButton.setPosition(this.inactivePosition);
+      this.restartMidiButton.setPosition(this.inactivePosition);
       this.midiFilesDropdown.setPosition(this.inactivePosition);
     } 
   }
@@ -186,6 +205,7 @@ class PianoHeroPage implements Page {
     this.loadMidiButton.addListener(this.buttonClickListener);
     this.prepareMidiButton.addListener(this.buttonClickListener);
     this.startMidiButton.addListener(this.buttonClickListener);
+    this.restartMidiButton.addListener(this.buttonClickListener);
     this.midiFilesDropdown.addListener(this.groupControlListener);
   }
   public void removeListeners(){}
@@ -208,10 +228,6 @@ class PianoHeroPage implements Page {
   }
 
   private void textSetup(){
-    this.midiNameTextPosition = new float[] {4*width/20, 9*height/10 + 35};
-    fill(0);
-    textSize(20);
-    textAlign(CENTER, CENTER);
   }
 
   private void drawText(){

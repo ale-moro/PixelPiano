@@ -7,7 +7,8 @@ class NavigationController {
         println("changing page", old_page, " => ", new_page);
         old_page.setVisibility(false);
         activePage = new_page;
+        background(255);
         new_page.setVisibility(true);
-        println("done");
+        new_page.setup();
     }
 }

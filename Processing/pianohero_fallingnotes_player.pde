@@ -3,7 +3,7 @@ class FallingNotesPlayer {
     boolean isPlaying; 
     ArrayList<FallingNote> fallingNotes;
     int index = 0;
-    float speed = 3;
+    float speed = 6;
     PlayPagePiano keyboard;
     int[] blackKeys = {1,3,6,8,10,13,15,18,20,22,25,27,30,32,34};
     long startTime = 0;
@@ -13,7 +13,7 @@ class FallingNotesPlayer {
     // ================================ Constructor ================================
     FallingNotesPlayer(GameNoteSequence noteSequence, PlayPagePiano keyboard, float margin) {
         this.noteSequence = noteSequence;
-        this.isPlaying = true;
+        this.isPlaying = false;
         this.fallingNotes = new ArrayList<FallingNote>();
         this.keyboard = keyboard;
         this.margin = width / 10;
@@ -34,8 +34,18 @@ class FallingNotesPlayer {
 
     public boolean startStop() {
         this.isPlaying = !this.isPlaying;
-        this.startTime = millis();
+        if(this.startTime == 0){
+            this.startTime = millis();
+        }
         return this.isPlaying;
+    }
+
+    public void restart() {
+        this.isPlaying = false;
+        this.index = 0;
+        this.fallingNotes.clear();
+        this.loadNoteSequence(this.noteSequence);
+        this.startTime = 0; 
     }
 
     public void draw() {
