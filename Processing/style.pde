@@ -20,15 +20,15 @@ class StyleManager {
 
     public void drawButtonBox(Button b, float radius){
         fill(0);
-        rect(b.getPosition()[0]-5, b.getPosition()[1]-5, b.getWidth()+10, b.getHeight()+5, radius);
+        rect(b.getPosition()[0]-5, b.getPosition()[1]-5, b.getWidth()+10, b.getHeight()+10, radius);
         fill(0, 200);
-        rect(b.getPosition()[0], b.getPosition()[1], b.getWidth()+10, b.getHeight()+5, radius); 
+        rect(b.getPosition()[0], b.getPosition()[1], b.getWidth()+10, b.getHeight()+10, radius); 
     }
 
     public void drawVerticalSliderBox(Slider s, float radius){
         fill(0);
-        rect(s.getPosition()[0]-5, s.getPosition()[1]-15, s.getWidth()+35, s.getHeight()+20, radius);
+        rect(s.getPosition()[0]-5, s.getPosition()[1]-10, s.getWidth()+35, s.getHeight()+20, radius);
         fill(0, 200);
-        rect(s.getPosition()[0], s.getPosition()[1]-10, s.getWidth()+35, s.getHeight()+20, radius); 
+        rect(s.getPosition()[0], s.getPosition()[1]-5, s.getWidth()+35, s.getHeight()+20, radius); 
     }
 }

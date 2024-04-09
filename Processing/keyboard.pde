@@ -12,28 +12,6 @@ public abstract class Piano {
 
   public abstract void draw();
 
-
-  public void writeNoteLabels(int[] octaves, int flag) {    
-    float margin = width / 10;  // Set margin to 1/10 of the width
-    float keyWidth = (width -  margin) / 21;  // Adjust keyWidth based on margins
-    
-    int j=0;
-    for (int i = 0; i < 21; i++) {
-      float keyX = width/20 + i * keyWidth; 
-      j = min(floor(i / 7), 2);
-
-      // Note visualization only for C
-      if (flag == 0 || i % 7 == 0) {
-        String noteLabel = whiteNotes[i % 7] + str(octaves[j]);
-        fill(100);
-        textAlign(CENTER, CENTER);
-        textSize(16);
-        text(noteLabel, keyX + keyWidth / 2, height - this.pianoHeight*0.35);
-      } 
-    }
-  }
-
-
   public boolean contains(int[] array, int key) {
     for (int value : array) {
       if (value == key) {
@@ -75,16 +53,29 @@ class InitPagePiano extends Piano {
       }
     }
   }
-
 }
 
 
 class PlayPagePiano extends Piano {
-  int pianoHeight = 0;
+  float pianoX = 0;
+  float pianoY = 0;
+  float marginX = 0;
+  float whiteKeyWidth = 0;
+  float blackKeyWidth = 0; 
+  float whiteKeyHeight = 0;
+  float blackKeyHeight = 0;
+
   int[] notes = {};
 
   public PlayPagePiano(){
-    this.pianoHeight = height/3;
+    this.pianoHeight = 2*height / 5;
+    this.pianoX = width / 20;
+    this.pianoY = height / 2;
+    this.marginX = width / 10;
+    this.whiteKeyWidth = (width - this.marginX) / 21;
+    this.blackKeyWidth = (width - this.marginX) / (21*1.5);
+    this.whiteKeyHeight = this.pianoHeight;
+    this.blackKeyHeight = this.pianoHeight / 1.75;
   }
 
   public void setNotes(int[] notes){
@@ -98,53 +89,71 @@ class PlayPagePiano extends Piano {
   public float getCoord(int i){
       return coordX[i];
   }
-  
+
+  public float height(){
+    return this.pianoHeight;
+  }
+
   public void draw(){
     int j = 0;
     int k = 0;
-    float margin = width / 10; 
 
     // White keys
     for (int i = 0; i < 36; i++) {
-      float keyWidth = (width - margin) / 21;
-      float keyX = width/20  +  j * keyWidth; 
+      float keyX = this.pianoX + j * this.whiteKeyWidth; 
 
       if(Arrays.binarySearch(whiteKeys,i)>=0){
-        Coord(i,keyX);
+        Coord(i, keyX);
         j++;
         if (contains(this.notes, i)){
           fill(150);
         } else {
           fill(255);
         }
-        rect(keyX, height/2, keyWidth, 2*height/5, 10);
+        rect(keyX, this.pianoY, this.whiteKeyWidth, this.whiteKeyHeight, 10);
       }
     }
       
     // Black keys
     for(int i = 0; i < 36; i++){
-      float keyWidth = (width - margin) / 21;
-      float keyX = width/20 + k * keyWidth; 
+      float keyX = width/20 + k * this.whiteKeyWidth; 
       
       if(Arrays.binarySearch(whiteKeys,i) >=0) {
         k++;
       } else if(Arrays.binarySearch(blackKeys, i) >= 0){
-          float blackKeyWidth = keyWidth / 1.5;
-          float blackKeyHeight = this.pianoHeight / 1.5;
-          float blackKeyX = keyX - blackKeyWidth / 2;
-          Coord(i,blackKeyX);
+          float blackKeyX = keyX - this.blackKeyWidth / 2;
+          Coord(i, blackKeyX);
     
           // Draw shadow for black keys 
           fill(0, 200);
-          rect(blackKeyX + 5, height/2 + 5, blackKeyWidth, blackKeyHeight, 10);  
+          rect(blackKeyX + 5, this.pianoY + 5, this.blackKeyWidth, this.blackKeyHeight, 10);  
   
           if(contains(this.notes, i)){
             fill(150);
           } else {
             fill(0);
           }
-          rect(blackKeyX, height/2, blackKeyWidth, blackKeyHeight, 10);
+          rect(blackKeyX, this.pianoY, this.blackKeyWidth, this.blackKeyHeight, 10);
         }
     } 
+  }
+  public void writeNoteLabels(int[] octaves, int flag) {    
+    float margin = width / 10;  // Set margin to 1/10 of the width
+    float keyWidth = (width -  margin) / 21;  // Adjust keyWidth based on margins
+    
+    int j=0;
+    for (int i = 0; i < 21; i++) {
+      float keyX = width/20 + i * keyWidth; 
+      j = min(floor(i / 7), 2);
+
+      // Note visualization only for C
+      if (flag == 0 || i % 7 == 0) {
+        String noteLabel = whiteNotes[i % 7] + str(octaves[j]);
+        fill(100);
+        textAlign(CENTER, CENTER);
+        textSize(16);
+        text(noteLabel, keyX + keyWidth / 2, this.pianoY+this.pianoHeight-23);
+      } 
+    }
   }
 }

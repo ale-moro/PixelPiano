@@ -118,7 +118,8 @@ class PianoHeroPage implements Page {
     //currentTime = millis();
     //diff = currentTime - prevTime;
     //println(currentTime, prevTime, diff);
-    background(255);
+    fill(128);
+    rect(0, 0, width, height/2);
 
     this.fallingNotesPlayer.draw();
 
@@ -157,26 +158,31 @@ class PianoHeroPage implements Page {
     this.backButton = cp5.addButton("pianoHeroBackButton")
             .setSize(width/15,30);
     styleManager.setDefaultButtonStyle(this.backButton);
+    styleManager.drawButtonBox(this.backButton, 10);
     this.backButton.setLabel("Back");
 
     this.loadMidiButton = cp5.addButton("pianoHeroLoadMidiButton")
       .setSize(width/7,30);
     styleManager.setDefaultButtonStyle(this.loadMidiButton); 
+    styleManager.drawButtonBox(this.loadMidiButton, 10);
     this.loadMidiButton.setLabel("Load Midi File");
 
     this.prepareMidiButton = cp5.addButton("pianoHeroPrepareMidiButton")
       .setSize(width/6,30);
     styleManager.setDefaultButtonStyle(this.prepareMidiButton);
+    styleManager.drawButtonBox(this.prepareMidiButton, 10);
     this.prepareMidiButton.setLabel("Prepare Midi File");
       
     this.startMidiButton = cp5.addButton("pianoHeroStartMidiButton")
       .setSize(width/12,30);
     styleManager.setDefaultButtonStyle(this.startMidiButton);
+    styleManager.drawButtonBox(this.startMidiButton, 10);
     this.startMidiButton.setLabel("Start");
 
     this.restartMidiButton = cp5.addButton("pianoHeroRestartMidiButton")
       .setSize(width/12,30);
       styleManager.setDefaultButtonStyle(this.restartMidiButton);
+      styleManager.drawButtonBox(this.restartMidiButton, 10);
       this.restartMidiButton.setLabel("Restart");
     this.addListeners();
   }
