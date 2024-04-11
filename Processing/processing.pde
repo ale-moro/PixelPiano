@@ -23,6 +23,7 @@ OscP5 oscP5;
 OscMsg msgClass;
 NavigationController navigationController;
 StyleManager styleManager;
+Utils utils;
 
 MidiDevice.Info[] midiDeviceInfo;
 MidiDevice midiOutputDevice;
@@ -50,6 +51,7 @@ void setup() {
   cp5 = new ControlP5(this);
   navigationController = new NavigationController();
   styleManager = new StyleManager();
+  utils = new Utils();
   msgClass = new OscMsg();
   oscP5 = new OscP5(this, 12000);
   startPage = new StartPage();

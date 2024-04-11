@@ -25,7 +25,7 @@ public class MidiLoader {
   public MidiLoader(){
     this.midiSequence = null;
     this.gameNoteSequence = new GameNoteSequence();
-    this.midiFilePath = midiLoaderSelectedMIDIFilePath;
+    this.midiFilePath = Utils.safePath(midiLoaderSelectedMIDIFilePath);
     this.midiFile = null;
     this.analyzer = new MidiSequenceAnalyzer();
 
@@ -40,7 +40,7 @@ public class MidiLoader {
   // GameNoteSequence from a file
   public GameNoteSequence computeGameNoteSequence(){
     // get MIDI file
-    this.midiFilePath = midiLoaderSelectedMIDIFilePath;
+    this.midiFilePath = Utils.safePath(midiLoaderSelectedMIDIFilePath);
     println("computeGameNoteSequence - Selected MIDI file: " + this.midiFilePath);
     if(this.midiFilePath == "") {
       throw new RuntimeException("No MIDI file path provided. Use setFilePath() method before calling computeGameNoteSequence().");
@@ -69,17 +69,18 @@ public class MidiLoader {
   // =======================================================================================
 
   public void setFilePath(String path) {
-      this.midiFilePath = path;
+      this.midiFilePath = Utils.safePath(path);
   }
   public String setMidiFilePath() {
     selectInput("Select a MIDI file:", "MIDIfileSelected");
-    this.midiFilePath = midiLoaderSelectedMIDIFilePath; 
+    this.midiFilePath = Utils.safePath(midiLoaderSelectedMIDIFilePath); 
     return this.midiFilePath;
   }
 
   public void setMidiFilePath(String path) {
-    midiLoaderSelectedMIDIFilePath = path;
-    this.midiFilePath = path;
+    String sp = Utils.safePath(path);
+    midiLoaderSelectedMIDIFilePath = sp;
+    this.midiFilePath = sp;
   }
 
   public String getMidiFilePath() {
@@ -109,7 +110,7 @@ public class MidiLoader {
   }
 
   Sequence getMidiSequence(String midiFilePath){
-    this.midiFilePath = midiFilePath;
+    this.midiFilePath = Utils.safePath(midiFilePath);
     this.midiFile = new File(this.midiFilePath);
     try {
       this.midiSequence = MidiSystem.getSequence(this.midiFile);
