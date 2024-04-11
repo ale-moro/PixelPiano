@@ -60,10 +60,10 @@ void setup() {
   activePage = startPage;
 
   midiLoaderSelectedMIDIFilePath = sketchPath() + "\\" + pianoHeroPage.getMidiFilesDropdownItemList()[0];
-
+  frameRate(333);
+  background(255);
 }
 
 void draw() { 
-  background(255);
   activePage.draw();
 }

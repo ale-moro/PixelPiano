@@ -1,10 +1,7 @@
 // Global click listener
 void keyPressed() {
   if (activePage.getID() == START_PAGE_INDEX) {  // handles switching from welcome page to play page
-    println("Active page index", MODE_SELECTION_PAGE_INDEX);
     navigationController.changePage(activePage, modeSelectionPage);
-    println(activePage);
-    fill(255, 255);
   }
 }
 

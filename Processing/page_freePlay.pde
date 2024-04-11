@@ -25,65 +25,8 @@ class PlayPage implements Page {
     this.buttonClickListener = new ButtonClickListener(this);
     this.isVisible = false;
     this.beginnerMode = false;
-    
-    this.myKnobPosition = new float[] {width*11/60, height*5/30};
-    this.myFaderPosition = new float[] {width*28/60 - 10, height*5/30};
-    this.octaveUpButtonPosition = new float[] {3*width/5 + width/8 + 110,height*5/30 + 110};
-    this.octaveDownButtonPosition = new float[] {3*width/5 + width/8 +20, height*5/30 + 110};
-    this.modeButtonPosition = new float[] {3*width/5 + width/8 + 36 ,height*5/30 - 15};
-    this.backButtonPosition = new float[] {9*width/10 + 5, 9*height/10 +25};
-    this.inactivePosition = new float[] {-1000, -1000};  
 
-    // Knob
-    this.myKnob = cp5.addKnob("myKnob")
-              .setRange(0, 100)
-              .setValue(0) // todo: Mappare valore nel range e settare value
-              .setPosition(this.inactivePosition)
-              .setRadius(80)
-              .setNumberOfTickMarks(10)
-              .setColorForeground(color(200))
-              .setColorBackground(color(0,0,0,1))
-              .setVisible(true)
-              .setColorActive(color(200));
-    this.myKnob.getCaptionLabel().setVisible(false);
-    
-    // Fader
-    this.myFader = cp5.addSlider("mySlider")
-                .setRange(0, 100)
-                .setValue(10)
-                .setPosition(this.inactivePosition)
-                .setSize(60,160)
-                .setColorForeground(color(200))
-                .setColorBackground(color(0,0,0,1))
-                .setVisible(true)
-                .setColorActive(color(200));
-    this.myFader.getCaptionLabel().setVisible(false);
-
-    // Octaves Buttons
-    this.octaveUpButton = cp5.addButton("octaveUpButton")
-    .setSize(60,60);
-    styleManager.setDefaultButtonStyle(this.octaveUpButton);
-    this.octaveUpButton.setColorBackground(color(0,0,0,1));
-    this.octaveUpButton.setLabel("+");
-    
-    this.octaveDownButton = cp5.addButton("octaveDownButton");
-    styleManager.setDefaultButtonStyle(this.octaveDownButton);
-    this.octaveDownButton.setSize(60,60);
-    this.octaveDownButton.setColorBackground(color(0,0,0,1));
-    this.octaveDownButton.setLabel("-");
-
-    this.modeButton = cp5.addButton("modeButton");
-    styleManager.setDefaultButtonStyle(this.modeButton);
-    this.modeButton.setSize(120,60);
-    this.modeButton.setColorBackground(color(0,0,0,1));
-    this.modeButton.setLabel("Expert");
-    
-    this.backButton = cp5.addButton("freePlayBackButton");
-    styleManager.setDefaultButtonStyle(this.backButton);
-    this.backButton.setSize(width/15,30);
-    this.backButton.setColorBackground(color(0,0,0,1));
-    this.backButton.setLabel("Back");
-
+    this.buttonsSetup();
     this.addListeners();
   }
 
@@ -129,10 +72,16 @@ class PlayPage implements Page {
     }
   }
 
+  public void setup(){
+    println("PlayPage setup"); 
+    this.drawPageLayoutLines();
+  }
+
   public void draw(){
     if(this.isVisible){
       // outer box
-      this.keyboard.drawBox();
+      this.drawPageLayoutLines();
+      this.drawButtonsBoxes();
       notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
       // keyboard
       this.keyboard.setNotes(notesOutput);
@@ -147,7 +96,42 @@ class PlayPage implements Page {
       this.fingers.positions(coordinates);
     }
   }
+  
+  // =============================== PAGE STYLING ===============================
+  private void drawPageLayoutLines(){
+    // Box
+    float boxHeight = height / 3;
+    float boxWidth = width*0.58 ;
+    float boxX = width / 20;
+    float boxY = height / 4 -  width/10;
+    
+    fill(255); // todo: make this transparent
+    stroke(0);
+    rect(boxX, boxY, boxWidth, boxHeight, 10);
+    rect(3*boxX/2 + boxWidth , boxY, boxWidth/2, boxHeight,10);  
+  }
 
+  private void drawButtonsBoxes(){
+    // fader
+    styleManager.drawVerticalSliderBox(this.myFader, 10); 
+    
+    // knob
+    //fill(0, 200,0,1);
+    //ellipse(width*11/60 +85, height*5/30 +85, 160, 160);
+    
+    // expert/beginner
+    styleManager.drawButtonBox(this.modeButton, 10);
+
+    // octaves
+    styleManager.drawButtonBox(this.octaveUpButton, 10);
+    styleManager.drawButtonBox(this.octaveDownButton, 10);
+    
+    // back
+    styleManager.drawButtonBox(this.backButton, 10);
+  }
+  // =============================================================================
+
+  // =============================== BUTTON CLICKS ===============================
   public void handleButtonClick(ControlEvent event) {
     if (!event.isController()) return;
     
@@ -177,6 +161,7 @@ class PlayPage implements Page {
 
   private void backButtonPressed(){
     fill(200);
+    stroke(0);
     rect(9*width/10+5, height*9/10, width/15+10, 50,10);
     println("Active page index", activePageIndex);
   }
@@ -195,6 +180,7 @@ class PlayPage implements Page {
     shift -= 12;
     println(shift);
     fill(200);
+    stroke(0);
     rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);
   }
 
@@ -211,6 +197,7 @@ class PlayPage implements Page {
     shift += 12;
     println(shift);
     fill(200);
+    stroke(0);
     rect(3*width/5 + width/8,height*5/30 + 110, 70, 70, 10);  
   }
 
@@ -223,6 +210,7 @@ class PlayPage implements Page {
         this.beginnerMode = false;
     } 
     fill(200);
+    stroke(0);
     rect(3*width/5 + width/8 + 15, height*5/30 -15, 130, 70, 10);
   }
   
@@ -232,4 +220,71 @@ class PlayPage implements Page {
   private void knobPressed(){
     println("knobPressed");
   }
+  // ================================================================================
+
+  // =============================== GRAPHIC ELEMENTS ===============================
+  private void buttonsSetup(){
+    this.setupButtonPositions();
+
+    // Knob
+    this.myKnob = cp5.addKnob("myKnob")
+              .setRange(0, 100)
+              .setValue(0) // todo: Mappare valore nel range e settare value
+              .setPosition(this.inactivePosition)
+              .setRadius(80)
+              .setNumberOfTickMarks(10)
+              .setColorForeground(color(200))
+              .setColorBackground(color(0,0,0,1))
+              .setVisible(true)
+              .setColorActive(color(200));
+    this.myKnob.getCaptionLabel().setVisible(false);
+    
+    // Fader
+    this.myFader = cp5.addSlider("mySlider")
+                .setRange(0, 100)
+                .setValue(50)
+                .setPosition(this.inactivePosition)
+                .setSize(60,160)
+                .setColorForeground(color(200))
+                .setColorBackground(color(0,0,0,1))
+                .setVisible(true)
+                .setColorActive(color(200));
+    this.myFader.getCaptionLabel().setVisible(false);
+
+    // Octaves Buttons
+    this.octaveUpButton = cp5.addButton("octaveUpButton")
+    .setSize(60,60);
+    styleManager.setDefaultButtonStyle(this.octaveUpButton);
+    this.octaveUpButton.setLabel("+");
+    
+    this.octaveDownButton = cp5.addButton("octaveDownButton");
+    styleManager.setDefaultButtonStyle(this.octaveDownButton);
+    this.octaveDownButton.setSize(60,60);
+    this.octaveDownButton.setColorBackground(color(0,0,0,1));
+    this.octaveDownButton.setLabel("-");
+
+    this.modeButton = cp5.addButton("modeButton");
+    styleManager.setDefaultButtonStyle(this.modeButton);
+    this.modeButton.setSize(120,60);
+    this.modeButton.setColorBackground(color(0,0,0,1));
+    this.modeButton.setLabel("Expert");
+    
+    this.backButton = cp5.addButton("freePlayBackButton");
+    styleManager.setDefaultButtonStyle(this.backButton);
+    this.backButton.setSize(width/15, 40);
+    this.backButton.setColorBackground(color(0,0,0,1));
+    this.backButton.setLabel("Back");
+  }
+
+  void setupButtonPositions(){
+    this.myKnobPosition = new float[] {width*11/60, height*5/30};
+    this.myFaderPosition = new float[] {width*28/60 - 10, height*5/30};
+    this.octaveUpButtonPosition = new float[] {3*width/5 + width/8 + 110,height*5/30 + 110};
+    this.octaveDownButtonPosition = new float[] {3*width/5 + width/8 +20, height*5/30 + 110};
+    this.modeButtonPosition = new float[] {3*width/5 + width/8 + 36 ,height*5/30 - 15};
+    this.backButtonPosition = new float[] {9*width/10 + 5, 9*height/10 +25};
+    this.inactivePosition = new float[] {-1000, -1000};  
+  } 
+
+  // ================================================================================
 }

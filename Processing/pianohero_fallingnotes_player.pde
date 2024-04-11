@@ -38,8 +38,18 @@ class FallingNotesPlayer {
 
     public boolean startStop() {
         this.isPlaying = !this.isPlaying;
-        this.startTime = millis();
+        if(this.startTime == 0){
+            this.startTime = millis();
+        }
         return this.isPlaying;
+    }
+
+    public void restart() {
+        this.isPlaying = false;
+        this.index = 0;
+        this.fallingNotes.clear();
+        this.loadNoteSequence(this.noteSequence);
+        this.startTime = 0; 
     }
 
     public void draw() {
@@ -49,8 +59,7 @@ class FallingNotesPlayer {
                 //println(currentTime, prevTime, diff);   
         if (this.isPlaying) {
             FallingNote note;
-               
-            //println("millis: " + (millis() - this.startTime));
+            // println("millis: " + (millis() - this.startTime));
 
             if (index < this.noteSequence.size() && (millis() - this.startTime) > this.noteSequence.get(index).getTimestampMs()){
                 int noteNumber = (int) this.noteSequence.get(index).getCode() % 36;

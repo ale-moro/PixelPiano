@@ -13,6 +13,7 @@ class ModeSelectionPage implements Page {
   float titleYshadow;
 
   public ModeSelectionPage() {
+    background(255);
     this.isVisible = false;
     this.buttonClickListener = new ButtonClickListener(this);
     this.pianoHeroButtonPosition = new float[]{width/2 - 100, height/2 + 50};
@@ -24,21 +25,18 @@ class ModeSelectionPage implements Page {
     this.titleX = width / 2;
     this.titleY = height / 6 - 30;
     this.titleYshadow = height / 6 - 30;
-
-    // Create and customize "Free Play" button
-    this.freePlayButton = cp5.addButton("freePlayButton")
-       .setSize(200, 50);
-    styleManager.setDefaultButtonStyle(this.freePlayButton);
-    this.freePlayButton.setLabel("Free Play");
-    
-    // Create and customize "Piano Hero" button
-    this.pianoHeroButton = cp5.addButton("pianoHeroButton")
-       .setSize(200, 50);
-    styleManager.setDefaultButtonStyle(this.pianoHeroButton);
-    this.pianoHeroButton.setLabel("Piano Hero");
-    this.addListeners(); 
+    this.setupButtons();
+    this.addListeners();
   }
 
+  public void setup(){
+    styleManager.drawButtonBox(this.freePlayButton, 10.0);
+    styleManager.drawButtonBox(this.pianoHeroButton, 10.0);
+  }
+  
+  public void draw(){
+    this.drawTitle();
+  }
 
   public int getID(){
     return this.pageIndex;
@@ -94,11 +92,18 @@ class ModeSelectionPage implements Page {
     text(this.pageTitle, titleX, titleYshadow);
   }
 
-  public void draw(){
-    drawTitle();
-  }
-  
-}
+  private void setupButtons(){
+    // Create and customize "Free Play" button
+    this.freePlayButton = cp5.addButton("freePlayButton")
+       .setSize(200, 50);
+    styleManager.setDefaultButtonStyle(this.freePlayButton);
+    this.freePlayButton.setLabel("Free Play");
+    
+    // Create and customize "Piano Hero" button
+    this.pianoHeroButton = cp5.addButton("pianoHeroButton")
+       .setSize(200, 50);
+    styleManager.setDefaultButtonStyle(this.pianoHeroButton);
+    this.pianoHeroButton.setLabel("Piano Hero");
 
-    
-    
+  }
+}

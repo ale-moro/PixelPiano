@@ -16,6 +16,10 @@ class StartPage implements Page {
   public void removeListeners(){}
   public void setVisibility(boolean isVisible){}
   public void handleButtonClick(ControlEvent event){}
+
+  public void setup(){
+    this.pageIndex = START_PAGE_INDEX;
+  }
   
   public void draw(){
     drawText();

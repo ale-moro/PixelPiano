@@ -16,10 +16,13 @@ class FallingNote {
   void draw() {
     if (!bw){      
       fill(0,255,0);
+      stroke(0, 196, 0);
     }
     else{
       fill(0,180,0);
+      stroke(0, 128, 0);
     }
+     
     rect(x, y, width, rectHeight, 10);
   }
 
