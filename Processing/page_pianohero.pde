@@ -43,7 +43,7 @@ class PianoHeroPage implements Page {
     this.keyWidth = (width -  this.margin) / 21;
     this.noteSequence = new GameNoteSequence();
 
-    this.midiFilesDropdownItemList = new String[] {"assets\\BWV_0578.mid", "assets\\HesaPirate.mid", "assets\\test.mid"};
+    this.midiFilesDropdownItemList = new String[] {"assets\\BWV_0578.mid", "assets\\HesaPirate.mid", "assets\\Dr Dre - Still Dre.mid"};
     this.midiFilePath = sketchPath() + "\\" + this.midiFilesDropdownItemList[0];
 
     this.midiLoader = new MidiLoader();
@@ -110,7 +110,7 @@ class PianoHeroPage implements Page {
     rect(0, 0, width, keyboard.getPianoY());
 
 
-    this.fallingNotesPlayer.draw(); //<>//
+    this.fallingNotesPlayer.draw(); //<>// //<>//
 
     // keyboard
     this.keyboard.setNotes(notesOutput);
