@@ -3,7 +3,7 @@ class FallingNotesPlayer {
     boolean isPlaying; 
     ArrayList<FallingNote> fallingNotes;
     int index = 0;
-    float speed = 1;
+    float speed = 3;
     boolean bw;
     PlayPagePiano keyboard;
     int[] blackKeys = {1,3,6,8,10,13,15,18,20,22,25,27,30,32,34};
@@ -46,7 +46,7 @@ class FallingNotesPlayer {
                 prevTime = currentTime;
                 currentTime = millis();
                 diff = currentTime - prevTime;
-               // println(currentTime, prevTime, diff);   
+                //println(currentTime, prevTime, diff);   
         if (this.isPlaying) {
             FallingNote note;
                
