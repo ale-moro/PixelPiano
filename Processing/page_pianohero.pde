@@ -44,7 +44,7 @@ class PianoHeroPage implements Page {
     this.noteSequence = new GameNoteSequence();
 
     this.midiFilesDropdownItemList = new String[] {"assets\\BWV_0578.mid", "assets\\HesaPirate.mid", "assets\\Dr Dre - Still Dre.mid"};
-    this.midiFilePath = sketchPath() + "\\" + this.midiFilesDropdownItemList[0];
+    this.midiFilePath = Utils.safePath(sketchPath() + "\\" + this.midiFilesDropdownItemList[0]);
 
     this.midiLoader = new MidiLoader();
 
@@ -76,7 +76,7 @@ class PianoHeroPage implements Page {
 
     } else if ("pianoHeroPrepareMidiButton".equals(buttonName)) {
       this.noteSequence = this.midiLoader.computeGameNoteSequence();
-      this.midiFilePath = this.midiLoader.getMidiFilePath();
+      this.midiFilePath = Utils.safePath(this.midiLoader.getMidiFilePath());
       this.fallingNotesPlayer.loadNoteSequence(this.noteSequence);
 
     } else if ("pianoHeroStartMidiButton".equals(buttonName)) {
@@ -92,7 +92,7 @@ class PianoHeroPage implements Page {
 
     } else if ("pianoHeroMidiFilesDropdown".equals(buttonName)) {   
       println("value: " + this.midiFilesDropdown.getValue());
-      this.midiFilePath = sketchPath() + "\\" + this.midiFilesDropdownItemList[round(this.midiFilesDropdown.getValue())];
+      this.midiFilePath = Utils.safePath(sketchPath() + "\\" + this.midiFilesDropdownItemList[round(this.midiFilesDropdown.getValue())]);
       this.midiLoader.setMidiFilePath(this.midiFilePath);
       print("Set new midi file path: " + this.midiFilePath);
     }
@@ -114,8 +114,8 @@ class PianoHeroPage implements Page {
 
     // keyboard
     this.keyboard.setNotes(notesOutput);
-    this.keyboard.draw();
     
+    this.keyboard.draw();
     // fingers
     notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
     this.fingers.positions(coordinates);
@@ -230,6 +230,7 @@ class PianoHeroPage implements Page {
     textSize(20);
     textAlign(LEFT, CENTER);
     this.midiFilePath = this.midiFilePath != midiLoaderSelectedMIDIFilePath? midiLoaderSelectedMIDIFilePath : this.midiFilePath;
+    this.midiFilePath = Utils.safePath(this.midiFilePath);
     String midiFileName = this.midiFilePath.contains("\\") ? this.midiFilePath.substring(this.midiFilePath.lastIndexOf("\\") + 1) : this.midiFilePath;
     text(midiFileName, this.midiNameTextPosition[0], this.midiNameTextPosition[1]);
   }
