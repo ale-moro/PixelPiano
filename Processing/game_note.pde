@@ -34,7 +34,6 @@ public class GameNote {
         this.timestampMs = Math.round(tickTimestamp * tick2Ms);    
     }
 
-
     public GameNote(int code, long tickTimestamp, int ticksDuration, int velocity, float tick2Ms) {
         this.code = code;
         this.tickTimestamp = tickTimestamp;

@@ -2,7 +2,9 @@ public interface Page {
 
     public int getID();
 
+    public void setup();
     public void draw();
+
 
     public void addListeners();
     public void removeListeners();

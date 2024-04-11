@@ -7,36 +7,35 @@ class ModeSelectionPage implements Page {
   float[] inactivePosition;
   boolean isVisible;
   ButtonClickListener buttonClickListener;
+  String pageTitle;
+  float titleX;
+  float titleY;
+  float titleYshadow;
 
   public ModeSelectionPage() {
+    background(255);
     this.isVisible = false;
     this.buttonClickListener = new ButtonClickListener(this);
     this.pianoHeroButtonPosition = new float[]{width/2 - 100, height/2 + 50};
     this.freePlayButtonPosition = new float[]{width/2 - 100, height/2 - 50};
     this.inactivePosition = new float[] {-1000, -1000};  
 
-    // Create and customize "Free Play" button
-    this.freePlayButton = cp5.addButton("freePlayButton")
-       .setPosition(this.inactivePosition)
-       .setSize(200, 50)
-       .setColorBackground(color(0))
-       .setColorForeground(color(50))
-       .setVisible(true)
-       .setColorActive(color(50));
-    this.freePlayButton.setLabel("Free Play");
-    this.freePlayButton.getCaptionLabel().setFont(customFont);
-    
-    // Create and customize "Piano Hero" button
-    this.pianoHeroButton = cp5.addButton("pianoHeroButton")
-       .setPosition(this.inactivePosition)
-       .setSize(200, 50)
-       .setColorBackground(color(0))
-       .setColorForeground(color(50))
-       .setVisible(true\)
-       .setColorActive(color(50));
-    this.pianoHeroButton.setLabel("Piano Hero");
-    this.pianoHeroButton.getCaptionLabel().setFont(customFont);
-    this.addListeners(); 
+    // Draw the title
+    this.pageTitle = "Select a Mode to Play";
+    this.titleX = width / 2;
+    this.titleY = height / 6 - 30;
+    this.titleYshadow = height / 6 - 30;
+    this.setupButtons();
+    this.addListeners();
+  }
+
+  public void setup(){
+    styleManager.drawButtonBox(this.freePlayButton, 10.0);
+    styleManager.drawButtonBox(this.pianoHeroButton, 10.0);
+  }
+  
+  public void draw(){
+    this.drawTitle();
   }
 
   public int getID(){
@@ -81,10 +80,30 @@ class ModeSelectionPage implements Page {
     }
   }
 
-  public void draw(){
-  }
+  private void drawTitle(){
+    // Draw the title
+    textSize(60);
+    textAlign(CENTER, CENTER);
   
-}
+    // Draw the shadow
+    fill(150, 50);
+    text(this.pageTitle, titleX + 3, titleY + 3);
+    fill(0);
+    text(this.pageTitle, titleX, titleYshadow);
+  }
 
+  private void setupButtons(){
+    // Create and customize "Free Play" button
+    this.freePlayButton = cp5.addButton("freePlayButton")
+       .setSize(200, 50);
+    styleManager.setDefaultButtonStyle(this.freePlayButton);
+    this.freePlayButton.setLabel("Free Play");
     
-    
+    // Create and customize "Piano Hero" button
+    this.pianoHeroButton = cp5.addButton("pianoHeroButton")
+       .setSize(200, 50);
+    styleManager.setDefaultButtonStyle(this.pianoHeroButton);
+    this.pianoHeroButton.setLabel("Piano Hero");
+
+  }
+}
