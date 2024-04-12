@@ -29,9 +29,18 @@ class FallingNote {
   void update() {
     y += speed;
   }
+  
+  boolean updateHeight() {
+   if(this.rectHeight > 0){
+     this.rectHeight -= speed;
+   }else{
+     return true;
+   }
+   return false;
+  }
 
   boolean isOffScreen() {
-    return y > height/2;
+    return y +rectHeight > height/2 - 3;
   }
 }
     
