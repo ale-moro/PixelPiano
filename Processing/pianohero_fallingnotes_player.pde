@@ -14,6 +14,8 @@ class FallingNotesPlayer {
     int currentTime=0;
     int prevTime=0;
     int diff;
+    int pressedSingle;
+    int [] pressedNotes = new int[5];
 
     // ================================ Constructor ================================
     FallingNotesPlayer(GameNoteSequence noteSequence, PlayPagePiano keyboard, float margin) {
@@ -76,13 +78,24 @@ class FallingNotesPlayer {
                 this.fallingNotes.add(note);
                 this.index++;
             }
-           
-
             for (int i = this.fallingNotes.size()-1; i >= 0; i--) {
+                
                 note = this.fallingNotes.get(i);
                 note.update();
                 note.draw();
+                
                 if (note.isOffScreen()) {
+                  pressedNotes = this.keyboard.getNotes();
+                  
+                  for(int j = 0; j< pressedNotes.length; j++){
+                    
+                    pressedSingle = pressedNotes[j];
+                    
+                    if(pressedSingle>0){
+                    note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
+                    }
+                  }
+          
                   remove = note.updateHeight();
                   if (remove){
                     this.fallingNotes.remove(i);

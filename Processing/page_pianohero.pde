@@ -101,10 +101,7 @@ class PianoHeroPage implements Page {
   public void setup() {}
   
   public void draw() {
-    //prevTime = currentTime;
-    //currentTime = millis();
-    //diff = currentTime - prevTime;
-    //println(currentTime, prevTime, diff);
+
     fill(255);
     noStroke(); 
     rect(0, 0, width, keyboard.getPianoY());
@@ -113,7 +110,7 @@ class PianoHeroPage implements Page {
     this.fallingNotesPlayer.draw(); //<>// //<>// //<>//
 
     // keyboard
-    this.keyboard.setNotes(notesOutput);
+    this.keyboard.setNotes(notesOutput); //<>//
     
     this.keyboard.draw();
     // fingers
