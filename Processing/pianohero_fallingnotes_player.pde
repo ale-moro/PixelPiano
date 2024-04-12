@@ -10,6 +10,7 @@ class FallingNotesPlayer {
     long startTime = 0;
     float keyWidth;
     float margin;
+    boolean remove = false;
     int currentTime=0;
     int prevTime=0;
     int diff;
@@ -82,7 +83,10 @@ class FallingNotesPlayer {
                 note.update();
                 note.draw();
                 if (note.isOffScreen()) {
+                  remove = note.updateHeight();
+                  if (remove){
                     this.fallingNotes.remove(i);
+                  }
                 }
             }
         }
