@@ -67,8 +67,8 @@ class PlayPagePiano extends Piano {
   float blackKeyWidth = 0; 
   float whiteKeyHeight = 0;
   float blackKeyHeight = 0;
-
-  int[] notes = {};
+  
+  int[] notes = {-1,-1,-1,-1,-1};
 
   public PlayPagePiano() {
     this.pianoHeight = 2*height / 5;
@@ -197,6 +197,8 @@ class PlayPagePiano extends Piano {
 
   // Setters
   public void setNotes(int[] notes) {
+    //println(notes);
+    //println("a");
     this.notes = notes;
   }
   // =============================================

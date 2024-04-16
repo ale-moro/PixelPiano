@@ -107,10 +107,10 @@ class PianoHeroPage implements Page {
     rect(0, 0, width, keyboard.getPianoY());
 
 
-    this.fallingNotesPlayer.draw(); //<>// //<>// //<>//
+    this.fallingNotesPlayer.draw(); //<>// //<>// //<>// //<>//
 
     // keyboard
-    this.keyboard.setNotes(notesOutput); //<>//
+    this.keyboard.setNotes(notesOutput); //<>// //<>//
     
     this.keyboard.draw();
     // fingers

@@ -34,7 +34,7 @@ class OscMsg {
         e.printStackTrace();
       }
     } else {
-      println("MIDI receiver not available.");
+      //println("MIDI receiver not available.");
     }
   }
   
@@ -49,7 +49,7 @@ class OscMsg {
         e.printStackTrace();
       }
     } else {
-      println("MIDI receiver not available.");
+      //println("MIDI receiver not available.");
     }
     
   }
