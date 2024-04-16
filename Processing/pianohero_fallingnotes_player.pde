@@ -97,6 +97,10 @@ class FallingNotesPlayer {
                       if(this.keyboard.getCoord(pressedSingle) == note.getX()){
                         note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
                         //println("dentro");
+                        break;
+                      }
+                      else{
+                        note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
                       }
                     }
                   }
