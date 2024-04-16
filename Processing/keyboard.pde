@@ -155,44 +155,48 @@ class PlayPagePiano extends Piano {
     return this.pianoHeight;
   }
 
+  public float width() {
+    return this.whiteKeyWidth * this.coordX.length;
+  }
+
   public float getPianoX() {
-    return pianoX;
+    return this.pianoX;
   }
 
   public float getPianoY() {
-    return pianoY;
+    return this.pianoY;
   }
 
   public float getMarginX() {
-    return marginX;
+    return this.marginX;
   }
 
   public float getWhiteKeyWidth() {
-    return whiteKeyWidth;
+    return this.whiteKeyWidth;
   }
 
   public float getBlackKeyWidth() {
-    return blackKeyWidth;
+    return this.blackKeyWidth;
   }
 
   public float getWhiteKeyHeight() {
-    return whiteKeyHeight;
+    return this.whiteKeyHeight;
   }
 
   public float getBlackKeyHeight() {
-    return blackKeyHeight;
+    return this.blackKeyHeight;
   }
 
   public int[] getNotes() {
-    return notes;
+    return this.notes;
   }
 
   public float getCoord(int i) {
-    return coordX[i];
+    return this.coordX[i];
   }
 
   public void Coord(int i, float x){
-    coordX[i] = x;
+    this.coordX[i] = x;
   }
 
   // Setters
