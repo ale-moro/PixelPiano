@@ -83,16 +83,21 @@ class FallingNotesPlayer {
                 note = this.fallingNotes.get(i);
                 note.update();
                 note.draw();
+                pressedNotes = this.keyboard.getNotes();
+                println(pressedNotes);
                 
                 if (note.isOffScreen()) {
-                  pressedNotes = this.keyboard.getNotes();
-                  println(pressedNotes);
+                  
                   for(int j = 0; j< pressedNotes.length; j++){
                     
                     pressedSingle = pressedNotes[j];
-                    
                     if(pressedSingle>0){
-                    note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
+                      println(this.keyboard.getCoord(pressedSingle));
+                      println(note.getX());
+                      if(this.keyboard.getCoord(pressedSingle) == note.getX()){
+                        //note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
+                        println("dentro");
+                      }
                     }
                   }
           

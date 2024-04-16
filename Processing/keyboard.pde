@@ -184,7 +184,7 @@ class PlayPagePiano extends Piano {
   }
 
   public int[] getNotes() {
-    return notes;
+    return this.notes;
   }
 
   public float getCoord(int i) {
