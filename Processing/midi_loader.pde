@@ -9,6 +9,10 @@ void PianoHeroMIDIfileSelected(File selection) {
   }
   pianoHeroPage.setMidiFilePath(selection.getAbsolutePath());
   pianoHeroPage.drawFilename();
+  delay(30);
+  pianoHeroPage.drawFilename();
+  delay(20);
+  pianoHeroPage.drawFilename();
 }
 
 void MIDIfileSelected(File selection) {

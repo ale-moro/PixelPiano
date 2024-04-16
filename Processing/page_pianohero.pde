@@ -57,7 +57,6 @@ class PianoHeroPage implements Page {
     this.midiLoader = new MidiLoader();
 
     this.createButtons();
-    this.textSetup();
 
     this.fallingNotesPlayer = new FallingNotesPlayer(this.noteSequence, this.keyboard, this.margin);
 
@@ -122,20 +121,20 @@ class PianoHeroPage implements Page {
     styleManager.drawButtonBox(this.prepareMidiButton, 10);
     styleManager.drawButtonBox(this.startMidiButton, 10);
     styleManager.drawButtonBox(this.restartMidiButton, 10);
+    styleManager.drawDropdownBox(this.midiFilesDropdown, 10);
     this.textSetup();
   }
   
   public void draw() {
-    //prevTime = currentTime;
-    //currentTime = millis();
-    //diff = currentTime - prevTime;
-    //println(currentTime, prevTime, diff);
-
     // reset falling notes draw
     fill(255);
     noStroke(); 
     rect(0, 0, width, keyboard.getPianoY());
 
+    // buttons 
+    styleManager.drawDropdownBox(this.midiFilesDropdown, 10);
+
+    // falling notes
     this.fallingNotesPlayer.draw();
 
     // keyboard
@@ -165,7 +164,15 @@ class PianoHeroPage implements Page {
     this.midiFilesDropdown = cp5.addDropdownList("pianoHeroMidiFilesDropdown")
       .setSize(width/5, 300);
     this.setDropdownStyle(this.midiFilesDropdown);
-    this.midiFilesDropdown.addItems(this.midiFilesDropdownItemList);
+    String[] titles = new String[this.midiFilesDropdownItemList.length];
+    for(int k=0; k < this.midiFilesDropdownItemList.length; k++){
+      String title = this.midiFilesDropdownItemList[k].replace("\\", "/");
+      String[] titleSplit = title.split("/");
+      title = titleSplit[titleSplit.length-1];
+      titles[k] = title;
+      println(title.substring(0, min(23, title.length() - 1)));
+    }
+    this.midiFilesDropdown.addItems(titles);
 
     this.backButton = cp5.addButton("pianoHeroBackButton")
             .setSize(width/15, this.buttons_height);
@@ -251,7 +258,6 @@ class PianoHeroPage implements Page {
     fill(0);
     textSize(20);
     textAlign(LEFT, CENTER);
-    this.midiFilePath = this.midiFilePath != midiLoaderSelectedMIDIFilePath? midiLoaderSelectedMIDIFilePath : this.midiFilePath;
     String midiFileName = this.midiFilePath.contains("\\") ? this.midiFilePath.substring(this.midiFilePath.lastIndexOf("\\") + 1) : this.midiFilePath;
     println("draw: " + midiFileName);
     text(midiFileName, this.midiNameTextPosition[0], this.midiNameTextPosition[1]);

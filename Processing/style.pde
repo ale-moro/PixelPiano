@@ -35,4 +35,12 @@ class StyleManager {
         
         rect(s.getPosition()[0], s.getPosition()[1]-5, s.getWidth()+35, s.getHeight()+20, radius); 
     }
+
+    public void drawDropdownBox(DropdownList d, float radius){
+        stroke(0);
+        fill(0);
+        rect(d.getPosition()[0]-5, d.getPosition()[1]-5, d.getWidth()+10, d.getHeight()+10, radius);
+        fill(0, 200);
+        rect(d.getPosition()[0], d.getPosition()[1], d.getWidth()+10, d.getHeight()+10, radius);
+    }
 }
