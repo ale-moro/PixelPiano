@@ -1,5 +1,20 @@
 import javax.sound.midi.*;
 
+void PianoHeroMIDIfileSelected(File selection) {
+  if (selection == null) {
+    println("Window was closed or the user hit cancel.");
+  } else {
+    println("PH - User selected " + selection.getAbsolutePath());
+    midiLoaderSelectedMIDIFilePath = selection.getAbsolutePath();
+  }
+  pianoHeroPage.setMidiFilePath(selection.getAbsolutePath());
+  pianoHeroPage.drawFilename();
+  delay(30);
+  pianoHeroPage.drawFilename();
+  delay(20);
+  pianoHeroPage.drawFilename();
+}
+
 void MIDIfileSelected(File selection) {
   if (selection == null) {
     println("Window was closed or the user hit cancel.");
@@ -74,6 +89,12 @@ public class MidiLoader {
   public String setMidiFilePath() {
     selectInput("Select a MIDI file:", "MIDIfileSelected");
     this.midiFilePath = Utils.safePath(midiLoaderSelectedMIDIFilePath); 
+    return this.midiFilePath;
+  }
+
+  public String setDrawMidiFilePath() {
+    selectInput("Select a MIDI file:", "PianoHeroMIDIfileSelected");
+    this.midiFilePath = midiLoaderSelectedMIDIFilePath; 
     return this.midiFilePath;
   }
 
