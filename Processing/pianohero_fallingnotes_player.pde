@@ -86,7 +86,6 @@ class FallingNotesPlayer {
                 
                 if (note.isOffScreen()) {
                   pressedNotes = this.keyboard.getNotes();
-                  println(pressedNotes);
                   for(int j = 0; j< pressedNotes.length; j++){
                     
                     pressedSingle = pressedNotes[j];
