@@ -122,8 +122,6 @@ class PianoHeroPage implements Page {
     
     this.drawFilename();
 
-
-
     // falling notes
     this.fallingNotesPlayer.draw();
 
@@ -131,6 +129,7 @@ class PianoHeroPage implements Page {
     this.keyboard.setNotes(notesOutput);
     
     this.keyboard.draw();
+
     // fingers
     notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
     this.fingers.positions(coordinates);

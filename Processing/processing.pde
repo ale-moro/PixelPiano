@@ -12,7 +12,7 @@ int shift = 0;
 int[] notesInput = new int[5];
 int[] notesOutput = {-1,-1,-1,-1,-1};
 float[] coordinates = new float[10];
-int[] pressedSens = {1,1,1,1,1};
+int[] pressedSens = {1,1,1,0,0};
 
 StartPage startPage;
 ModeSelectionPage modeSelectionPage;
@@ -58,7 +58,7 @@ void setup() {
   modeSelectionPage = new ModeSelectionPage();
   freePlayPage = new PlayPage();
   pianoHeroPage = new PianoHeroPage();
-  msgClass.selectMidiOutput("virtualPort");
+  msgClass.selectMidiOutput("Microsoft GS Wavetable Synth");
   activePage = startPage;
 
   midiLoaderSelectedMIDIFilePath = sketchPath() + "\\" + pianoHeroPage.getMidiFilesDropdownItemList()[0];
