@@ -10,7 +10,7 @@ Page activePage;
 int[] octaves = {3, 4, 5};
 int shift = 0;
 int[] notesInput = new int[5];
-int[] notesOutput = new int[5];
+int[] notesOutput = {-1,-1,-1,-1,-1};
 float[] coordinates = new float[10];
 int[] pressedSens = {1,1,1,0,0};
 
