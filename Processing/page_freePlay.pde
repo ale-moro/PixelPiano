@@ -79,6 +79,7 @@ class PlayPage implements Page {
 
   public void draw(){
     if(this.isVisible){
+      background(255);
       // outer box
       this.drawPageLayoutLines();
       this.drawButtonsBoxes();
