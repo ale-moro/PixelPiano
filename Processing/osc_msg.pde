@@ -55,4 +55,23 @@ class OscMsg {
     }
     
   }
+  
+  public void sendVolumeMsg(float value){
+    if (midiReceiver != null) {
+      try {
+        // Send a MIDI note-on message
+        ShortMessage msg = new ShortMessage();
+        new_vol = int(value * 127);
+        msg.setMessage(ShortMessage.CONTROL_CHANGE, CHANGE_VOLUME, new_vol); // MIDI channel 0, note number 60 (C4), velocity 100
+        print("new volume: ", new_vol);
+
+        midiReceiver.send(msg, -1);
+        
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else {
+      // todo:
+      // println("MIDI receiver not available.");
+    }
 }
