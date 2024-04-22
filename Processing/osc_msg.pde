@@ -4,8 +4,13 @@ class OscMsg {
     try {
       // Get available MIDI devices
       midiDeviceInfo = MidiSystem.getMidiDeviceInfo();
-  
+      println("Avaliable MIDI devices: " + midiDeviceInfo);
+
+
+
       for (MidiDevice.Info info : midiDeviceInfo) {
+        println("" + info.getName());
+
         if (info.getName().equals(outputDeviceName)) {
           midiOutputDevice = MidiSystem.getMidiDevice(info);
           midiOutputDevice.open();
@@ -13,13 +18,16 @@ class OscMsg {
           break;
         }
       }
-  
+      println("Output MIDI device: " + midiOutputDevice);
+
+      println();
       if (midiOutputDevice == null || midiReceiver == null) {
         println("Output MIDI device not found or unable to open.");
       }
     } catch (MidiUnavailableException e) {
       e.printStackTrace();
     }
+    println();
   }
 
 
@@ -53,9 +61,5 @@ class OscMsg {
       // todo:
       // println("MIDI receiver not available.");
     }
-    
   }
-  
-
-
 }
