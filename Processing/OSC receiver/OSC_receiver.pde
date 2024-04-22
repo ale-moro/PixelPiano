@@ -13,7 +13,7 @@ void setup() {
   oscP5 = new OscP5(this, 12000); // Listening on port 12000
   
   // Set up MIDI output
-  listAvailableDevices();
+  //listAvailableDevices();
   selectMidiOutput("virtualPort"); // Replace with your desired output device name
 }
 
@@ -92,9 +92,9 @@ void oscEvent(OscMessage msg) {
       int noteNumber = receivedValues[1];
 
       if(noteNumber!= 0 && noteNumber != prevValue){
-        sendNoteOff(prevValue);
-        print("Sending note on of index finger: " + noteNumber+"\n");
-        sendNoteOn(noteNumber);
+      sendNoteOff(prevValue);
+      print("Sending note on of index finger: " + noteNumber+"\n");
+      sendNoteOn(noteNumber);
       }
       prevValue = noteNumber;
     } else {

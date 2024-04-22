@@ -14,7 +14,7 @@ class Fingers {
           noteToPlay[i] = fingers[i]%36 + shift;
           if(noteToPlay[i] < 0){ 
             noteToPlay[i] += 36;
-          } else if( noteToPlay[i] >= 36){
+          }else if( noteToPlay[i] >= 36){
             noteToPlay[i] -= 36;
           }
       }
@@ -26,6 +26,7 @@ class Fingers {
     for(int i = 0; i < toPlay.length; i++){
       //println(toPlay[i]);
       if(toPlay[i]!=-1 && toPlay[i] != prev[i]){
+        //println("im in");
         msgClass.sendNoteOn(toPlay[i] + 24);
       } else {
         for(int j=0; j < toPlay.length;j++){
@@ -77,10 +78,9 @@ class Fingers {
           j++;
         }
     }
-    // println("notesIn: " + notesIn[0] + " " + notesIn[1] + " " + notesIn[2] + " " + notesIn[3] + " " + notesIn[4]);
-    // println("pressed: " + pressed[0] + " " + pressed[1] + " " + pressed[2] + " " + pressed[3] + " " + pressed[4]);
-    // println("sensors: " + sensors[0] + " " + sensors[1] + " " + sensors[2] + " " + sensors[3] + " " + sensors[4]);
-    // println(" ");
-    return pressed;
+    //println(pressed);
+    //println(notesIn);
+    return pressed; 
   }
+  
 }
