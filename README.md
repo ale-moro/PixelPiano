@@ -10,7 +10,7 @@ Open the `python` folder
 - If not already installed install `virtualenv`: `pip install virtualenv`
 - Create virtual environment : `python -m venv venv` or `python3 -m venv venv` or `py -m venv venv`
   
-- Activate virtual environment: `venv\Scripts\activate`
+- Activate virtual environment: `venv\Scripts\activate`(windows) or `source\venv\Scripts\activate` (linux/mac)
 
 ### Install required dependencies
 - Install require dependencies: `pip install -r requirements.txt`
