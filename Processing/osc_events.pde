@@ -16,7 +16,7 @@ void oscEvent(OscMessage msg) {
               int argumentCount = msg.arguments().length;
               for(int i = 0; i< argumentCount; i++){
                  //prevPressureValues[i] = pressedSens[i];
-                 pressedSens[i] = max(msg.get(i).intValue());
+                 pressedSens[i] = min(msg.get(i).intValue(), 1);
               } 
               print("pressedSens: ");
               for(int i = 0; i<pressedSens.length; i++){
