@@ -19,7 +19,7 @@ class Fingers {
           }
       }
     }
-    println(noteToPlay);
+    //println(noteToPlay);
     toPlay = pressedKeys(noteToPlay, sensors);
     
     //println(temp);
