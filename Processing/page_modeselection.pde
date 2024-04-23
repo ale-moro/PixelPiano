@@ -11,6 +11,7 @@ class ModeSelectionPage implements Page {
   float titleX;
   float titleY;
   float titleYshadow;
+  Fingers fingers;
 
   public ModeSelectionPage() {
     background(255);
@@ -19,6 +20,8 @@ class ModeSelectionPage implements Page {
     this.pianoHeroButtonPosition = new float[]{width/2 - 100, height/2 + 50};
     this.freePlayButtonPosition = new float[]{width/2 - 100, height/2 - 50};
     this.inactivePosition = new float[] {-1000, -1000};  
+    
+    this.fingers = new Fingers();
 
     // Draw the title
     this.pageTitle = "Select a Mode to Play";
@@ -30,12 +33,20 @@ class ModeSelectionPage implements Page {
   }
 
   public void setup(){
-    styleManager.drawButtonBox(this.freePlayButton, 10.0);
-    styleManager.drawButtonBox(this.pianoHeroButton, 10.0);
+
   }
   
   public void draw(){
+    background(255);
+    // title 
     this.drawTitle();
+    
+    // buttons
+    styleManager.drawButtonBox(this.freePlayButton, 10.0);
+    styleManager.drawButtonBox(this.pianoHeroButton, 10.0);
+    
+    // fingers
+    this.fingers.positions(coordinates);
   }
 
   public int getID(){
