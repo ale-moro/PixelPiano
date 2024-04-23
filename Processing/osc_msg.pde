@@ -1,6 +1,8 @@
 class OscMsg {
+  int CHANGE_VOLUME = 7;
   
   public void selectMidiOutput(String outputDeviceName) {
+
     try {
       // Get available MIDI devices
       midiDeviceInfo = MidiSystem.getMidiDeviceInfo();
@@ -61,8 +63,8 @@ class OscMsg {
       try {
         // Send a MIDI note-on message
         ShortMessage msg = new ShortMessage();
-        new_vol = int(value * 127);
-        msg.setMessage(ShortMessage.CONTROL_CHANGE, CHANGE_VOLUME, new_vol); // MIDI channel 0, note number 60 (C4), velocity 100
+        int new_vol = int(value * 127);
+        msg.setMessage(ShortMessage.CONTROL_CHANGE, this.CHANGE_VOLUME, new_vol); // MIDI channel 0, note number 60 (C4), velocity 100
         print("new volume: ", new_vol);
 
         midiReceiver.send(msg, -1);
@@ -74,4 +76,5 @@ class OscMsg {
       // todo:
       // println("MIDI receiver not available.");
     }
+  }
 }

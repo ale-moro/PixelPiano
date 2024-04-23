@@ -122,8 +122,6 @@ class PianoHeroPage implements Page {
     
     this.drawFilename();
 
-
-
     // falling notes
     this.fallingNotesPlayer.draw();
 
