@@ -128,7 +128,8 @@ def main():
       # pull frame
       ret, frame = cap.read()
       # mirror frame
-      frame = cv2.flip(frame, 1)
+      # frame = cv2.flip(frame, 1)
+
       # print landmarks
       hand_landmarker.detect_async(frame)
       frame = draw_landmarks_on_image(frame, hand_landmarker.result)

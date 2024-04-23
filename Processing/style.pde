@@ -11,7 +11,7 @@ class StyleManager {
 
     public void setDefaultButtonStyle(Button button){
         button.setPosition(this.inactivePosition);
-        button.setColorBackground(color(0));
+        button.setColorBackground(color(0,0,0,1));
         button.setColorForeground(color(50));
         button.setVisible(true);
         button.setColorActive(color(50));
