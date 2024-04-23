@@ -1,19 +1,29 @@
 public class GameNoteSequence {
+    // midiSequence is the Sequence object of midi events from javax.sound.midi 
+    private Sequence midiSequence;
     private ArrayList<GameNote> sequence;
 
-    public GameNoteSequence(Sequence sequence) {
-        this.sequence = createFromMidiSequence(sequence);
+    public GameNoteSequence(Sequence midiSequence) {
+        this.midiSequence = midiSequence;
+        this.sequence = createFromMidiSequence(midiSequence);
     }
 
     public GameNoteSequence() {
-        this.sequence = new ArrayList<GameNote>();
+        try {
+            this.midiSequence = new Sequence(Sequence.PPQ, 4); // javax.sound.midi.Sequence
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.sequence = new ArrayList<GameNote>(); // ArrayList<GameNote>
         this.sequence.add(new GameNote());
     }
 
     // Create GameNote objects from MIDI sequence
     public ArrayList<GameNote> createFromMidiSequence(Sequence midiSequence) {
+        this.midiSequence = midiSequence; // javax.sound.midi.Sequence
+
         MidiSequenceAnalyzer analyzer = new MidiSequenceAnalyzer(midiSequence);
-        this.sequence = new ArrayList<GameNote>();
+        this.sequence = new ArrayList<GameNote>(); // ArrayList<GameNote>
         Track[] tracks = midiSequence.getTracks();
         for (Track track : tracks) {
             for (int i = 0; i < track.size(); i++) {
@@ -51,19 +61,20 @@ public class GameNoteSequence {
 
     // Getters and setters for sequence
     public ArrayList<GameNote> getSequence() {
-        return sequence;
+        return this.sequence; 
     }
 
-    public void setSequence(ArrayList<GameNote> sequence) {
-        this.sequence = sequence;
+    // midiSequence is the Sequence object of midi events from javax.sound.midi 
+    public Sequence getMidiSequence() {
+        return this.midiSequence; // javax.sound.midi.Sequence
     }
 
     public int getSize() {
-        return sequence.size();
+        return this.sequence.size();
     }
 
     public int size() {
-        return sequence.size();
+        return this.sequence.size();
     }
 
     public GameNote get(int index) {
