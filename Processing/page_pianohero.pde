@@ -4,7 +4,7 @@ class PianoHeroPage implements Page {
   int pageIndex = PIANO_HERO_PAGE_INDEX;
 
   DropdownList midiFilesDropdown;
-  String[] midiFilesDropdownItemList;
+  ArrayList<String> midiFilesDropdownItemList;
   Button backButton;
   Button loadMidiButton;
   Button startMidiButton;
@@ -24,8 +24,8 @@ class PianoHeroPage implements Page {
   Fingers fingers;
   PlayPagePiano keyboard;
 
-  int currentTime=0;
-  int prevTime=0;
+  int currentTime = 0;
+  int prevTime = 0;
   int diff;
   float pianoHeight;
   float keyWidth;
@@ -48,8 +48,11 @@ class PianoHeroPage implements Page {
     this.keyWidth = (width -  this.margin) / 21;
     this.noteSequence = new GameNoteSequence();
 
-    this.midiFilesDropdownItemList = new String[] {"assets\\BWV_0578.mid", "assets\\HesaPirate.mid", "assets\\Dr Dre - Still Dre.mid"};
-    this.midiFilePath = Utils.safePath(sketchPath() + "\\" + this.midiFilesDropdownItemList[0]);
+    this.midiFilesDropdownItemList = new ArrayList<String>();
+    this.midiFilesDropdownItemList.add("assets\\BWV_0578.mid");
+    this.midiFilesDropdownItemList.add("assets\\HesaPirate.mid");
+    this.midiFilesDropdownItemList.add("assets\\Dr Dre - Still Dre.mid");
+    this.midiFilePath = Utils.safePath(sketchPath() + "\\" + this.midiFilesDropdownItemList.get(0));
 
     this.midiLoader = new MidiLoader();
 
@@ -62,7 +65,7 @@ class PianoHeroPage implements Page {
     return this.pageIndex;
   }
 
-  public String[] getMidiFilesDropdownItemList(){
+  public ArrayList<String> getMidiFilesDropdownItemList(){
     return this.midiFilesDropdownItemList;
   }
 
@@ -92,6 +95,12 @@ class PianoHeroPage implements Page {
 
       // LEGACY: pianoHeroPrepareMidiButton
       this.preparePlayer();
+      // todo: when loading a new midi file, add it to the dropdown list - but path loading is not working from "pianoHeroMidiFilesDropdown"
+      String newMidiFilePath = Utils.getFileNameFromPath(this.midiFilePath);
+      this.midiFilesDropdownItemList.add(this.midiFilePath);
+      this.midiFilesDropdown.addItem(newMidiFilePath, this.midiFilesDropdownItemList.size()-1);
+      this.midiFilesDropdown.setValue(this.midiFilesDropdownItemList.size()-1);
+      this.midiFilesDropdown.setLabel("Select Midi File"); 
 
     } else if ("pianoHeroStartMidiButton".equals(buttonName)) {
       this.isPlaying = !this.isPlaying ? this.fallingNotesPlayer.start() : this.fallingNotesPlayer.stop();
@@ -109,7 +118,12 @@ class PianoHeroPage implements Page {
     } else if ("pianoHeroMidiFilesDropdown".equals(buttonName)) {
       // text 
       println("Dropdown menu value selected: " + this.midiFilesDropdown.getValue());
-      this.midiFilePath = Utils.safePath(sketchPath() + "\\" + this.midiFilesDropdownItemList[round(this.midiFilesDropdown.getValue())]);
+      String dropdownPath = this.midiFilesDropdownItemList.get(round(this.midiFilesDropdown.getValue()));
+      if (!Utils.isAbsolutePath(dropdownPath)){
+        dropdownPath = sketchPath() + "\\" + dropdownPath;
+      } 
+      this.midiFilePath = Utils.safePath(dropdownPath);
+
       this.midiLoader.setMidiFilePath(this.midiFilePath);
       this.preparePlayer();
     }
@@ -158,29 +172,27 @@ class PianoHeroPage implements Page {
     this.groupControlListener = new GroupControlListener(this); 
     float bottomButtonRowY = 9.3*height/10;
 
+    // positions
     this.midiNameTextPosition = new float[] {4.125*width/20, bottomButtonRowY + 12};
     this.midiFilesDropdownPosition = new float[] {width/20, height/20};
     this.backButtonPosition = new float[] {9*width/10 + 5, bottomButtonRowY};
     this.loadMidiButtonPosition = new float[] {width/20 , bottomButtonRowY}; 
     this.startMidiButtonPausedPosition = new float[] {6.65*width/10 + 3, bottomButtonRowY};
     this.startMidiButtonPlayingPosition = new float[] {keyboard.getPianoX(), bottomButtonRowY};
-
     this.restartMidiButtonPosition = new float[] {7.7*width/10, bottomButtonRowY};
     this.inactivePosition = new float[] {-1000, -1000};
 
+    // dropdown
     this.midiFilesDropdown = cp5.addDropdownList("pianoHeroMidiFilesDropdown")
       .setSize(width/5, 300);
     this.setDropdownStyle(this.midiFilesDropdown);
-    String[] titles = new String[this.midiFilesDropdownItemList.length];
-    for(int k=0; k < this.midiFilesDropdownItemList.length; k++){
-      String title = this.midiFilesDropdownItemList[k].replace("\\", "/");
-      String[] titleSplit = title.split("/");
-      title = titleSplit[titleSplit.length-1];
-      titles[k] = title;
-      println(title.substring(0, min(23, title.length() - 1)));
+    String[] titles = new String[this.midiFilesDropdownItemList.size()];
+    for(int k=0; k < this.midiFilesDropdownItemList.size(); k++){
+      titles[k] = Utils.getFileNameFromPath(this.midiFilesDropdownItemList.get(k));
     }
     this.midiFilesDropdown.addItems(titles);
 
+    // buttons
     this.backButton = cp5.addButton("pianoHeroBackButton")
             .setSize(width/15, this.buttons_height);
     styleManager.setDefaultButtonStyle(this.backButton);
