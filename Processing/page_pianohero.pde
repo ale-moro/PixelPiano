@@ -87,6 +87,8 @@ class PianoHeroPage implements Page {
           print(".");
       }
       print(" Done!\n");
+      // todo: add to dropdownlist or at least set label to ("Select Midi File");
+      // DOC: https://sojamo.de/libraries/controlP5/reference/controlP5/DropdownList.html
 
       // LEGACY: pianoHeroPrepareMidiButton
       this.preparePlayer();
@@ -102,15 +104,14 @@ class PianoHeroPage implements Page {
         this.setVisibility(true, true);
       }
     } else if ("pianoHeroRestartMidiButton".equals(buttonName)) {
-      this.fallingNotesPlayer.restart();      
-      this.startMidiButton.setLabel("Start");
+      this.preparePlayer();
 
     } else if ("pianoHeroMidiFilesDropdown".equals(buttonName)) {
       // text 
       println("Dropdown menu value selected: " + this.midiFilesDropdown.getValue());
       this.midiFilePath = Utils.safePath(sketchPath() + "\\" + this.midiFilesDropdownItemList[round(this.midiFilesDropdown.getValue())]);
       this.midiLoader.setMidiFilePath(this.midiFilePath);
-      preparePlayer();
+      this.preparePlayer();
     }
   }
 
@@ -148,6 +149,8 @@ class PianoHeroPage implements Page {
       this.noteSequence = this.midiLoader.computeGameNoteSequence();
       this.midiFilePath = Utils.safePath(this.midiLoader.getMidiFilePath());
       this.fallingNotesPlayer.loadNoteSequence(this.noteSequence);
+      this.fallingNotesPlayer.restart();
+
   }
 
   private void createButtons(){ 
