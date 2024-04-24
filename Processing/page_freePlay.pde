@@ -18,6 +18,7 @@ class PlayPage implements Page {
   Fingers fingers;
   PlayPagePiano keyboard;
   ButtonClickListener buttonClickListener;
+  Button[] buttonsArray;
 
   public PlayPage() {
     this.fingers = new Fingers();
@@ -75,6 +76,12 @@ class PlayPage implements Page {
   public void setup(){
     println("PlayPage setup"); 
     this.drawPageLayoutLines();
+    
+    buttonsArray = new Button[4];
+    buttonsArray[0] = this.octaveUpButton;
+    buttonsArray[1] = this.octaveDownButton;
+    buttonsArray[2] = this.modeButton;
+    buttonsArray[3] = this.backButton;
   }
 
   public void draw(){
@@ -95,6 +102,10 @@ class PlayPage implements Page {
       }
       // fingers' positions
       this.fingers.positions(coordinates);
+    }
+    
+    for(int i = 0; i < buttonsArray.length; i++){
+      checkCoordinates(coordinates, buttonsArray[i], pressedSens);
     }
   }
   
@@ -134,9 +145,9 @@ class PlayPage implements Page {
 
   // =============================== BUTTON CLICKS ===============================
   public void handleButtonClick(ControlEvent event) {
-    if (!event.isController()) return;
+    if (!event.isController() && !event.isTab()) return;
     
-    String buttonName = event.getController().getName();
+    String buttonName = event.getName();
     
     switch (buttonName) {
         case "freePlayBackButton":

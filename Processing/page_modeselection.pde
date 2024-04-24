@@ -12,6 +12,8 @@ class ModeSelectionPage implements Page {
   float titleY;
   float titleYshadow;
   Fingers fingers;
+  Button[] buttonsArray;
+  int pressedbut;
 
   public ModeSelectionPage() {
     background(255);
@@ -33,7 +35,9 @@ class ModeSelectionPage implements Page {
   }
 
   public void setup(){
-
+    buttonsArray = new Button[2];
+    buttonsArray[0] = this.freePlayButton;
+    buttonsArray[1] = this.pianoHeroButton;
   }
   
   public void draw(){
@@ -44,7 +48,10 @@ class ModeSelectionPage implements Page {
     // buttons
     styleManager.drawButtonBox(this.freePlayButton, 10.0);
     styleManager.drawButtonBox(this.pianoHeroButton, 10.0);
-    
+    for(int i = 0; i < buttonsArray.length; i++){
+      checkCoordinates(coordinates, buttonsArray[i], pressedSens);
+        
+    }
     // fingers
     this.fingers.positions(coordinates);
   }
@@ -78,7 +85,8 @@ class ModeSelectionPage implements Page {
   }
 
   public void handleButtonClick(ControlEvent event) {
-    if (!event.isController()) return;
+    println(event.getName());
+    if (!event.isController() && !event.isTab()) return;
     String buttonName = event.getName();
     
     switch (buttonName) {
