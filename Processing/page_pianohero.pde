@@ -131,7 +131,7 @@ class PianoHeroPage implements Page {
 
   public void setup() {
     this.preparePlayer();
-    buttonsArray = new Button[5];
+    buttonsArray = new Button[4];
     buttonsArray[0] = this.backButton;
     buttonsArray[1] = this.loadMidiButton;
     buttonsArray[2] = this.startMidiButton;
