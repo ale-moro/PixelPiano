@@ -20,7 +20,7 @@ class PianoHeroPage implements Page {
   ButtonClickListener buttonClickListener;
   GroupControlListener groupControlListener;
   Button[] buttonsArray;
-
+ int buttons_height = 30;
   Fingers fingers;
   PlayPagePiano keyboard;
 
@@ -130,12 +130,12 @@ class PianoHeroPage implements Page {
   }
 
   public void setup() {
+    this.preparePlayer();
     buttonsArray = new Button[5];
     buttonsArray[0] = this.backButton;
     buttonsArray[1] = this.loadMidiButton;
-    buttonsArray[2] = this.prepareMidiButton;
-    buttonsArray[3] = this.startMidiButton;
-    buttonsArray[4] = this.restartMidiButton;
+    buttonsArray[2] = this.startMidiButton;
+    buttonsArray[3] = this.restartMidiButton;
   }
   
   public void draw() {
