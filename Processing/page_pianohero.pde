@@ -19,7 +19,7 @@ class PianoHeroPage implements Page {
   float[] midiNameTextPosition;
   ButtonClickListener buttonClickListener;
   GroupControlListener groupControlListener;
-  int buttons_height = 30;
+  Button[] buttonsArray;
 
   Fingers fingers;
   PlayPagePiano keyboard;
@@ -74,8 +74,8 @@ class PianoHeroPage implements Page {
   }
 
   public void handleButtonClick(ControlEvent event) {
-    if (!event.isController()) return;
-    String buttonName = event.getController().getName();
+    if (!event.isController() && !event.isTab()) return;
+    String buttonName = event.getName();
     
     if ("pianoHeroBackButton".equals(buttonName)) {
       navigationController.changePage(activePage, modeSelectionPage);
@@ -130,7 +130,12 @@ class PianoHeroPage implements Page {
   }
 
   public void setup() {
-      this.preparePlayer();
+    buttonsArray = new Button[5];
+    buttonsArray[0] = this.backButton;
+    buttonsArray[1] = this.loadMidiButton;
+    buttonsArray[2] = this.prepareMidiButton;
+    buttonsArray[3] = this.startMidiButton;
+    buttonsArray[4] = this.restartMidiButton;
   }
   
   public void draw() {
@@ -144,6 +149,10 @@ class PianoHeroPage implements Page {
     styleManager.drawButtonBox(this.startMidiButton, 10);
     styleManager.drawButtonBox(this.restartMidiButton, 10);
     styleManager.drawDropdownBox(this.midiFilesDropdown, 10);
+    
+    for(int i = 0; i < buttonsArray.length; i++){
+      checkCoordinates(coordinates, buttonsArray[i], pressedSens);
+    }
     
     this.drawFilename();
 
