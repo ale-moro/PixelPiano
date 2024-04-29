@@ -14,10 +14,14 @@ class FallingNotesPlayer {
     int currentTime=0;
     int prevTime=0;
     int diff;
+    int tot_notes;
+    int correct_notes = 0;
+    boolean temp = false;
     int pressedSingle;
     int [] pressedNotes = new int[5];
     MidiPlayer midiPlayer;
     boolean midi_player_paused;
+    
 
 
     // ================================ Constructor ================================
@@ -119,9 +123,19 @@ class FallingNotesPlayer {
                             //println(this.keyboard.getCoord(pressedSingle));
                             //println(note.getX());
                             if(this.keyboard.getCoord(pressedSingle) == note.getX()){
+                              if(temp != (this.keyboard.getCoord(pressedSingle) == note.getX())){
+                                correct_notes += 1;
+                                score = computeScore(correct_notes);
+                                temp = this.keyboard.getCoord(pressedSingle) == note.getX();
+                              }
+                                
                                 note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
+                               
                                 break;
                             } else {
+                                if(temp != (this.keyboard.getCoord(pressedSingle) == note.getX())){                       
+                                  temp = this.keyboard.getCoord(pressedSingle) == note.getX();
+                                }
                                 note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
                             }
                       }
@@ -134,6 +148,13 @@ class FallingNotesPlayer {
                 }
             }
         }
+    }
+    
+    private float computeScore(int correct){
+    
+       tot_notes = this.noteSequence.getSequence().size();   
+       return (float)correct/tot_notes*100;
+       
     }
 
     private float defineKey(int inx){
