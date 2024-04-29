@@ -7,9 +7,10 @@ void oscEvent(OscMessage msg) {
         for (int i = 0; i < argumentCount; i++) {
             int receivedValue = msg.get(i).intValue();
             receivedValues[i] = receivedValue-12-shift;
-            //println("notesInput: "+ receivedValues[i]);
+            // println("notesInput: "+ receivedValues[i]);
             }
         notesInput = receivedValues;
+        //println(notesInput);
       }
       
     if (msg.checkAddrPattern("/belapressure")){
