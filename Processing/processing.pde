@@ -12,7 +12,7 @@ int shift = 0;
 int[] notesInput = new int[5];
 int[] notesOutput = {-1,-1,-1,-1,-1};
 float[] coordinates = new float[10];
-int[] pressedSens = {0,0,0,0,0};
+int[] pressedSens = {1,0,0,0,0};
 
 StartPage startPage;
 ModeSelectionPage modeSelectionPage;
@@ -61,7 +61,7 @@ void setup() {
   msgClass.selectMidiOutput("virtualPort");
   activePage = startPage;
 
-  midiLoaderSelectedMIDIFilePath = sketchPath() + "\\" + pianoHeroPage.getMidiFilesDropdownItemList()[0];
+  midiLoaderSelectedMIDIFilePath = sketchPath() + "\\" + pianoHeroPage.getMidiFilesDropdownItemList().get(0);
   frameRate(333);
   background(255);
 }

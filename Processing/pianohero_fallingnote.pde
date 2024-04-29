@@ -3,8 +3,9 @@ class FallingNote {
   float width, rectHeight;
   float speed;
   boolean bw;
-  color whiteC;
-  color blackC;
+  
+  color whiteC = color(0, 0, 128);
+  color blackC = color(0, 0, 255);
 
   FallingNote(float x, float y, float width, float rectHeight, float speed, boolean bw) {
     this.x = x;
@@ -13,8 +14,6 @@ class FallingNote {
     this.rectHeight = rectHeight;
     this.speed = speed;
     this.bw = bw;
-    this.whiteC = color(0,0,128);
-    this.blackC = color(0,0,255);
   }
 
   void draw() {
@@ -58,7 +57,7 @@ class FallingNote {
   }
 
   boolean isOffScreen() {
-    return y +rectHeight > height/2 - 3;
+    return y + rectHeight > height/2 - 3;
   }
 }
     

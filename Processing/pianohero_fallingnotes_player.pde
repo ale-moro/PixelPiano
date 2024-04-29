@@ -16,6 +16,9 @@ class FallingNotesPlayer {
     int diff;
     int pressedSingle;
     int [] pressedNotes = new int[5];
+    MidiPlayer midiPlayer;
+    boolean midi_player_paused;
+
 
     // ================================ Constructor ================================
     FallingNotesPlayer(GameNoteSequence noteSequence, PlayPagePiano keyboard, float margin) {
@@ -24,29 +27,45 @@ class FallingNotesPlayer {
         this.fallingNotes = new ArrayList<FallingNote>();
         this.keyboard = keyboard;
         this.margin = width / 10;
+        this.midiPlayer = new MidiPlayer();
+        this.midi_player_paused = true;
     }
+
     // =============================================================================
     public void loadNoteSequence(GameNoteSequence noteSequence) {
         this.noteSequence = noteSequence;
         this.isPlaying = false;
         this.index = 0;
+        this.fallingNotes.clear();
         for (int i = 0; i < 30; ++i) {
-            println("i: " + i + " | code: " +
-                    noteSequence.get(i).getCode() + " | duration: " + 
-                    noteSequence.get(i).getDurationMs() + " | timestamp: " + 
-                    noteSequence.get(i).getTimestampMs()
-                    );
+            // println("i: " + i + " | code: " +
+            //         noteSequence.get(i).getCode() + " | duration: " + 
+            //         noteSequence.get(i).getDurationMs() + " | timestamp: " + 
+            //         noteSequence.get(i).getTimestampMs()
+            //         );
+            noteSanityCheck(noteSequence.get(i));
         }
+        midiPlayer.load(noteSequence.getMidiSequence());
+        this.startTime = 0; 
     }
 
-    public boolean startStop() {
-        this.isPlaying = !this.isPlaying;
+    public boolean start(){
+        this.isPlaying = true;
         if(this.startTime == 0){
             this.startTime = millis();
         }
+        return this.isPlaying;  
+    }
+
+    public boolean stop(){
+        this.isPlaying = false;
+        this.midi_player_paused = true;
+        this.midiPlayer.stop();
         return this.isPlaying;
     }
 
+    // loads the brand new midi seuqence - but doesn't actually start the game
+    // resets the internal clock to zero, so that it will be initialized correctly when the game starts
     public void restart() {
         this.isPlaying = false;
         this.index = 0;
@@ -64,6 +83,7 @@ class FallingNotesPlayer {
             FallingNote note;
             // println("millis: " + (millis() - this.startTime));
 
+            // create notes (above out of the screen)
             if (index < this.noteSequence.size() && (millis() - this.startTime) > this.noteSequence.get(index).getTimestampMs()){
                 int noteNumber = (int) this.noteSequence.get(index).getCode() % 36;
                 note = new FallingNote(
@@ -72,37 +92,39 @@ class FallingNotesPlayer {
                     defineKey(noteNumber),
                     this.noteSequence.get(index).getDurationMs()/diff*this.speed,
                     this.speed,
-                    Arrays.binarySearch(blackKeys, noteNumber )>=0
+                    Arrays.binarySearch(blackKeys, noteNumber) >= 0
                 );
                 
                 this.fallingNotes.add(note);
                 this.index++;
             }
+
+            // update notes and (make them come down) 
             for (int i = this.fallingNotes.size()-1; i >= 0; i--) {
-                
                 note = this.fallingNotes.get(i);
                 note.update();
                 note.draw();
                 pressedNotes = this.keyboard.getNotes();
                 
-                
                 if (note.isOffScreen()) {
-                  pressedNotes = this.keyboard.getNotes();
-                  for(int j = 0; j< pressedNotes.length; j++){
-                    
-                    pressedSingle = pressedNotes[j];
-                    if(pressedSingle>0){
-                      //println(this.keyboard.getCoord(pressedSingle));
-                      //println(note.getX());
-                      if(this.keyboard.getCoord(pressedSingle) == note.getX()){
-                        note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
-                        //println("dentro");
-                        break;
-                      }
-                      else{
-                        note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
-                      }
+                    if(this.midi_player_paused == true){
+                      this.midi_player_paused = false;
+                      this.midiPlayer.start();
                     }
+                    pressedNotes = this.keyboard.getNotes();
+                    for(int j = 0; j < pressedNotes.length; j++){
+                      
+                        pressedSingle = pressedNotes[j];
+                        if(pressedSingle > 0){
+                            //println(this.keyboard.getCoord(pressedSingle));
+                            //println(note.getX());
+                            if(this.keyboard.getCoord(pressedSingle) == note.getX()){
+                                note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
+                                break;
+                            } else {
+                                note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
+                            }
+                      }
                   }
           
                   remove = note.updateHeight();
@@ -122,6 +144,22 @@ class FallingNotesPlayer {
             keyWidth = (width - margin) / 21; 
             bw = true;
         }
-    return keyWidth;
-  }
+        return keyWidth;
+    }
+
+    private void noteSanityCheck(GameNote note){
+        try {
+            if (note.getDurationMs() < 1) {
+                throw new Exception("Midi Note duration is less than 1ms");
+            }
+            if (note.getTimestampMs() < 0) {
+                throw new Exception("Midi Note timestamp is less than 0ms");
+            }
+            if (note.getCode() < 0 || note.getCode() > 127) {
+                throw new Exception("Midi Note code is out of bounds [0-127]: " + note.getCode());
+            }
+        } catch (Exception e) {
+            println(e);
+        }
+    }
 }
