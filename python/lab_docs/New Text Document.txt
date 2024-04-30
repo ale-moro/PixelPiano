@@ -1,0 +1,114 @@
+SSH
+utente: mcolombo
+
+MACHINES
+Hack 10.79.23.8 | GPU 11Gb
+Euler 10.79.0.8 | GPU 24Gb
+Dirac 10.79.0.10 | GPU 12Gb
+Curie 10.79.0.13 | GPU 8Gb
+Bayes 10.79.0.9 | NO GPU
+Ampere 10.79.0.7 | NO GPU
+
+MONITORAGGIO 
+http://10.79.0.14/netdata/5min.php
+
+NOTE:
+- activate env path: source activate /nas/home/mcolombo/MT-FOLEY/mtfoley
+- copy file from remote: scp mcolombo@10.79.0.10:../../nas/home/mcolombo/MT-FOLEY/results/DogBark_003.wav ./results
+
+Tools:
+TMUX
+
+Check GPU usage:
+nvidia-smi 
+
+===============================================================================
+
+TENSORBOARD
+On the remote machine, run:
+ - tensorboard --logdir <path> --port 6006
+
+On the local machine, run
+ - ssh -N -f -L localhost:16006:localhost:6006 <user@remote>
+
+then navigate to http://localhost:16006
+
+explanation of ssh command:
+
+-N : no remote commands
+
+-f : put ssh in the background
+
+-L <machine1>:<portA>:<machine2>:<portB> :
+
+forward <machine1>:<portA> (local scope) to <machine2>:<portB> (remote scope)
+
+===============================================================================
+
+
+===============================================================================
+
+TMUX
+
+New session:
+tmux new -s <session_name>
+
+Open session 
+tmux a -t <session_name>
+
+List sessions
+tmux ls
+
+Shortcuts:
+	split Vertical: Ctrl+B e poi [%]
+	split Horizontal: Ctrl+B e poi [%]
+	swap panel: Ctrl+B e poi [o]
+
+Panes of even dimension
+tmux select-layout even-horizontal
+
+===============================================================================
+
+
+
+===============================================================================
+
+SSH KEY
+
+The key fingerprint is:
+SHA256:NHilqLMrCvd78lbPwN5k2lvRZpcWqcYkphC/ypDZqxA mcolombo@ispl-ampere
+The key's randomart image is:
++---[RSA 3072]----+
+|       .  .      |
+|       ooo      .|
+|      o.=. o . o |
+|     .+o..+ +.. o|
+|   Eo+ oSo  .++o.|
+|    .oo * o .+.. |
+|. ...  * X  .    |
+|....o.+ o =.     |
+|.. .+B.   ..     |
++----[SHA256]-----+
+
+===============================================================================
+
+
+TODO:
+
+htop
+
+tmux -> macchine poli
+
+Guardare ottimizzione training - datapipeline: torchaudio e spostare su gpu - 
+
+tensorboard
+
+trainig time with attention
+
+num validation steps?
+
+only single diffusion step in training?
+
+train while true?
+
+

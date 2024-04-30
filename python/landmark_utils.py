@@ -152,5 +152,5 @@ class LandmarkPianoMapper:
                 key = sum(np.array([1 for num in self.white_keys_x_indices if num <= landmark[0]]))
                 active_notes[idx] = white_key_to_midi_note(key)
 
-        print('active notes:', active_notes)
+        # print('active notes:', active_notes)
         return active_notes

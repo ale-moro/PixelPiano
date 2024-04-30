@@ -1,0 +1,49 @@
+ERROR domenica sera 8/04/2024
+_________________________________________________________________________________________________________________________________________
+
+
+[Rank 1] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=575278, OpType=ALLREDUCE, NumelIn=6681728, NumelOut=6681728, Timeout(ms)=600000) ran for 600173 milliseconds before timing out.
+
+[rank1]:[E ProcessGroupNCCL.cpp:537] Some NCCL operations have failed or timed out. Due to the asynchronous nature of CUDA kernels, subsequent GPU operations might run on corrupted/incomplete data. 
+
+[rank1]:[E ProcessGroupNCCL.cpp:543] To avoid data inconsistency, we are taking the entire process down.
+
+[rank1]:[E ProcessGroupNCCL.cpp:1182] [Rank 1] NCCL watchdog thread terminated with exception: [Rank 1] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=575278, OpType=ALLREDUCE, NumelIn=6681728, NumelOut=6681728, Timeout(ms)=600000) ran for 600173 milliseconds before timing out.
+Exception raised from checkTimeout at ../torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:525 (most recent call first): 
+frame #0: c10::Error::Error(c10::SourceLocation, std::string) + 0x57 (0x7f43c9381d87 in /nas/home/mcolombo/conda/envs/env-mt-foley/lib/python3.8/site-packages/torch/lib/libc10.so)
+
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x1e6 (0x7f437b088f66 in /nas/home/mcolombo/conda/envs/env-mt-foley/lib/python3.8/site-packages/torch/lib/libtorch_cuda.so)             
+         
+frame #2: c10d::ProcessGroupNCCL::workCleanupLoop() + 0x19d (0x7f437b08c4bd in /nas/home/mcolombo/conda/env
+s/env-mt-foley/lib/python3.8/site-packages/torch/lib/libtorch_cuda.so)
+
+frame #3: c10d::ProcessGroupNCCL::ncclCommWatchdog() + 0x119 (0x7f437b08d0b9 in /nas/home/mcolombo/conda/envs/env-mt-foley/lib/python3.8/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xdbbf4 (0x7f43c8ac7bf4 in /nas/home/mcolombo/conda/envs/en
+v-mt-foley/bin/..
+/lib/libstdc++.so.6)        
+
+frame #5: <unknown function> + 0x94ac3 (0x7f43ca528ac3 in /lib/x86_64-linux-gnu/libc.so.6) 
+
+frame #6: <unknown function> + 0x126850 (0x7f43ca5ba850 in /lib/x86_64-linux-gnu/libc.so.6) 
+
+
+
+
+
+Traceback (most recent call last):   
+File "train.py", line 45, in <module>   
+
+main() 
+File "train.py", line 34, in main  
+spawn(   
+File "/nas/home/mcolombo/conda/envs/env-mt-foley/lib/python3.8/site-packages/torch/multiprocessing/spawn.py", line 241, in spawn        
+    return start_processes(fn, args, nprocs, join, daemon, start_method="spawn") 
+File "/nas/home/mcolombo/conda/envs/env-mt-foley/lib/python3.8/site-packages/torch/multiprocessing/spawn.py", line 197, in start_processes                                                                          
+
+while not context.join():
+
+File "/nas/home/mcolombo/conda/envs/env-mt-foley/lib/python3.8/site-packages/torch/multiprocessing/spawn.py", line 140, in join                                                                                     
+raise ProcessExitedException(
+
+torch.multiprocessing.spawn.ProcessExitedException: process 1 terminated with signal SIGABRT                                                                                                                   (env-mt-foley) mcolombo@ispl-euler:/nas/home/mcolombo/MT-FOLEY$ /nas/home/mcolombo/conda/envs/env-mt-foley/lib/python3.8/multiprocessing/resource_tracker.py:203: UserWarning: resource_tracker: There appear to be 97leaked semaphore objects to clean up at shutdown                                                                                                  
+  warnings.warn('resource_tracker: There appear to be %d '  

@@ -1,0 +1,9 @@
+MAMBA TRAINING TODO:
+
+on HACK:
+ - set lr  to 1e-4
+ - change to mamba in params.py
+ - change model_directory
+ - n_epoch: 65
+ - batch_size: 4
+ - trin.py prima riga
