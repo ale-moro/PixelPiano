@@ -107,6 +107,8 @@ class PlayPage implements Page {
     for(int i = 0; i < buttonsArray.length; i++){
       checkCoordinates(coordinates, buttonsArray[i], pressedSens);
     }
+    
+    checkFader(coordinates, myFader, pressedSens);
   }
   
   // =============================== PAGE STYLING ===============================

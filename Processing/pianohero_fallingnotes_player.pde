@@ -16,6 +16,7 @@ class FallingNotesPlayer {
     int diff;
     int tot_notes;
     int correct_notes = 0;
+    float score = 0;
     boolean temp = false;
     int pressedSingle;
     int [] pressedNotes = new int[5];
@@ -148,6 +149,10 @@ class FallingNotesPlayer {
                 }
             }
         }
+    }
+    
+    public float getScore(){
+      return score;
     }
     
     private float computeScore(int correct){

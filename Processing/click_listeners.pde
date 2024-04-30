@@ -1,5 +1,6 @@
 import controlP5.*;
 // Global click listener
+
 void keyPressed() {
   if (activePage.getID() == START_PAGE_INDEX) {  // handles switching from welcome page to play page
     navigationController.changePage(activePage, modeSelectionPage);
@@ -49,6 +50,27 @@ public void checkCoordinates(float[] coords, Button button, int[] pressed){
     }
       
       
+}
+
+public void checkFader(float[] coords, Slider fader, int[] pressed){
+  float fader_width = fader.getWidth();
+  float fader_height = fader.getHeight();
+  float x_up_l = fader.getPosition()[0];
+  float y_up_l = fader.getPosition()[1];
+  float x_up_r = x_up_l + fader_width;
+  float y_down_l = y_up_l + fader_height;
+  
+  for(int i= 0; i < coords.length; i++){
+      float curr_x = coords[i] * width;
+      float curr_y = coords[i+1] * height;
+      if(x_up_r > curr_x && curr_x> x_up_l && y_down_l > curr_y && curr_y > y_up_l && pressed[floor(i/2)] == 1){
+        float elementPosition = map(curr_y, y_down_l, y_up_l, 0, 100);
+        fader.setValue(elementPosition);
+        msgClass.sendVolumeMsg(100 - elementPosition);
+      }
+      i++;
+  }
+
 }
 
 public class GroupControlListener implements ControlListener {
