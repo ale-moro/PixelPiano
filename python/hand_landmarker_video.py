@@ -1,5 +1,4 @@
 # IMPORTS
-
 # utils
 import wget
 import time
@@ -11,22 +10,14 @@ from mediapipe.tasks import python
 from mediapipe import solutions
 from mediapipe.tasks.python import vision
 from mediapipe.framework.formats import landmark_pb2
-
 # cv2
 import cv2
 # math
 import numpy as np
-
-# data serialization
-import pickle
-import struct
 # OSC
 from pythonosc import osc_message_builder
 from pythonosc import udp_client
-# socket
-import socket
 
-# custom
 from landmark_utils import *
 
 # SETUP
@@ -37,7 +28,7 @@ HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
 
 #ip = '192.168.1.176'
 ip = 'localhost'
-port = 12001 
+port = 12000 
 client = udp_client.SimpleUDPClient(ip, port)
 landmark_utils = LandmarkUtils()
 landmark_mapper = LandmarkPianoMapper()
@@ -50,40 +41,18 @@ if not os.path.exists(model_path):
     print(f"The model '{model_path}' is already downloaded.")
     wget.download('https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task', model_path)
 
-# OSC
 def send_osc_active_notes(note_numbers: list):
   note_numbers = [int(n) for n in note_numbers]
   client.send_message('/note_numbers', note_numbers)
 
 def send_osc_coords(coords: list, flattened_coords_prev: np.array):
-  flattened_coords = np.array([round(float(coord), 4) for sublist in coords for coord in sublist])
+  
+  flattened_coords = np.array([round(float(coord),4) for sublist in coords for coord in sublist])
   flattened_coords_prev = flattened_coords if (flattened_coords!=np.zeros(10)).any() else flattened_coords_prev
   flattened_coords_prev = (flattened_coords + flattened_coords_prev)/2
+  # print(flattened_coords)
   client.send_message('/coords', flattened_coords_prev)
-
   return flattened_coords_prev
-
-def send_osc_frame(frame):
-
-  def rescale_frame(frame, new_width=600, new_height=480):  
-    # Rescale the image
-    return cv2.resize(frame, (new_width, new_height))
-
-  def grayscale_frame(frame):
-    img_float32 = np.float32(frame)
-    return cv2.cvtColor(img_float32, cv2.COLOR_BGR2GRAY)
-  
-  # Process the image
-  processed_frame = grayscale_frame(frame)
-  # processed_frame = rescale_frame(frame, new_width=60, new_height=48)
-  processed_frame = cv2.resize(processed_frame, (24, 16))
-  print('resizedframe.shape', processed_frame.shape)
-   # Convert image to byte array
-  # processed_frame = np.array([[0, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5]])
-  img_bytes = processed_frame.tobytes()
-  # Send the byte array over OSC
-  client.send_message("/frame", img_bytes)
-  cv2.imshow('frame', processed_frame.astype(np.uint8)) 
 
 
 def draw_landmarks_on_image(rgb_image, detection_result: mp.tasks.vision.HandLandmarkerResult):
@@ -155,60 +124,35 @@ def main():
    cap = cv2.VideoCapture(0)
    hand_landmarker = landmarker_and_result()
    flattened_coords_prev = np.zeros(10)
-
-   # Initialize socket
-   server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-   server_socket.bind(('localhost', 8000))
-   server_socket.listen(10)
-
-   # Accept a connection
-   client_socket, addr = server_socket.accept()
-   connection = client_socket.makefile('wb')
-
-
    while True:
-    # pull frame
-    ret, frame = cap.read()
-    print('resizedframe.shape', frame.shape)
+      # pull frame
+      ret, frame = cap.read()
+      # mirror frame
+      frame = cv2.flip(frame, 1)
+      # print landmarks
+      hand_landmarker.detect_async(frame)
+      frame = draw_landmarks_on_image(frame, hand_landmarker.result)
+      # print grid
+      frame, rows_indices, columns_indices = landmark_mapper.draw_grid_on_image(frame, return_indices=True)
 
-    # mirror frame
-    # frame = cv2.flip(frame, 1)
+      # retrieve and convert landmarks
+      landmarks_coords = landmark_utils.xy_fingertips_landmarks(hand_landmarker.result)
+      if len(landmarks_coords) > 0:
+        flattened_coords_prev = send_osc_coords(landmarks_coords, flattened_coords_prev)
+      landmarks_coords = landmark_mapper.scale_landmark_to_video_size(frame, landmarks_coords)
 
-    if ret:
-      # Serialize frame
-      data = pickle.dumps(frame)
-      # Pack message length and frame data
-      message_size = struct.pack("L", len(data))
-      # Send message length followed by frame data
-      connection.write(message_size + data)
+      # map landmarks to notes
+      midi_notes = landmark_mapper.landmarks_to_midi_notes(landmarks_coords) 
 
-    # print landmarks
-    hand_landmarker.detect_async(frame)
-    frame = draw_landmarks_on_image(frame, hand_landmarker.result)
-    # print grid
-    frame, rows_indices, columns_indices = landmark_mapper.draw_grid_on_image(frame, return_indices=True)
+      send_osc_active_notes(list(midi_notes))
 
-    # retrieve and convert landmarks
-    landmarks_coords = landmark_utils.xy_fingertips_landmarks(hand_landmarker.result)
-    if len(landmarks_coords) > 0:
-      flattened_coords_prev = send_osc_coords(landmarks_coords, flattened_coords_prev)
-    landmarks_coords = landmark_mapper.scale_landmark_to_video_size(frame, landmarks_coords)
+  
+      # display frame
+      cv2.imshow('frame', frame.astype(np.uint8)) 
+      if cv2.waitKey(1) == ord('q'):
+            break
 
-    # map landmarks to notes
-    midi_notes = landmark_mapper.landmarks_to_midi_notes(landmarks_coords) 
-
-    send_osc_active_notes(list(midi_notes))
-    # send_osc_frame(frame)
-
-    # display frame
-    cv2.imshow('frame', frame.astype(np.uint8)) 
-    if cv2.waitKey(1) == ord('q'):
-          break
-
-   # release everything
-   # Close connections
-   connection.close()
-   server_socket.close()
+    # release everything
    hand_landmarker.close()
    cap.release()
    cv2.destroyAllWindows()
