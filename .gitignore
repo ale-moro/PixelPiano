@@ -36,3 +36,4 @@ python/hand_landmarker.task
 
 # Ignore specifically named files
 _*
+.legacy
