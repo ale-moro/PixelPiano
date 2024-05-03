@@ -19,8 +19,8 @@ class PianoHeroPage implements Page {
   float[] midiNameTextPosition;
   ButtonClickListener buttonClickListener;
   GroupControlListener groupControlListener;
-  int buttons_height = 30;
-
+  Button[] buttonsArray;
+ int buttons_height = 30;
   Fingers fingers;
   PlayPagePiano keyboard;
 
@@ -74,8 +74,8 @@ class PianoHeroPage implements Page {
   }
 
   public void handleButtonClick(ControlEvent event) {
-    if (!event.isController()) return;
-    String buttonName = event.getController().getName();
+    if (!event.isController() && !event.isTab()) return;
+    String buttonName = event.getName();
     
     if ("pianoHeroBackButton".equals(buttonName)) {
       navigationController.changePage(activePage, modeSelectionPage);
@@ -130,7 +130,12 @@ class PianoHeroPage implements Page {
   }
 
   public void setup() {
-      this.preparePlayer();
+    this.preparePlayer();
+    buttonsArray = new Button[4];
+    buttonsArray[0] = this.backButton;
+    buttonsArray[1] = this.loadMidiButton;
+    buttonsArray[2] = this.startMidiButton;
+    buttonsArray[3] = this.restartMidiButton;
   }
   
   public void draw() {
@@ -145,6 +150,10 @@ class PianoHeroPage implements Page {
     styleManager.drawButtonBox(this.restartMidiButton, 10);
     styleManager.drawDropdownBox(this.midiFilesDropdown, 10);
     
+    for(int i = 0; i < buttonsArray.length; i++){
+      checkCoordinates(coordinates, buttonsArray[i], pressedSens);
+    }
+    
     this.drawFilename();
 
     // falling notes
@@ -155,6 +164,7 @@ class PianoHeroPage implements Page {
     
     this.keyboard.draw();
     // fingers
+    
     notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
     this.fingers.positions(coordinates);
   }
