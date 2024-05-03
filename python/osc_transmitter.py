@@ -64,7 +64,7 @@ class OSCConnection:
 
     def _send_midi_notes(self, midi_notes: list):
         # Send MIDI notes via OSC
-        self.client.send_message('/midi_notes', midi_notes)
+        self.client.send_message('/note_numbers', midi_notes)
 
     def send_osc_active_notes(self, note_numbers):
         midi_notes = [int(n) for n in note_numbers]
