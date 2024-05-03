@@ -32,6 +32,8 @@ class PianoHeroPage implements Page {
   float margin;
   float rectY = 0;
   boolean isPlaying = false;
+  boolean showText = true;
+  float scoreValue = 0.0;
 
   MidiLoader midiLoader;
   boolean waitingForMidiFilePath = false;
@@ -163,8 +165,15 @@ class PianoHeroPage implements Page {
     this.keyboard.setNotes(notesOutput);
     
     this.keyboard.draw();
-    // fingers
     
+    //score
+    if(showText){
+      drawScore(false);
+    }else{
+      drawScore(true);
+    }
+    
+    // fingers
     notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
     this.fingers.positions(coordinates);
   }
@@ -225,8 +234,43 @@ class PianoHeroPage implements Page {
     this.addListeners();
   }
   
+    private void drawScore(boolean textOn) {
+      
+    float score_textX;
+    float score_textY;
+    
+    fill(0);
+    textMode(SHAPE);
+    
+    if (textOn) {      
+      score_textX = 9*width/10 + 5;
+      score_textY = 9.3*height/10 + 10;
+      textSize(30);
+      textAlign(RIGHT, CENTER);
+      textFont(createFont("Monospaced", 30));
+      
+    }else{
+      score_textX = width/2;
+      score_textY = height/3;
+      textSize(60);
+      textAlign(CENTER, CENTER);
+      textFont(createFont("Monospaced", 60));
+      
+    }
+   
+    
+      // Draw the shadow
+      fill(150, 50);
+      text("Score: " + nf(fallingNotesPlayer.getScore(),0,1) + "%" , score_textX + 2, score_textY + 2);
+      fill(0);
+      text("Score: " + nf(fallingNotesPlayer.getScore(),0,1) + "%" , score_textX, score_textY);
+
+  }
+  
+  
   public void setVisibility(boolean isVisible){
     if(isVisible){
+    
       this.backButton.setPosition(this.backButtonPosition);
       this.loadMidiButton.setPosition(this.loadMidiButtonPosition);
       this.startMidiButton.setPosition(this.startMidiButtonPausedPosition);
@@ -234,6 +278,7 @@ class PianoHeroPage implements Page {
       this.midiFilesDropdown.setPosition(this.midiFilesDropdownPosition);
     } else {
       background(255);
+      
       this.backButton.setPosition(this.inactivePosition);
       this.loadMidiButton.setPosition(this.inactivePosition); 
       this.startMidiButton.setPosition(this.inactivePosition);
@@ -243,6 +288,8 @@ class PianoHeroPage implements Page {
   }
 
   public void setVisibility(boolean isVisible, boolean playing_mode){
+    showText = isVisible;
+    
     if (!playing_mode){
       this.setVisibility((isVisible));
     } else {
@@ -253,7 +300,7 @@ class PianoHeroPage implements Page {
         this.midiFilesDropdown.setPosition(this.midiFilesDropdownPosition);
         this.startMidiButton.setPosition(this.startMidiButtonPausedPosition);
       } else {
-        background(255);
+        background(255);      
         this.backButton.setPosition(this.inactivePosition);
         this.loadMidiButton.setPosition(this.inactivePosition); 
         this.restartMidiButton.setPosition(this.inactivePosition);
@@ -299,6 +346,7 @@ class PianoHeroPage implements Page {
       this.midiFilePath = this.midiFilePath != midiLoaderSelectedMIDIFilePath? midiLoaderSelectedMIDIFilePath : this.midiFilePath;
       this.midiFilePath = Utils.safePath(this.midiFilePath);
       String midiFileName = this.midiFilePath.contains("\\") ? this.midiFilePath.substring(this.midiFilePath.lastIndexOf("\\") + 1) : this.midiFilePath;
+      midiFileName = this.midiFilePath.contains("/") ? this.midiFilePath.substring(this.midiFilePath.lastIndexOf("/") + 1) : this.midiFilePath;
       text(midiFileName, this.midiNameTextPosition[0], this.midiNameTextPosition[1]);
       }
   }

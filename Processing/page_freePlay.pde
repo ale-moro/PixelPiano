@@ -18,8 +18,8 @@ class PlayPage implements Page {
   Fingers fingers;
   PlayPagePiano keyboard;
   ButtonClickListener buttonClickListener;
-  VideoStream videoStream;
   Button[] buttonsArray;
+  VideoStream videoStream;
 
   public PlayPage() {
     this.fingers = new Fingers();
@@ -110,6 +110,8 @@ class PlayPage implements Page {
     for(int i = 0; i < buttonsArray.length; i++){
       checkCoordinates(coordinates, buttonsArray[i], pressedSens);
     }
+    
+    checkFader(coordinates, myFader, pressedSens);
   }
   
   // =============================== PAGE STYLING ===============================
