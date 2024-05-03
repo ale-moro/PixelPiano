@@ -2,8 +2,8 @@ class PlayPage implements Page {
   int pageIndex = PLAY_PAGE_INDEX;
   boolean isVisible;
   float[] inactivePosition;
-  Knob myKnob;
-  float[] myKnobPosition;
+  // Knob myKnob;
+  // float[] myKnobPosition;
   boolean beginnerMode;
   Slider myFader;
   float[] myFaderPosition;
@@ -19,10 +19,12 @@ class PlayPage implements Page {
   PlayPagePiano keyboard;
   ButtonClickListener buttonClickListener;
   Button[] buttonsArray;
+  VideoStream videoStream;
 
   public PlayPage() {
     this.fingers = new Fingers();
     this.keyboard = new PlayPagePiano();
+    this.videoStream = new VideoStream(4 * height / 9, height / 3, width / 10, height / 4 -  width/10);
     this.buttonClickListener = new ButtonClickListener(this);
     this.isVisible = false;
     this.beginnerMode = false;
@@ -41,7 +43,7 @@ class PlayPage implements Page {
     this.octaveUpButton.addListener(this.buttonClickListener);
     this.octaveDownButton.addListener(this.buttonClickListener);
     this.myFader.addListener(this.buttonClickListener);
-    this.myKnob.addListener(this.buttonClickListener);
+    // this.myKnob.addListener(this.buttonClickListener);
   }
 
   public void removeListeners() { // WARNING not safe
@@ -50,7 +52,7 @@ class PlayPage implements Page {
     this.octaveUpButton.removeListener(this.buttonClickListener);
     this.octaveDownButton.removeListener(this.buttonClickListener);
     this.myFader.removeListener(this.buttonClickListener);
-    this.myKnob.removeListener(this.buttonClickListener);
+    // this.myKnob.removeListener(this.buttonClickListener);
   }
 
   public void setVisibility(boolean isVisible){
@@ -62,14 +64,14 @@ class PlayPage implements Page {
       this.octaveUpButton.setPosition(this.octaveUpButtonPosition);
       this.octaveDownButton.setPosition(this.octaveDownButtonPosition);
       this.myFader.setPosition(this.myFaderPosition); 
-      this.myKnob.setPosition(this.myKnobPosition);    
+      // this.myKnob.setPosition(this.myKnobPosition);    
     } else {
       this.backButton.setPosition(this.inactivePosition);
       this.modeButton.setPosition(this.inactivePosition);
       this.octaveUpButton.setPosition(this.inactivePosition);
       this.octaveDownButton.setPosition(this.inactivePosition);
       this.myFader.setPosition(this.inactivePosition);
-      this.myKnob.setPosition(this.inactivePosition);
+      // this.myKnob.setPosition(this.inactivePosition);
     }
   }
 
@@ -90,6 +92,7 @@ class PlayPage implements Page {
       // outer box
       this.drawPageLayoutLines();
       this.drawButtonsBoxes();
+      this.videoStream.draw();
       notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
       // keyboard
       this.keyboard.setNotes(notesOutput);
@@ -167,9 +170,9 @@ class PlayPage implements Page {
         case "mySlider":
             freePlayPage.faderPressed();
             break;
-        case "myFader":
-            freePlayPage.knobPressed();
-            break;
+        // case "myFader":
+        //     freePlayPage.knobPressed();
+        //     break;
       }
     }
 
@@ -231,9 +234,9 @@ class PlayPage implements Page {
   private void faderPressed(){
   }
 
-  private void knobPressed(){
-    println("knobPressed");
-  }
+  // private void knobPressed(){
+  //   println("knobPressed");
+  // }
   // ================================================================================
 
   // =============================== GRAPHIC ELEMENTS ===============================
@@ -241,17 +244,17 @@ class PlayPage implements Page {
     this.setupButtonPositions();
 
     // Knob
-    this.myKnob = cp5.addKnob("myKnob")
-              .setRange(0, 100)
-              .setValue(0) // todo: Mappare valore nel range e settare value
-              .setPosition(this.inactivePosition)
-              .setRadius(80)
-              .setNumberOfTickMarks(10)
-              .setColorForeground(color(200))
-              .setColorBackground(color(0,0,0,1))
-              .setVisible(true)
-              .setColorActive(color(200));
-    this.myKnob.getCaptionLabel().setVisible(false);
+    // this.myKnob = cp5.addKnob("myKnob")
+    //           .setRange(0, 100)
+    //           .setValue(0) // todo: Mappare valore nel range e settare value
+    //           .setPosition(this.inactivePosition)
+    //           .setRadius(80)
+    //           .setNumberOfTickMarks(10)
+    //           .setColorForeground(color(200))
+    //           .setColorBackground(color(0,0,0,1))
+    //           .setVisible(true)
+    //           .setColorActive(color(200));
+    // this.myKnob.getCaptionLabel().setVisible(false);
     
     // Fader
     this.myFader = cp5.addSlider("mySlider")
@@ -291,7 +294,7 @@ class PlayPage implements Page {
   }
 
   void setupButtonPositions(){
-    this.myKnobPosition = new float[] {width*11/60, height*5/30};
+    // this.myKnobPosition = new float[] {width*11/60, height*5/30};
     this.myFaderPosition = new float[] {width*28/60 - 10, height*5/30};
     this.octaveUpButtonPosition = new float[] {3*width/5 + width/8 + 110,height*5/30 + 110};
     this.octaveDownButtonPosition = new float[] {3*width/5 + width/8 +20, height*5/30 + 110};

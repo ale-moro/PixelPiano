@@ -1,0 +1,93 @@
+import socket
+import pickle
+import time
+import cv2
+import numpy as np
+
+def resize_frame(frame, width, height):
+    return cv2.resize(frame, (width, height))
+
+# Define host and port
+HOST = '127.0.0.1'
+PORT = 12345
+
+# Create a socket object
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# Bind the socket to the address
+server_socket.bind((HOST, PORT))
+
+# Listen for incoming connections
+server_socket.listen()
+
+print("Server is listening on", (HOST, PORT))
+
+# Accept connections from client
+client_socket, client_address = server_socket.accept()
+
+print("Connected to", client_address)
+
+# Open the camera
+cap = cv2.VideoCapture(0)
+
+try:
+    # Capture frame-by-frame
+    while True:
+        ret, f = cap.read()
+
+        # Convert frame to grayscale
+        frame = cv2.cvtColor(f, cv2.COLOR_BGR2GRAY)
+        # Resize the frame
+        frame = resize_frame(frame, 32, 24)
+        # Display the frame locally (optional)
+        # cv2.imshow('Processed Image', frame)
+
+        print("Frame shape:", frame.shape)
+        # for p in frame:
+        #     print(p)
+
+
+        # Serialize the frame to bytes
+        serialized_frame = pickle.dumps(frame)
+
+        # Send the frame size first
+        serialized_frame_bytes = len(serialized_frame).to_bytes(4, byteorder='big')
+        print("Serialized frame size:", len(serialized_frame))
+        print("Serialized frame size bytes:", serialized_frame_bytes)
+        client_socket.sendall(serialized_frame_bytes)
+
+        # Send the frame data
+        print("serialized_frame length:", len(serialized_frame))
+        client_socket.sendall(serialized_frame)
+
+        # Display the frame on the server-side (optional)
+        cv2.imshow('Server Video', f)
+
+        time.sleep(0.1)
+
+
+        # # Convert frame to bytes
+        # encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
+        # _, img_encoded = cv2.imencode('.jpg', frame, encode_param)
+        # img_bytes = img_encoded.tobytes()
+
+        # # Send the image size first
+        # image_size = len(img_bytes)
+        # print(f"Image size: og: {frame.shape} => enc: {len(img_encoded)} => bytes: {len(img_bytes)} == {image_size}", )
+        # image_byte_size = len(img_bytes).to_bytes(4, byteorder='big')
+        # print("Image byte size:", image_byte_size)
+        # client_socket.sendall(len(img_bytes).to_bytes(4, byteorder='big'))
+
+        # # Send the image data
+        # client_socket.sendall(img_bytes)
+
+        # print("Sent image")
+
+        # # Wait for a while before capturing the next image
+        # time.sleep(0.1)
+    
+except KeyboardInterrupt:
+    # Release the camera and close the connection on Ctrl+C
+    cap.release()
+    client_socket.close()
+    server_socket.close()

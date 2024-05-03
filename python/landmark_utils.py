@@ -1,10 +1,10 @@
 import math
 import numpy as np
 import mediapipe as mp
-import matplotlib.pyplot as plt
 
 class LandmarkUtils:
-    def xy_fingertips_landmarks(self, detection_result: mp.tasks.vision.HandLandmarkerResult):
+    @staticmethod
+    def xy_fingertips_landmarks(detection_result: mp.tasks.vision.HandLandmarkerResult):
         try:
             if detection_result.hand_landmarks == []:
                 return np.array([])
@@ -89,7 +89,6 @@ class LandmarkPianoMapper:
 
     def draw_grid_on_image(self, rgb_image, return_indices=False):
         grid_image = np.copy(rgb_image) # np.array
-        # print(annotated_image.shape) # 480, 640, 3 (rgb)
         grid, rows_indices, columns_indices = self.create_image_grid(
             grid_image,
             n_rows=1,
@@ -102,7 +101,7 @@ class LandmarkPianoMapper:
         # print('grid_image', grid_image.shape)
         # plt.imshow(grid_image)
         # plt.show()
-        if return_indices:
+        if return_indices is True:
             return grid_image.astype('int'), rows_indices, columns_indices
         else:
             return grid_image.astype('int')

@@ -1,0 +1,47 @@
+import cv2
+import numpy as np
+from pythonosc import osc_message_builder
+from pythonosc import udp_client
+
+# Set up OSC client
+ip = 'localhost'
+port = 12001  # Make sure this matches the port in your Processing sketch
+client = udp_client.SimpleUDPClient(ip, port)
+
+# Function to send resized image via OSC
+def send_resized_image_via_osc(image, new_width, new_height):
+    print(f"\nSending resized image: {new_width}x{new_height}")
+    # Resize the image
+    resized_image = cv2.resize(image, (new_width, new_height))
+    height, width, _ = resized_image.shape
+    for y in range(height):
+        for x in range(width):
+            # Get pixel values (BGR format)
+            b, g, r = resized_image[y, x]
+            # Convert pixel values to strings and send them as OSC messages
+            client.send_message('/pixel', [str(x), str(y), str(r), str(g), str(b)])
+    print("Image sent successfully!")
+
+# Capture video from camera
+cap = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    # Process the frame (e.g., hand landmark detection)
+    # Your processing code here
+
+    # Send the processed frame via OSC
+    send_resized_image_via_osc(frame, 120, 80)
+
+    # Display the frame locally (optional)
+    cv2.imshow('Processed Image', frame)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        print("Exiting...")
+        break
+
+# Release the camera and close OpenCV windows
+cap.release()
+cv2.destroyAllWindows()
