@@ -24,6 +24,7 @@ out
 venv/
 __pycache__/
 target/
+env_3_11_0/
 
 # Ignore package manager directories
 pipenv/
