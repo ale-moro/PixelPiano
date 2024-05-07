@@ -28,6 +28,7 @@ Utils utils;
 MidiDevice.Info[] midiDeviceInfo;
 MidiDevice midiOutputDevice;
 Receiver midiReceiver;
+VideoStream videoStream;
 int prevValue = 0;
 
 // color[] pastelColors = new color[15];
@@ -53,6 +54,7 @@ void setup() {
   styleManager = new StyleManager();
   utils = new Utils();
   msgClass = new OscMsg();
+  videoStream = new VideoStream(4 * height / 9, height / 3, width / 10, height / 4 -  width/10);
   oscP5 = new OscP5(this, 12000);
   startPage = new StartPage();
   modeSelectionPage = new ModeSelectionPage();
@@ -67,5 +69,6 @@ void setup() {
 }
 
 void draw() { 
+  videoStream.listen();
   activePage.draw();
 }

@@ -16,6 +16,7 @@ class VideoStream {
     int img_x = 0;
     int img_y = 0;
     byte[] imageData;
+    byte[] imageBytes;
 
 
     VideoStream(int image_width, int image_height, int x, int y){
@@ -23,6 +24,8 @@ class VideoStream {
         this.image_height = image_height;
         this.img_x = x;
         this.img_y = y;
+        this.imageData = new byte[image_byte_length];
+        this.imageBytes = new byte[image_byte_length]; 
 
         img = createImage(this.stream_width, this.stream_height, ALPHA);
         // Set the image pixels from the byte array
@@ -50,7 +53,51 @@ class VideoStream {
         }
     }
 
+    void listen() {
+        try {
+            // Check if there's data available from the server
+            if (in.available() > 0) {
+                // Check if we've received the image size
+                if (image_byte_length == 0) {
+                    // Read the image size (4 bytes)
+                    image_byte_length = in.readInt();
+                    // Initialize the image data array
+                    this.imageData = new byte[image_byte_length];
+                    if(this.imageBytes.length == 0){
+                      this.imageBytes = new byte[image_byte_length]; 
+                    }
+                } else {
+                    // Read the image data
+                    in.readFully(this.imageData);
+                    this.imageBytes = this.imageData;
+                    image_byte_length = 0;
+                }
+            }
+        } catch (IOException e) {
+            println("Error reading from server");
+        }
+    }
+    
     void draw() {
+      // Create a new PImage object
+      img = createImage(this.stream_width, this.stream_height, ALPHA);
+      // Set the image pixels from the byte array
+      img.loadPixels();
+      int index = 0;
+      for (int y = 0; y < stream_height; y++) {
+          for (int x = 0; x < stream_width; x++) {
+              int pixelValue = Byte.toUnsignedInt(this.imageBytes[index]); // Get pixel value (0-255)
+              int pixel = color(pixelValue);            
+              img.pixels[y * stream_width + x] = pixel;
+              index++;
+          }
+      }
+      img.updatePixels();
+      // Display the image
+      image(img, this.img_x, this.img_y, this.image_width, this.image_height);
+    }
+
+    void draw_old() {
         try {
             // Check if there's data available from the server
             if (in.available() > 0) {

@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 
 # custom
-from video_socket_transmitter import VideoSocketTransmitter
+from video_socket_transmitter import VideoSocketServer
 from osc_transmitter import OSCTransmitter
 from hand_landmarker import HandLandmarker
 from frame_utils import FrameUtils
@@ -23,19 +23,19 @@ class Application:
         self.landmark_mapper = LandmarkPianoMapper()
         self.flattened_coords_prev = np.zeros(10)
         self.osc_communicator = OSCTransmitter(self.video_capture)
-        self.video_transmitter = VideoSocketTransmitter(self.video_capture, grayscale=True, resize=(640, 480))
+        self.video_transmitter = VideoSocketServer(self.video_capture, grayscale=True, resize=(640, 480))
 
     def run(self):
         # Accept a client connection
         self.video_transmitter.accept_connection()
-        self.video_transmitter.stream_video(on_separate_thread=True)
+        # self.video_transmitter.stream_video(on_separate_thread=True)
         # self.osc_communicator.stream_OSC_messages(on_separate_thread=True)
 
         while True:
-            ret, frame = self.video_capture.read()
+            ret, frame_clean = self.video_capture.read()
 
             # FRAME IMAGE PROCESSING
-            frame = FrameUtils.flip_frame_horizontally(frame=frame)
+            frame = FrameUtils.flip_frame_horizontally(frame=frame_clean)
             # print landmarks on frame
             self.hand_landmarker.detect_landmarks(frame)
             #print(self.hand_landmarker.result)
@@ -55,9 +55,14 @@ class Application:
             # map landmarks to MIDI notes and send them via OSC
             midi_notes = self.landmark_mapper.landmarks_to_midi_notes(landmarks_coords)
             self.osc_communicator.send_osc_active_notes(list(midi_notes))
+            print('sent_osc')
+
+            self.video_transmitter._send_frame(frame_clean)
+            print('sent_frame')
             
             # Display frame
-            cv2.imshow('frame', frame.astype(np.uint8)) 
+            frame = FrameUtils.flip_frame_horizontally(frame)
+            # cv2.imshow('frame', frame.astype(np.uint8)) 
             if cv2.waitKey(1) == ord('q') or cv2.waitKey(33) == 27:
                 break
 
