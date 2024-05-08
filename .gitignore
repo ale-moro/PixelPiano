@@ -17,8 +17,8 @@ out
 *.class
 *.jar
 *.war
-out
-.task
+*.task
+*.legacy
 
 # Ignore dependencies and build directories
 venv/
@@ -37,4 +37,4 @@ python/hand_landmarker.task
 
 # Ignore specifically named files
 _*
-.legacy
+
