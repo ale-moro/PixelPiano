@@ -10,17 +10,17 @@ void oscEvent(OscMessage msg) {
             // println("notesInput: "+ receivedValues[i]);
             }
         notesInput = receivedValues;
-        println(notesInput);
+        // println(notesInput);
       }
       
     if (msg.checkAddrPattern("/belapressure")){
               int argumentCount = msg.arguments().length;
-              for(int i = 0; i< argumentCount; i++){
+              for(int i = 0; i < argumentCount; i++){
                  //prevPressureValues[i] = pressedSens[i];
                  pressedSens[i] = min(msg.get(i).intValue(), 1);
               } 
                 //print("pressedSens: ");
-              for(int i = 0; i<pressedSens.length; i++){
+              for(int i = 0; i < pressedSens.length; i++){
                 // print(pressedSens[i] + " - ");
               }
               println();

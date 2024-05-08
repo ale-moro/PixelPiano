@@ -182,17 +182,30 @@ class PlayPage implements Page {
   }
 
   private void octaveUpButtonPressed(){
-    for (int i = 0; i < octaves.length; i++) {
-      if(octaves[1] < 6){
+    if(octaves[2] < 7){
+      for (int i = 0; i < octaves.length; i++) {
         octaves[i]++;
-      } else {
-        octaves[0] = 5;
-        octaves[1] = 6;
-        octaves[2] = 7;
       }
+      shift -= 12;
+
+    } else {
+      octaves[0] = 5;
+      octaves[1] = 6;
+      octaves[2] = 7;
+      shift = - 36;
     }
 
-    shift -= 12;
+    // for (int i = 0; i < octaves.length; i++) {
+    //   if(octaves[1] < 6){
+    //     octaves[i]++;
+    //   } else {
+    //     octaves[0] = 5;
+    //     octaves[1] = 6;
+    //     octaves[2] = 7;
+    //   }
+    // }
+
+    // shift -= 12;
     println(shift);
     fill(200);
     stroke(0);
@@ -200,16 +213,27 @@ class PlayPage implements Page {
   }
 
   private void octaveDownButtonPressed(){
-    for (int i = 0; i < octaves.length; i++) {
-      if(octaves[0] > 2 ){
+    if(octaves[0] > 1 ){
+      for (int i = 0; i < octaves.length; i++) {
         octaves[i]--;
-      } else {
-        octaves[0] = 1;
-        octaves[1] = 2;
-        octaves[2] = 3;
       }
+      shift += 12;
+    } else {
+      octaves[0] = 1;
+      octaves[1] = 2;
+      octaves[2] = 3;
+      shift = 36;
     }
-    shift += 12;
+    // for (int i = 0; i < octaves.length; i++) {
+    //   if(octaves[0] > 2 ){
+    //     octaves[i]--;
+    //   } else {
+    //     octaves[0] = 1;
+    //     octaves[1] = 2;
+    //     octaves[2] = 3;
+    //   }
+    // }
+    // shift += 12;
     println(shift);
     fill(200);
     stroke(0);
