@@ -19,12 +19,10 @@ class PlayPage implements Page {
   PlayPagePiano keyboard;
   ButtonClickListener buttonClickListener;
   Button[] buttonsArray;
-  VideoStream videoStream;
 
   public PlayPage() {
     this.fingers = new Fingers();
     this.keyboard = new PlayPagePiano();
-    this.videoStream = new VideoStream(4 * height / 9, height / 3, width / 10, height / 4 -  width/10);
     this.buttonClickListener = new ButtonClickListener(this);
     this.isVisible = false;
     this.beginnerMode = false;
@@ -92,7 +90,7 @@ class PlayPage implements Page {
       // outer box
       this.drawPageLayoutLines();
       this.drawButtonsBoxes();
-      this.videoStream.draw();
+      videoStream.draw();
       notesOutput = this.fingers.getPressedNotes(notesInput, pressedSens, shift, this.keyboard);
       // keyboard
       this.keyboard.setNotes(notesOutput);
