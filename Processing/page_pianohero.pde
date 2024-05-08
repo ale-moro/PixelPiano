@@ -145,7 +145,6 @@ class PianoHeroPage implements Page {
     background(255);
 
     // buttons 
-    styleManager.drawDropdownBox(this.midiFilesDropdown, 10);
     styleManager.drawButtonBox(this.backButton, 10);
     styleManager.drawButtonBox(this.loadMidiButton, 10);
     styleManager.drawButtonBox(this.startMidiButton, 10);
