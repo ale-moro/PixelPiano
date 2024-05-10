@@ -47,9 +47,7 @@ public void checkCoordinates(float[] coords, Button button, int[] pressed){
       
       }
       i++;
-    }
-      
-      
+    } 
 }
 
 public void checkFader(float[] coords, Slider fader, int[] pressed){
@@ -66,7 +64,7 @@ public void checkFader(float[] coords, Slider fader, int[] pressed){
       if(x_up_r > curr_x && curr_x> x_up_l && y_down_l > curr_y && curr_y > y_up_l && pressed[floor(i/2)] == 1){
         float elementPosition = map(curr_y, y_down_l, y_up_l, 0, 100);
         fader.setValue(elementPosition);
-        msgClass.sendVolumeMsg(100 - elementPosition);
+        msgClass.sendVolumeMsg(elementPosition);
       }
       i++;
   }
