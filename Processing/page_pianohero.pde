@@ -51,10 +51,15 @@ class PianoHeroPage implements Page {
     this.noteSequence = new GameNoteSequence();
 
     this.midiFilesDropdownItemList = new ArrayList<String>();
-    this.midiFilesDropdownItemList.add("assets\\BWV_0578.mid");
-    this.midiFilesDropdownItemList.add("assets\\HesaPirate.mid");
-    this.midiFilesDropdownItemList.add("assets\\Dr Dre - Still Dre.mid");
-    this.midiFilePath = Utils.safePath(sketchPath() + "\\" + this.midiFilesDropdownItemList.get(0));
+    String folderPath = sketchPath() + java.io.File.separator + "assets" + java.io.File.separator;
+    println("Folder path: " + folderPath);
+    List<String> fileNames = PathUtils.getFileNamesInFolder(folderPath);
+    for (String fileName : fileNames) {
+        String filePath = folderPath + java.io.File.separator + fileName;
+        midiFilesDropdownItemList.add(filePath);
+        println("Added file path: " + filePath);
+    }
+    this.midiFilePath = Utils.safePath(sketchPath() +  java.io.File.separator + this.midiFilesDropdownItemList.get(0));
 
     this.midiLoader = new MidiLoader();
 
@@ -122,7 +127,9 @@ class PianoHeroPage implements Page {
       println("Dropdown menu value selected: " + this.midiFilesDropdown.getValue());
       String dropdownPath = this.midiFilesDropdownItemList.get(round(this.midiFilesDropdown.getValue()));
       if (!Utils.isAbsolutePath(dropdownPath)){
-        dropdownPath = sketchPath() + "\\" + dropdownPath;
+        println("Dropdown path is not absolute, adding sketch path: " + dropdownPath);
+        dropdownPath = sketchPath() + java.io.File.separator + dropdownPath;
+        println("Dropdown path is now: " + dropdownPath);
       } 
       this.midiFilePath = Utils.safePath(dropdownPath);
 

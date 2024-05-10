@@ -1,5 +1,8 @@
 import java.nio.file.Paths;
 import java.nio.file.Path;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 static class Utils {
     
@@ -33,4 +36,25 @@ static class Utils {
     Path p = Paths.get(path); 
     return p.isAbsolute();
   }
+}
+
+public static class PathUtils {
+    
+    public static ArrayList<String> getFileNamesInFolder(String folderPath) {
+        ArrayList<String> fileNames = new ArrayList<>();
+        java.io.File folder = new java.io.File(folderPath);
+        
+        if (folder.exists() && folder.isDirectory()) {
+            java.io.File[] files = folder.listFiles();
+            if (files != null) {
+                for (java.io.File file : files) {
+                    if (file.isFile()) {
+                        fileNames.add(file.getName());
+                    }
+                }
+            }
+        }
+        
+        return fileNames;
+    }
 }
