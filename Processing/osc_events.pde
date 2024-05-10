@@ -23,7 +23,7 @@ void oscEvent(OscMessage msg) {
               for(int i = 0; i < pressedSens.length; i++){
                 // print(pressedSens[i] + " - ");
               }
-              println();
+             // println();
           }
       
       if(msg.checkAddrPattern("/coords")){

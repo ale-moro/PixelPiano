@@ -186,6 +186,9 @@ class PlayPage implements Page {
       for (int i = 0; i < octaves.length; i++) {
         octaves[i]++;
       }
+      for (int i = 0; i <= 127; i++) {
+        msgClass.sendNoteOff(i);
+      }
       shift -= 12;
 
     } else {
@@ -206,7 +209,7 @@ class PlayPage implements Page {
     // }
 
     // shift -= 12;
-    println(shift);
+    
     fill(200);
     stroke(0);
     rect(3*width/5 + width/8 + 90,height*5/30 + 110, 70, 70, 10);
@@ -216,6 +219,9 @@ class PlayPage implements Page {
     if(octaves[0] > 1 ){
       for (int i = 0; i < octaves.length; i++) {
         octaves[i]--;
+      }
+      for (int i = 0; i <= 127; i++) {
+        msgClass.sendNoteOff(i);
       }
       shift += 12;
     } else {

@@ -60,14 +60,14 @@ class OscMsg {
   
   // value needs to be in range [0-100]
   public void sendVolumeMsg(float value){
-      print("value: ", value);
+      //print("value: ", value);
     if (midiReceiver != null) {
       try {
         // Send a MIDI note-on message
         ShortMessage msg = new ShortMessage();
         int new_vol = int(value/100* 127);
         msg.setMessage(ShortMessage.CONTROL_CHANGE, CHANGE_VOLUME, new_vol); // MIDI channel 0, note number 60 (C4), velocity 100
-        print("new volume: ", new_vol);
+        //print("new volume: ", new_vol);
 
         midiReceiver.send(msg, -1);
         
