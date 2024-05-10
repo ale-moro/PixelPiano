@@ -31,7 +31,6 @@ Receiver midiReceiver;
 VideoStream videoStream;
 int prevValue = 0;
 
-// color[] pastelColors = new color[15];
 color[] pastelColors = { #EAE4E9, #FFF1E6, #FDE2E4, #FAD2E1, #E2ECE9,
                           #BEE1E6, #F0EFEB, #DFE7FD, #EAE4E9, #FFF1E6, #FDE2E4, #FAD2E1, #E2ECE9,
                           #BEE1E6, #F0EFEB, #DFE7FD }; 
@@ -63,7 +62,7 @@ void setup() {
   msgClass.selectMidiOutput("virtualPort");
   activePage = startPage;
 
-  midiLoaderSelectedMIDIFilePath = sketchPath() + "\\" + pianoHeroPage.getMidiFilesDropdownItemList().get(0);
+  midiLoaderSelectedMIDIFilePath = pianoHeroPage.getMidiFilesDropdownItemList().get(0);
   frameRate(333);
   background(255);
 }
