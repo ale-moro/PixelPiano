@@ -55,10 +55,10 @@ class Application:
             # map landmarks to MIDI notes and send them via OSC
             midi_notes = self.landmark_mapper.landmarks_to_midi_notes(landmarks_coords)
             self.osc_communicator.send_osc_active_notes(list(midi_notes))
-            print('sent_osc')
+            # print('sent_osc')
 
             self.video_transmitter._send_frame(frame_clean)
-            print('sent_frame')
+            # print('sent_frame')
             
             # Display frame
             frame = FrameUtils.flip_frame_horizontally(frame)

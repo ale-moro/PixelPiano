@@ -6,7 +6,8 @@ class Fingers {
   public int[] getPressedNotes(int[] fingers, int[] sensors, int shift, Piano keyboard){
     
     for(int i = 0; i< fingers.length; i++){
-        if(fingers[i] == -12){
+   
+        if(fingers[i] == -12 - shift){
           //println("conversione in: " + noteToPlay[i]);
           noteToPlay[i] = -1;
         } else {
@@ -18,14 +19,13 @@ class Fingers {
           }
       }
     }
-    // println(noteToPlay);
+    println(noteToPlay);
     toPlay = pressedKeys(noteToPlay, sensors);
-    
-    //println(temp);
+
     for(int i = 0; i < toPlay.length; i++){
       //println(toPlay[i]);
       if(toPlay[i]!=-1 && toPlay[i] != prev[i]){
-        //println("im in");
+       
         msgClass.sendNoteOn(toPlay[i] + 24);
       } else {
         for(int j=0; j < toPlay.length;j++){
