@@ -38,7 +38,7 @@ class VideoSocketServer:
         f = FrameUtils.resize_frame(f, 640, 480)
 
         # Flip image
-        f = FrameUtils.flip_frame_horizontally(f)
+        # f = FrameUtils.flip_frame_horizontally(f)
 
         # Send the frame to the client
         self.server_socket.send_frame(f)

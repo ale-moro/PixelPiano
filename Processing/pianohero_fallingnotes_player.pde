@@ -99,7 +99,6 @@ class FallingNotesPlayer {
                     this.speed,
                     Arrays.binarySearch(blackKeys, noteNumber) >= 0
                 );
-                
                 this.fallingNotes.add(note);
                 this.index++;
             }
@@ -124,12 +123,14 @@ class FallingNotesPlayer {
                             //println(this.keyboard.getCoord(pressedSingle));
                             //println(note.getX());
                             if(this.keyboard.getCoord(pressedSingle) == note.getX()){
-                              if(temp != (this.keyboard.getCoord(pressedSingle) == note.getX())){
+                              println("note.getCorrectPressed(): ", note.getCorrectPressed());
+                              if(!note.getCorrectPressed()){
                                 correct_notes += 1;
                                 score = computeScore(correct_notes);
-                                temp = this.keyboard.getCoord(pressedSingle) == note.getX();
+                                println("score: " + score);
+                                note.setCorrectPressed(true);
+                            
                               }
-                                
                                 note.colorChange(this.keyboard.getCoord(pressedSingle) == note.getX());
                                
                                 break;
@@ -157,7 +158,8 @@ class FallingNotesPlayer {
     
     private float computeScore(int correct){
     
-       tot_notes = this.noteSequence.getSequence().size();   
+       tot_notes = this.noteSequence.getSequence().size(); 
+       println("correct"+ correct);
        return (float)correct/tot_notes*100;
        
     }

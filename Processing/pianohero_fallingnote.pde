@@ -3,6 +3,7 @@ class FallingNote {
   float width, rectHeight;
   float speed;
   boolean bw;
+  boolean isCorrectPressed;
   
   color whiteC = color(0, 0, 128);
   color blackC = color(0, 0, 255);
@@ -14,6 +15,7 @@ class FallingNote {
     this.rectHeight = rectHeight;
     this.speed = speed;
     this.bw = bw;
+    this.isCorrectPressed = false;
   }
 
   void draw() {
@@ -59,5 +61,15 @@ class FallingNote {
   boolean isOffScreen() {
     return y + rectHeight > height/2 - 3;
   }
+  
+      // Getter for isCorrectPressed
+    public boolean getCorrectPressed() {
+        return this.isCorrectPressed;
+    }
+
+    // Setter for isCorrectPressed
+    public void setCorrectPressed(boolean pressed) {
+        this.isCorrectPressed = pressed;
+    }
 }
     

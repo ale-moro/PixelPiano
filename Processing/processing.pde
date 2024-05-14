@@ -12,7 +12,7 @@ int shift = 0;
 int[] notesInput = new int[5];
 int[] notesOutput = {-1,-1,-1,-1,-1};
 float[] coordinates = new float[10];
-int[] pressedSens = {0,1,0,0,0};
+int[] pressedSens = {0,0,0,0,0};
 
 StartPage startPage;
 ModeSelectionPage modeSelectionPage;

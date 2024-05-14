@@ -33,9 +33,11 @@ class Application:
 
         while True:
             ret, frame_clean = self.video_capture.read()
+            frame = frame_clean
 
             # FRAME IMAGE PROCESSING
-            frame = FrameUtils.flip_frame_horizontally(frame=frame_clean)
+            # frame = FrameUtils.flip_frame_horizontally(frame=frame_clean)
+            # frame = FrameUtils.flip_frame_vertically(frame=frame_clean)
             # print landmarks on frame
             self.hand_landmarker.detect_landmarks(frame)
             #print(self.hand_landmarker.result)
@@ -55,13 +57,11 @@ class Application:
             # map landmarks to MIDI notes and send them via OSC
             midi_notes = self.landmark_mapper.landmarks_to_midi_notes(landmarks_coords)
             self.osc_communicator.send_osc_active_notes(list(midi_notes))
-            # print('sent_osc')
 
             self.video_transmitter._send_frame(frame_clean)
-            # print('sent_frame')
             
             # Display frame
-            frame = FrameUtils.flip_frame_horizontally(frame)
+            # frame = FrameUtils.flip_frame_horizontally(frame)
             # cv2.imshow('frame', frame.astype(np.uint8)) 
             if cv2.waitKey(1) == ord('q') or cv2.waitKey(33) == 27:
                 break

@@ -4,7 +4,6 @@ public class GameNote {
     private long tickTimestamp;
     private int timestampMs;
     private int durationMs;
-
     private int velocity;
 
     public GameNote() {
@@ -14,6 +13,7 @@ public class GameNote {
         this.velocity = 0;
         this.durationMs = 0;
         this.timestampMs = 0;   
+        
     }
 
     public GameNote(int code, long tickTimestamp, int velocity) {
@@ -43,6 +43,7 @@ public class GameNote {
         this.timestampMs = Math.round(tickTimestamp * tick2Ms);    
     }
 
+    
     // Getter for code
     public int getCode() {
         return code;

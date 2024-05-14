@@ -20,6 +20,10 @@ class FrameUtils:
     @staticmethod
     def flip_frame_horizontally(frame):
         return cv2.flip(frame, 1)
+
+    @staticmethod
+    def flip_frame_vertically(frame):
+        return cv2.flip(frame, 0)
     
     @staticmethod
     def serialize_frame(frame): 
