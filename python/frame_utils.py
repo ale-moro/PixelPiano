@@ -36,6 +36,15 @@ class FrameUtils:
     @staticmethod
     def wait_key(delay):
         return cv2.waitKey(delay)
+
+    # example: ratio 1/5 reduces the frame by 2/5 both vertically and horizontally
+    @staticmethod
+    def crop(frame, ratio=1/5):
+        x_min = int(frame.shape[0]*ratio)
+        x_max = int(frame.shape[0]*(1-ratio))
+        y_min = int(frame.shape[1]*ratio)
+        y_max = int(frame.shape[1]*(1-ratio))
+        return frame[x_min:x_max, y_min:y_max, :].astype(np.uint8)
     
     @staticmethod
     def draw_landmarks(rgb_frame, detection_result: mp.tasks.vision.HandLandmarkerResult):

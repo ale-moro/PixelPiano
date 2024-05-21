@@ -72,11 +72,9 @@ class ServerSocket:
             # Send the frame size first
             serialized_frame_bytes_len = len(serialized_frame).to_bytes(4, byteorder='big')
             msg = self.client_socket.sendall(serialized_frame_bytes_len)
-            print('1:', msg)
 
             # Send the frame data
             msg = self.client_socket.sendall(serialized_frame)
-            print('2:', msg)
 
         except Exception as e:
             print("Error sending frame:", e)

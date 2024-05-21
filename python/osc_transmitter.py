@@ -8,30 +8,30 @@ from landmark_utils import LandmarkPianoMapper
 
 
 class OSCTransmitter:
-    def __init__(self, video_capture):
+    def __init__(self, video_capture, crop_factor=None):
         self.video_capture = video_capture 
         self.connection = OSCConnection(ip='localhost', port=12000)
         self.hand_landmarker = HandLandmarker()
         self.landmark_mapper = LandmarkPianoMapper()
         self.flattened_coords_prev = np.zeros(10)
+        self.crop_factor = crop_factor
 
 
     def send_osc_active_notes(self, note_numbers):
         self.connection.send_osc_active_notes(note_numbers)
 
     def send_coords(self, coords: list, flattened_coords_prev: np.array):
-        self.connection.send_coords(coords, flattened_coords_prev)
+        self.connection.send_coords(coords, flattened_coords_prev, crop_factor=self.crop_factor)
     
     def stream_OSC_messages(self, on_separate_thread:bool=True):
         if on_separate_thread:
-        # Start the thread for receiving frames
+            # Start the thread for receiving frames
             stream_thread = threading.Thread(target=self._stream_OSC_messages, args=([self.video_capture]))
             stream_thread.start()
         else:
             self._stream_active_notes()
 
     def _stream_OSC_messages(self, video_capture):
-        print()
         while True:
             # Read a frame from the camera
             ret, frame = video_capture.read()
@@ -74,8 +74,15 @@ class OSCConnection:
         # Send coordinates via OSC
         self.client.send_message('/coords', coords)
 
-    def send_coords(self, coords: list, flattened_coords_prev: np.array):
+    def send_coords(self, coords: list, flattened_coords_prev: np.array, crop_factor=None):
         flattened_coords = np.array([round(float(coord), 4) for sublist in coords for coord in sublist])
+        if crop_factor is not None:
+            upperbound = 1 / (1 - crop_factor)
+            shift_factor = (1 - upperbound)
+            f = lambda x: x * upperbound + shift_factor
+            print('\nog flattened_coords', flattened_coords)
+            flattened_coords = f(flattened_coords)  
+            print('new flattened coords:', flattened_coords) 
         flattened_coords_prev = flattened_coords if (flattened_coords!=np.zeros(10)).any() else flattened_coords_prev
         coords = (flattened_coords + flattened_coords_prev)/2
         self._send_coords(coords=coords)

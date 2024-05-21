@@ -25,20 +25,18 @@ class LandmarkUtils:
 
     
 class LandmarkPianoMapper:
-    def __init__(self, n_octaves = 3, bottom_C_midi_note=48) -> None:
+    def __init__(self, n_octaves = 3, bottom_C_midi_note=48, scale_factor=0) -> None:
         self.n_octaves = n_octaves
         self.bottom_C_midi_note = bottom_C_midi_note
         self.black_key_width_factor = 0.5
-        self.white_key_width = 20
-        self.black_keys_y_end = 200
+        self.white_key_width = 20 * (1 - scale_factor)
+        self.black_keys_y_end = 200 * (1 - scale_factor)
         self.white_keys_x_indices = []
         self.black_keys_x_indices = []
         self.black_keys_x_start_indices = []
-
-        self.white_keys_y_end = 400
-        self.black_keys_y_start = 100
+        self.white_keys_y_end = 400 * (1 - scale_factor)
+        self.black_keys_y_start = 100 * (1 + scale_factor)
         self.marginX = 0
-
 
     def create_image_grid(self, image, n_rows, n_columns, return_indices=False):
         """
