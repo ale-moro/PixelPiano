@@ -8,11 +8,11 @@ from landmark_utils import LandmarkPianoMapper
 
 
 class OSCTransmitter:
-    def __init__(self, video_capture, crop_factor=None):
+    def __init__(self, video_capture, landmark_mapper:LandmarkPianoMapper, crop_factor=None,):
         self.video_capture = video_capture 
         self.connection = OSCConnection(ip='localhost', port=12000)
         self.hand_landmarker = HandLandmarker()
-        self.landmark_mapper = LandmarkPianoMapper()
+        self.landmark_mapper = landmark_mapper
         self.flattened_coords_prev = np.zeros(10)
         self.crop_factor = crop_factor
 

@@ -25,18 +25,25 @@ class LandmarkUtils:
 
     
 class LandmarkPianoMapper:
-    def __init__(self, n_octaves = 3, bottom_C_midi_note=48, scale_factor=0) -> None:
+
+    def __init__(self, frame_width, frame_height, n_octaves = 3, bottom_C_midi_note=48, scale_factor=1/5) -> None:
         self.n_octaves = n_octaves
         self.bottom_C_midi_note = bottom_C_midi_note
         self.black_key_width_factor = 0.5
-        self.white_key_width = 20 * (1 - scale_factor)
         self.black_keys_y_end = 200 * (1 - scale_factor)
         self.white_keys_x_indices = []
         self.black_keys_x_indices = []
         self.black_keys_x_start_indices = []
-        self.white_keys_y_end = 400 * (1 - scale_factor)
-        self.black_keys_y_start = 100 * (1 + scale_factor)
-        self.marginX = 0
+        self.frame_height = frame_height
+        self.frame_width = frame_width
+        self.scale_factor = scale_factor
+
+       
+        self.white_keys_y_start = round(frame_height/2)
+        self.black_keys_y_start = round(frame_height/2)
+        self.white_keys_y_end = round(frame_height/2 + frame_height*(1-scale_factor)*2/5)
+        self.black_keys_y_end = round(frame_height/2 + frame_height*(1-scale_factor)*2/9)
+
 
     def create_image_grid(self, image, n_rows, n_columns, return_indices=False):
         """
@@ -51,21 +58,16 @@ class LandmarkPianoMapper:
         list: A grid containing sets of normalized pixel coordinates for the image based on the step sizes.
         """
         # x of each key type
-        self.marginX = round(image.shape[1]/20)
+        
         n_white_keys = self.n_octaves * 7
-        self.white_key_width = round((image.shape[1] - 2*self.marginX)/ n_white_keys)
+        self.marginX = round((self.frame_width/10 + (n_white_keys*()))/2)
+        self.white_key_width = round((self.frame_width*(1-self.scale_factor) - 2*self.marginX) / n_white_keys)
         black_key_width = round(self.white_key_width * self.black_key_width_factor)
         self.white_keys_x_indices = np.array([self.marginX + round(x*self.white_key_width) for x in range(n_white_keys)])
         self.black_keys_x_start_indices = np.array([round(key-(1-self.black_key_width_factor)*self.white_key_width/2) for idx, key in enumerate(self.white_keys_x_indices) if idx%7 not in [0, 3]])
         self.black_keys_x_end_indices = np.array([round(idx + black_key_width) for idx in self.black_keys_x_start_indices])
         self.black_keys_x_indices = np.array([[round(key+i) for i in range(black_key_width)] for key in self.black_keys_x_start_indices])
         self.black_keys_x_indices = self.black_keys_x_indices.flatten()
-
-        # y of each key type
-        self.white_keys_y_start = round(image.shape[0]/2)
-        self.black_keys_y_start = round(image.shape[0]/2)
-        self.white_keys_y_end = round(image.shape[0]/2 + image.shape[0]*2/5)
-        self.black_keys_y_end = round(image.shape[0]/2 + image.shape[0]*2/9)
 
         # display grid
         grid = np.zeros_like(image)
