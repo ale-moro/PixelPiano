@@ -19,7 +19,7 @@ frame_width = 640
 frame_height = 480
 
 class Application:
-    def __init__(self, scale_factor=1/5):
+    def __init__(self, scale_factor=1/10):
         self.video_capture = cv2.VideoCapture(0)
         _, frame = self.video_capture.read()
         self.frame_height = frame.shape[1]  

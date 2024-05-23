@@ -78,11 +78,11 @@ class OSCConnection:
         flattened_coords = np.array([round(float(coord), 4) for sublist in coords for coord in sublist])
         if crop_factor is not None:
             upperbound = 1 / (1 - crop_factor)
-            shift_factor = (1 - upperbound)
-            f = lambda x: x * upperbound + shift_factor
-            print('\nog flattened_coords', flattened_coords)
+            shift_factor = crop_factor / (2*(1 - crop_factor))
+            f = lambda x: x * upperbound - shift_factor
             flattened_coords = f(flattened_coords)  
-            print('new flattened coords:', flattened_coords) 
+
+
         flattened_coords_prev = flattened_coords if (flattened_coords!=np.zeros(10)).any() else flattened_coords_prev
         coords = (flattened_coords + flattened_coords_prev)/2
         self._send_coords(coords=coords)

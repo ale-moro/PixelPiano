@@ -26,7 +26,7 @@ class LandmarkUtils:
     
 class LandmarkPianoMapper:
 
-    def __init__(self, frame_width, frame_height, n_octaves = 3, bottom_C_midi_note=48, scale_factor=1/5) -> None:
+    def __init__(self, frame_width, frame_height, n_octaves = 3, bottom_C_midi_note=48, scale_factor=1/10) -> None:
         self.n_octaves = n_octaves
         self.bottom_C_midi_note = bottom_C_midi_note
         self.black_key_width_factor = 0.5
@@ -57,13 +57,13 @@ class LandmarkPianoMapper:
         Returns:
         list: A grid containing sets of normalized pixel coordinates for the image based on the step sizes.
         """
-        # x of each key type
-        
+       
         n_white_keys = self.n_octaves * 7
-        self.marginX = round((self.frame_width/10 + (n_white_keys*()))/2)
+        self.marginX = round(self.frame_width/20)*(1-self.scale_factor)
         self.white_key_width = round((self.frame_width*(1-self.scale_factor) - 2*self.marginX) / n_white_keys)
         black_key_width = round(self.white_key_width * self.black_key_width_factor)
-        self.white_keys_x_indices = np.array([self.marginX + round(x*self.white_key_width) for x in range(n_white_keys)])
+        scale_offset = round(0.5*self.frame_width*(self.scale_factor/(1-self.scale_factor)))
+        self.white_keys_x_indices = np.array([round(self.marginX) + scale_offset + round(x*self.white_key_width) for x in range(n_white_keys)])
         self.black_keys_x_start_indices = np.array([round(key-(1-self.black_key_width_factor)*self.white_key_width/2) for idx, key in enumerate(self.white_keys_x_indices) if idx%7 not in [0, 3]])
         self.black_keys_x_end_indices = np.array([round(idx + black_key_width) for idx in self.black_keys_x_start_indices])
         self.black_keys_x_indices = np.array([[round(key+i) for i in range(black_key_width)] for key in self.black_keys_x_start_indices])
