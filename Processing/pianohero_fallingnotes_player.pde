@@ -77,6 +77,8 @@ class FallingNotesPlayer {
         this.fallingNotes.clear();
         this.loadNoteSequence(this.noteSequence);
         this.startTime = 0; 
+        this.score = 0;
+        this.correct_notes = 0;
     }
 
     public void draw() {
@@ -117,7 +119,6 @@ class FallingNotesPlayer {
                     }
                     pressedNotes = this.keyboard.getNotes();
                     for(int j = 0; j < pressedNotes.length; j++){
-                      
                         pressedSingle = pressedNotes[j];
                         if(pressedSingle > 0){
                             //println(this.keyboard.getCoord(pressedSingle));
@@ -125,9 +126,9 @@ class FallingNotesPlayer {
                             if(this.keyboard.getCoord(pressedSingle) == note.getX()){
                               println("note.getCorrectPressed(): ", note.getCorrectPressed());
                               if(!note.getCorrectPressed()){
-                                correct_notes += 1;
-                                score = computeScore(correct_notes);
-                                println("score: " + score);
+                                this.correct_notes += 1;
+                                score = computeScore(this.correct_notes);
+                                println("score: " + this.score);
                                 note.setCorrectPressed(true);
                             
                               }
@@ -153,15 +154,13 @@ class FallingNotesPlayer {
     }
     
     public float getScore(){
-      return score;
+      return this.score;
     }
     
     private float computeScore(int correct){
-    
        tot_notes = this.noteSequence.getSequence().size(); 
        println("correct"+ correct);
        return (float)correct/tot_notes*100;
-       
     }
 
     private float defineKey(int inx){

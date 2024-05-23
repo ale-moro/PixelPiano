@@ -22,12 +22,13 @@ class Application:
     def __init__(self, scale_factor=1/10):
         self.video_capture = cv2.VideoCapture(0)
         _, frame = self.video_capture.read()
-        self.frame_height = frame.shape[1]  
-        self.frame_width = frame.shape[0]
+        self.frame_height = frame.shape[0]  
+        self.frame_width = frame.shape[1]
+        print('fs', frame.shape)
 
         self.hand_landmarker = HandLandmarker()
         self.landmark_utils = LandmarkUtils()
-        self.landmark_mapper = LandmarkPianoMapper(frame_width, frame_height, scale_factor=scale_factor)
+        self.landmark_mapper = LandmarkPianoMapper(self.frame_width, self.frame_height, scale_factor=scale_factor)
         self.flattened_coords_prev = np.zeros(10)
         self.osc_communicator = OSCTransmitter(self.video_capture, landmark_mapper=self.landmark_mapper, crop_factor=scale_factor)
         self.video_transmitter = VideoSocketServer(self.video_capture, grayscale=True, resize=(frame_width, frame_height))

@@ -37,12 +37,11 @@ class LandmarkPianoMapper:
         self.frame_height = frame_height
         self.frame_width = frame_width
         self.scale_factor = scale_factor
-
        
         self.white_keys_y_start = round(frame_height/2)
         self.black_keys_y_start = round(frame_height/2)
-        self.white_keys_y_end = round(frame_height/2 + frame_height*(1-scale_factor)*2/5)
-        self.black_keys_y_end = round(frame_height/2 + frame_height*(1-scale_factor)*2/9)
+        self.white_keys_y_end = round(frame_height * (1/2 + (1-scale_factor) * 2/5))
+        self.black_keys_y_end = round(frame_height * (1/2 + (1-scale_factor) * 2/9))
 
 
     def create_image_grid(self, image, n_rows, n_columns, return_indices=False):
