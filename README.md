@@ -2,10 +2,14 @@
 - Marco Furio Colombo
 - Mattia Massimi
 - Alessandra Moro
+
+
+
+
   
-<center>
+<p align="center">
   <img src="assets/logo.jpg" alt="PixelPiano by Colombo, Massimi, Moro" width="400" title="PixelPiano by Colombo, Massimi, Moro"/>
-</center>
+</p>
 
 
 # PixelPiano - The interactive virtual piano
