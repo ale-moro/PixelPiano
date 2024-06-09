@@ -6,7 +6,6 @@
 
 
 
-  
 <p align="center">
   <img src="assets/logo.jpg" alt="PixelPiano by Colombo, Massimi, Moro" width="400" title="PixelPiano by Colombo, Massimi, Moro"/>
 </p>
@@ -51,6 +50,7 @@ In order to run the whole application, all three systems need to be running.
   `python hand_landmarker_video.py` or `python3 hand_landmarker_video.py`
 - **Processing**: open one of the files inside the `Processing` folder in the Processing IDE, it should automatically open all Prcessing project files.
   Run the skecth: press the IDE start button.
+- **Synth**: open your midi controlled virtusl sytnhesizer of choice and set it to receive midi messages. In our experiments we used [Surge XT](https://surge-synthesizer.github.io/).
 
   NOTE:
   Since python contains a socket server and the Processing Java code contains a socket client:
