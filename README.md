@@ -15,6 +15,9 @@
 This innovative project transforms the way we interact with musical instruments by combining wearable technology, computer vision, and real-time data processing. 
 By using a glove embedded with pressure sensors and a camera-based hand tracking system, you can play a virtual piano on any flat surface, making music accessible and portable.
 
+## Video Demo
+
+https://github.com/ale-moro/PixelPiano/tree/main/assets/cpac_video_demo.mp4
 
 ## Setup 
 Chose a convenient path on your local computer and clone this repository  `git clone https://github.com/ale-moro/PixelPiano`
